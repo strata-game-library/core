@@ -40,7 +40,7 @@ interface SoundPool {
  * ```
  */
 export const FootstepAudio = forwardRef<FootstepAudioRef, FootstepAudioProps>(
-    ({ surfaces, defaultSurface = 'default', volume = 1, poolSize = 4 }, ref) => {
+    ({ surfaces, defaultSurface = 'default', volume = 1, poolSize = 4, throttleMs = 50 }, ref) => {
         const poolsRef = useRef<Map<string, SoundPool>>(new Map());
 
         useEffect(() => {
@@ -76,14 +76,14 @@ export const FootstepAudio = forwardRef<FootstepAudioRef, FootstepAudioProps>(
                         poolsRef.current.get(surface) ?? poolsRef.current.get(defaultSurface);
                     if (pool) {
                         const now = Date.now();
-                        if (now - pool.lastPlayed > 50) {
+                        if (now - pool.lastPlayed > throttleMs) {
                             pool.howl.play();
                             pool.lastPlayed = now;
                         }
                     }
                 },
             }),
-            [defaultSurface]
+            [defaultSurface, throttleMs]
         );
 
         return null;

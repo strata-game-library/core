@@ -26,19 +26,25 @@ import type { AmbientAudioProps, AmbientAudioRef } from './types';
  */
 export const AmbientAudio = forwardRef<AmbientAudioRef, AmbientAudioProps>(
     ({ url, volume = 1, loop = true, autoplay = false, fadeTime = 0, onLoad }, ref) => {
-        const soundManager = useAudioManager();
-        const idRef = useRef(`ambient-${Math.random().toString(36).substr(2, 9)}`);
+        // Note: Currently using direct Howl instance for simplicity.
+        // TODO: Future enhancement - integrate with SoundManager for bus/volume control
+        const _soundManager = useAudioManager();
         const howlRef = useRef<Howl | null>(null);
         const soundIdRef = useRef<number | undefined>(undefined);
         const targetVolumeRef = useRef(volume);
 
         useEffect(() => {
+            let isMounted = true;
+
             const howl = new Howl({
                 src: [url],
                 loop,
                 volume: fadeTime > 0 && autoplay ? 0 : volume,
                 preload: true,
                 onload: () => {
+                    // Prevent callbacks after unmount
+                    if (!isMounted) return;
+
                     onLoad?.();
                     if (autoplay) {
                         soundIdRef.current = howl.play();
@@ -47,11 +53,16 @@ export const AmbientAudio = forwardRef<AmbientAudioRef, AmbientAudioProps>(
                         }
                     }
                 },
+                onloaderror: (_id, error) => {
+                    if (!isMounted) return;
+                    console.error(`Failed to load ambient audio: ${error}`);
+                },
             });
 
             howlRef.current = howl;
 
             return () => {
+                isMounted = false;
                 howl.unload();
                 howlRef.current = null;
                 soundIdRef.current = undefined;
@@ -108,15 +119,15 @@ export const AmbientAudio = forwardRef<AmbientAudioRef, AmbientAudioProps>(
                         );
                     }
                 },
-                setVolume: (vol: number, fadeTimeMs?: number) => {
+                setVolume: (vol: number, fadeTime?: number) => {
                     targetVolumeRef.current = vol;
                     if (howlRef.current) {
                         const id = soundIdRef.current;
-                        if (fadeTimeMs && fadeTimeMs > 0 && id !== undefined) {
+                        if (fadeTime && fadeTime > 0 && id !== undefined) {
                             howlRef.current.fade(
                                 howlRef.current.volume() as number,
                                 vol,
-                                fadeTimeMs * 1000,
+                                fadeTime * 1000,
                                 id
                             );
                         } else if (id !== undefined) {

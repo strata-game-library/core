@@ -48,12 +48,14 @@ export const AudioEmitter = forwardRef<AudioEmitterRef, AudioEmitterProps>(
         ref
     ) => {
         const spatialAudio = useSpatialAudio();
-        const idRef = useRef(`emitter-${Math.random().toString(36).substr(2, 9)}`);
+        const idRef = useRef(`emitter-${crypto.randomUUID()}`);
         const sourceRef = useRef<THREE.PositionalAudio | null>(null);
         const positionRef = useRef(new THREE.Vector3(...position));
 
         useEffect(() => {
             if (!spatialAudio) return;
+
+            let isMounted = true;
 
             spatialAudio
                 .load(idRef.current, url, {
@@ -63,6 +65,9 @@ export const AudioEmitter = forwardRef<AudioEmitterRef, AudioEmitterProps>(
                     distanceModel,
                 })
                 .then((source) => {
+                    // Prevent setting state/refs after unmount
+                    if (!isMounted) return;
+
                     sourceRef.current = source;
                     source.position.copy(positionRef.current);
                     source.setVolume(volume);
@@ -72,9 +77,14 @@ export const AudioEmitter = forwardRef<AudioEmitterRef, AudioEmitterProps>(
                     if (autoplay) {
                         source.play();
                     }
+                })
+                .catch((error) => {
+                    if (!isMounted) return;
+                    console.error(`Failed to load audio emitter: ${error.message}`);
                 });
 
             return () => {
+                isMounted = false;
                 spatialAudio.remove(idRef.current);
                 sourceRef.current = null;
             };

@@ -32,17 +32,12 @@ export function AudioEnvironment({
         if (!preset) return;
 
         // Environment effects would require Web Audio API nodes
-        // For now, log the configuration for debugging
-        if (process.env.NODE_ENV === 'development') {
-            console.debug('AudioEnvironment:', {
-                type,
-                preset,
-                customDecay: reverbDecay,
-                customWet: reverbWet,
-                lowpassFrequency,
-                highpassFrequency,
-            });
-        }
+        // Configuration is stored but actual audio effects require further implementation
+        void preset;
+        void reverbDecay;
+        void reverbWet;
+        void lowpassFrequency;
+        void highpassFrequency;
     }, [type, reverbDecay, reverbWet, lowpassFrequency, highpassFrequency]);
 
     return null;

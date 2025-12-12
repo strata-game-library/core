@@ -17,7 +17,7 @@ import type {
  * Context value provided by AudioProvider
  */
 export interface AudioContextValue {
-    soundManager: SoundManager;
+    soundManager: SoundManager | null;
     spatialAudio: SpatialAudio | null;
     listener: THREE.AudioListener | null;
     isReady: boolean;
@@ -166,6 +166,8 @@ export interface FootstepAudioProps {
     defaultSurface?: string;
     volume?: number;
     poolSize?: number;
+    /** Minimum time between footstep sounds in milliseconds (default: 50) */
+    throttleMs?: number;
 }
 
 /**

@@ -44,11 +44,13 @@ export const PositionalAudio = forwardRef<PositionalAudioRef, PositionalAudioPro
         ref
     ) => {
         const spatialAudio = useSpatialAudio();
-        const idRef = useRef(`positional-${Math.random().toString(36).substr(2, 9)}`);
+        const idRef = useRef(`positional-${crypto.randomUUID()}`);
         const sourceRef = useRef<THREE.PositionalAudio | null>(null);
 
         useEffect(() => {
             if (!spatialAudio) return;
+
+            let isMounted = true;
 
             spatialAudio
                 .load(idRef.current, url, {
@@ -58,6 +60,9 @@ export const PositionalAudio = forwardRef<PositionalAudioRef, PositionalAudioPro
                     distanceModel,
                 })
                 .then((source) => {
+                    // Prevent setting state/refs after unmount
+                    if (!isMounted) return;
+
                     sourceRef.current = source;
                     source.position.set(position[0], position[1], position[2]);
                     source.setPlaybackRate(playbackRate);
@@ -73,9 +78,14 @@ export const PositionalAudio = forwardRef<PositionalAudioRef, PositionalAudioPro
                     if (autoplay) {
                         source.play();
                     }
+                })
+                .catch((error) => {
+                    if (!isMounted) return;
+                    console.error(`Failed to load positional audio: ${error.message}`);
                 });
 
             return () => {
+                isMounted = false;
                 spatialAudio.remove(idRef.current);
                 sourceRef.current = null;
             };

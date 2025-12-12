@@ -92,14 +92,16 @@ export class SoundManager {
                 html5: soundConfig.html5 ?? false,
                 pool: soundConfig.pool ?? this.config.html5PoolSize,
                 format: soundConfig.format,
-                onload: () => resolve(),
+                onload: () => {
+                    // Only register sound after successful load to prevent inconsistent state
+                    this.sounds.set(id, howl);
+                    this.soundConfigs.set(id, soundConfig);
+                    this.addToBus(id, bus);
+                    resolve();
+                },
                 onloaderror: (_id, error) =>
                     reject(new Error(`Failed to load sound ${id}: ${error}`)),
             });
-
-            this.sounds.set(id, howl);
-            this.soundConfigs.set(id, soundConfig);
-            this.addToBus(id, bus);
         });
     }
 

@@ -91,6 +91,7 @@ export function AudioProvider({ children, masterVolume = 1 }: AudioProviderProps
     const spatialAudioRef = useRef<SpatialAudio | null>(null);
     const listenerRef = useRef<THREE.AudioListener | null>(null);
 
+    // Initialize audio system once when camera is available
     useEffect(() => {
         soundManagerRef.current = createSoundManager({ masterVolume });
 
@@ -109,11 +110,18 @@ export function AudioProvider({ children, masterVolume = 1 }: AudioProviderProps
             spatialAudioRef.current?.dispose();
             camera.remove(listener);
         };
-    }, [camera, masterVolume]);
+    }, [camera]); // masterVolume excluded: handled by separate effect to prevent re-initialization
+
+    // Update master volume without re-initializing audio system
+    useEffect(() => {
+        if (isReady && soundManagerRef.current) {
+            soundManagerRef.current.setMasterVolume(masterVolume);
+        }
+    }, [masterVolume, isReady]);
 
     const value = useMemo(
         () => ({
-            soundManager: soundManagerRef.current!,
+            soundManager: soundManagerRef.current,
             spatialAudio: spatialAudioRef.current,
             listener: listenerRef.current,
             isReady,
@@ -121,7 +129,8 @@ export function AudioProvider({ children, masterVolume = 1 }: AudioProviderProps
         [isReady]
     );
 
-    if (!isReady) return null;
+    // Only render children when audio system is ready to prevent null manager access
+    if (!isReady || !soundManagerRef.current) return null;
 
     return <AudioContext.Provider value={value}>{children}</AudioContext.Provider>;
 }

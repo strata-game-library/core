@@ -134,7 +134,8 @@ public class StrataPlugin: CAPPlugin, CAPBridgedPlugin {
     private func getSafeAreaInsets() -> [String: CGFloat] {
         var insets: [String: CGFloat] = ["top": 0, "right": 0, "bottom": 0, "left": 0]
         
-        DispatchQueue.main.sync {
+        // Check if we're already on the main thread to avoid deadlock
+        if Thread.isMainThread {
             if let window = UIApplication.shared.connectedScenes
                 .compactMap({ $0 as? UIWindowScene })
                 .flatMap({ $0.windows })
@@ -146,6 +147,21 @@ public class StrataPlugin: CAPPlugin, CAPBridgedPlugin {
                     "bottom": safeArea.bottom,
                     "left": safeArea.left
                 ]
+            }
+        } else {
+            DispatchQueue.main.sync {
+                if let window = UIApplication.shared.connectedScenes
+                    .compactMap({ $0 as? UIWindowScene })
+                    .flatMap({ $0.windows })
+                    .first(where: { $0.isKeyWindow }) {
+                    let safeArea = window.safeAreaInsets
+                    insets = [
+                        "top": safeArea.top,
+                        "right": safeArea.right,
+                        "bottom": safeArea.bottom,
+                        "left": safeArea.left
+                    ]
+                }
             }
         }
         
@@ -226,8 +242,13 @@ public class StrataPlugin: CAPPlugin, CAPBridgedPlugin {
         ]
         var triggers: [String: Float] = ["left": 0, "right": 0]
         
-        if let controller = GCController.controllers().first,
-           let gamepad = controller.extendedGamepad {
+        // Support multiple controllers - aggregate their inputs
+        let controllers = GCController.controllers()
+        let controllerIndex = call.getInt("controllerIndex") ?? 0
+        
+        if controllerIndex < controllers.count,
+           let gamepad = controllers[controllerIndex].extendedGamepad {
+            // Read from specific controller
             let deadzone: Float = 0.15
             
             let lx = gamepad.leftThumbstick.xAxis.value
@@ -246,6 +267,31 @@ public class StrataPlugin: CAPPlugin, CAPBridgedPlugin {
             
             triggers["left"] = gamepad.leftTrigger.value
             triggers["right"] = gamepad.rightTrigger.value
+        } else if controllerIndex == 0 && !controllers.isEmpty {
+            // Fallback: aggregate all controllers (for backwards compatibility)
+            let deadzone: Float = 0.15
+            for controller in controllers {
+                guard let gamepad = controller.extendedGamepad else { continue }
+                
+                let lx = gamepad.leftThumbstick.xAxis.value
+                let ly = gamepad.leftThumbstick.yAxis.value
+                if abs(lx) > deadzone { leftStick["x"] = max(leftStick["x"] ?? 0, abs(lx)) * (lx > 0 ? 1 : -1) }
+                if abs(ly) > deadzone { leftStick["y"] = max(leftStick["y"] ?? 0, abs(ly)) * (ly < 0 ? 1 : -1) }
+                
+                let rx = gamepad.rightThumbstick.xAxis.value
+                let ry = gamepad.rightThumbstick.yAxis.value
+                if abs(rx) > deadzone { rightStick["x"] = max(rightStick["x"] ?? 0, abs(rx)) * (rx > 0 ? 1 : -1) }
+                if abs(ry) > deadzone { rightStick["y"] = max(rightStick["y"] ?? 0, abs(ry)) * (ry < 0 ? 1 : -1) }
+                
+                // OR buttons together - if any controller has button pressed
+                buttons["jump"] = (buttons["jump"] ?? false) || gamepad.buttonA.isPressed
+                buttons["action"] = (buttons["action"] ?? false) || gamepad.buttonB.isPressed
+                buttons["cancel"] = (buttons["cancel"] ?? false) || gamepad.buttonX.isPressed
+                
+                // Use max trigger value
+                triggers["left"] = max(triggers["left"] ?? 0, gamepad.leftTrigger.value)
+                triggers["right"] = max(triggers["right"] ?? 0, gamepad.rightTrigger.value)
+            }
         }
         
         let touchesArray: [[String: Any]] = activeTouches.map { (id, data) in
@@ -262,7 +308,8 @@ public class StrataPlugin: CAPPlugin, CAPBridgedPlugin {
             "rightStick": rightStick,
             "buttons": buttons,
             "triggers": triggers,
-            "touches": touchesArray
+            "touches": touchesArray,
+            "controllerCount": controllers.count
         ]
         
         call.resolve(snapshot)

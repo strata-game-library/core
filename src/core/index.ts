@@ -415,13 +415,5 @@ export type {
     EffectsChunk,
 } from './shaders';
 
-<<<<<<< HEAD
-// Decals
-export * from './decals';
-
-// LOD
-export * from './lod';
-=======
 // Physics utilities
 export * from './physics';
->>>>>>> 161cced (Refactor: Export physics module and improve physics utilities)

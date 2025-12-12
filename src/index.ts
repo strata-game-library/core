@@ -145,8 +145,8 @@ export {
     axisToMagnitude,
     angleToAxis,
     // Audio (pure TS)
-    Howl,
-    Howler,
+    // Note: Howl and Howler from howler.js are not re-exported.
+    // Import directly from 'howler' if needed.
     SoundManager,
     SpatialAudio,
     createSoundManager,
@@ -209,26 +209,22 @@ export {
     sampleCurve,
     calculateBoneRotation,
     // State management (pure TS)
+    // Note: Zustand's create, useStore, temporal, and immer are not re-exported.
+    // Import directly from 'zustand' and related packages if needed.
     createGameStore,
     createPersistenceAdapter,
     calculateChecksum,
     verifyChecksum,
     webPersistenceAdapter,
     createWebPersistenceAdapter,
-    create,
-    useStore,
-    temporal,
-    immer,
     // UI utilities (pure TS)
+    // Note: lerp, easeOutCubic, easeOutElastic are available above from camera utilities.
     getAnchorOffset,
     worldToScreen,
     screenToWorld,
     calculateFade,
     formatProgressText,
     clampProgress,
-    uiLerp,
-    uiEaseOutCubic,
-    uiEaseOutElastic,
     getTextDirection,
     createDefaultProgressBar,
     createDefaultInventory,
@@ -273,7 +269,8 @@ export type {
     ScreenShakeIntensity,
     // Cloud types
     CloudLayerConfig,
-    WindConfig as CloudWindConfig,
+    // Note: WindConfig from clouds module omitted to avoid collision with weather WindConfig.
+    // Import CloudWindConfig directly from './core/clouds' if needed.
     DayNightConfig,
     CloudMaterialOptions,
     VolumetricCloudOptions,
@@ -606,7 +603,7 @@ export type {
     YukaVehicleRef,
     YukaPathProps,
     YukaPathRef,
-    StateConfig,
+    StateConfig as YukaStateConfig,
     YukaStateMachineProps,
     YukaStateMachineRef,
     YukaNavMeshProps,

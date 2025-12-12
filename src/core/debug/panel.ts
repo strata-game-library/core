@@ -11,8 +11,6 @@
 import { useControls, folder, button, Leva, LevaPanel, useCreateStore } from 'leva';
 import type {
     DebugPanelConfig,
-    DebugSchema,
-    DebugStore,
     CameraDebugValues,
     PhysicsDebugValues,
     LightingDebugValues,
@@ -35,16 +33,6 @@ export interface DebugPanelInstance {
         hideTitleBar?: boolean;
     };
 }
-
-/**
- * Default panel position mapping for Leva.
- */
-const POSITION_MAP = {
-    'top-left': { x: 0, y: 0 },
-    'top-right': { x: -1, y: 0 },
-    'bottom-left': { x: 0, y: -1 },
-    'bottom-right': { x: -1, y: -1 },
-} as const;
 
 /**
  * Creates a debug panel configuration with store and pre-computed Leva props.
@@ -330,7 +318,6 @@ export function usePostProcessingDebug(
 /**
  * Creates a debug action button.
  *
- * @param label - Button label
  * @param onClick - Click handler
  * @returns Button schema for use in useControls
  *
@@ -340,17 +327,17 @@ export function usePostProcessingDebug(
  *
  * function DebugActions() {
  *   useDebugControls({
- *     reset: createDebugButton('Reset Position', () => {
+ *     'Reset Position': createDebugButton(() => {
  *       player.position.set(0, 0, 0);
  *     }),
- *     spawn: createDebugButton('Spawn Enemy', spawnEnemy),
+ *     'Spawn Enemy': createDebugButton(spawnEnemy),
  *   });
  *
  *   return null;
  * }
  * ```
  */
-export function createDebugButton(_label: string, onClick: () => void): ReturnType<typeof button> {
+export function createDebugButton(onClick: () => void): ReturnType<typeof button> {
     return button(onClick);
 }
 

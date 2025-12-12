@@ -14,7 +14,6 @@ import type { PerformanceStats, StatsConfig } from './types';
 const DEFAULT_CONFIG: Required<StatsConfig> = {
     updateInterval: 100,
     trackMemory: true,
-    trackWebGL: true,
     maxSamples: 60,
 };
 
@@ -183,7 +182,8 @@ export function formatStats(
               }
             : undefined,
         drawCalls: stats.drawCalls?.toString(),
-        triangles: stats.triangles ? formatTriangles(stats.triangles, precision) : undefined,
+        triangles:
+            stats.triangles !== undefined ? formatTriangles(stats.triangles, precision) : undefined,
         textures: stats.textures?.toString(),
         geometries: stats.geometries?.toString(),
         timestamp: new Date(stats.timestamp).toISOString(),
@@ -325,11 +325,15 @@ export function calculateAverageStats(samples: PerformanceStats[]): PerformanceS
 
     const count = samples.length;
 
+    // Check if any sample had optional fields
+    const hasDrawCalls = samples.some((s) => s.drawCalls !== undefined);
+    const hasTriangles = samples.some((s) => s.triangles !== undefined);
+
     return {
         fps: sum.fps / count,
         frameTime: sum.frameTime / count,
-        drawCalls: sum.drawCalls ? Math.round(sum.drawCalls / count) : undefined,
-        triangles: sum.triangles ? Math.round(sum.triangles / count) : undefined,
+        drawCalls: hasDrawCalls ? Math.round(sum.drawCalls / count) : undefined,
+        triangles: hasTriangles ? Math.round(sum.triangles / count) : undefined,
         timestamp: Date.now(),
     };
 }

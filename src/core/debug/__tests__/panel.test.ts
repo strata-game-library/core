@@ -8,7 +8,7 @@
  */
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { renderHook, act } from '@testing-library/react';
+import { renderHook } from '@testing-library/react';
 
 function extractValues(schema: Record<string, unknown>): Record<string, unknown> {
     const result: Record<string, unknown> = {};
@@ -357,17 +357,9 @@ describe('createDebugButton', () => {
     describe('ideal case', () => {
         it('creates a button with click handler', () => {
             const onClick = vi.fn();
-            createDebugButton('Reset', onClick);
+            createDebugButton(onClick);
 
             expect(button).toHaveBeenCalledWith(onClick);
-        });
-    });
-
-    describe('error cases', () => {
-        it('handles undefined onClick gracefully', () => {
-            expect(() =>
-                createDebugButton('Test', undefined as unknown as () => void)
-            ).not.toThrow();
         });
     });
 });

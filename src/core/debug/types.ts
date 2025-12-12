@@ -221,10 +221,8 @@ export interface PerformanceStats {
 export interface StatsConfig {
     /** Update interval in milliseconds */
     updateInterval?: number;
-    /** Whether to track memory usage */
+    /** Whether to track memory usage (Chromium-based browsers only) */
     trackMemory?: boolean;
-    /** Whether to track WebGL info */
-    trackWebGL?: boolean;
     /** Maximum samples for averaging */
     maxSamples?: number;
 }

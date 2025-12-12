@@ -9,20 +9,19 @@
  */
 
 import tunnelRat from 'tunnel-rat';
-import type { TunnelConfig, Tunnel, DebugTunnelId } from './types';
+import type { Tunnel, DebugTunnelId } from './types';
 
 /**
  * Creates a new tunnel for React portals.
  * Tunnels allow rendering content in a different location in the DOM tree.
  *
- * @param _config - Optional tunnel configuration
  * @returns A tunnel with In and Out components
  *
  * @example
  * ```typescript
  * import { createTunnel } from '@jbcom/strata/core/debug';
  *
- * const DebugOverlay = createTunnel({ id: 'debug-overlay' });
+ * const DebugOverlay = createTunnel();
  *
  * // In your 3D scene component
  * function Scene() {
@@ -50,7 +49,7 @@ import type { TunnelConfig, Tunnel, DebugTunnelId } from './types';
  * }
  * ```
  */
-export function createTunnel(_config: TunnelConfig = {}): Tunnel {
+export function createTunnel(): Tunnel {
     return tunnelRat();
 }
 
@@ -89,10 +88,13 @@ const tunnelRegistry = new Map<string, Tunnel>();
  * ```
  */
 export function getTunnel(id: string): Tunnel {
-    if (!tunnelRegistry.has(id)) {
-        tunnelRegistry.set(id, createTunnel({ id }));
+    const existing = tunnelRegistry.get(id);
+    if (existing) {
+        return existing;
     }
-    return tunnelRegistry.get(id)!;
+    const tunnel = createTunnel();
+    tunnelRegistry.set(id, tunnel);
+    return tunnel;
 }
 
 /**
@@ -143,7 +145,7 @@ export function clearTunnels(): void {
  * }
  * ```
  */
-export const DebugOverlayTunnel: Tunnel = createTunnel({ id: 'debug-overlay' });
+export const DebugOverlayTunnel: Tunnel = createTunnel();
 
 /**
  * Pre-configured tunnel for FPS counter display.
@@ -162,7 +164,7 @@ export const DebugOverlayTunnel: Tunnel = createTunnel({ id: 'debug-overlay' });
  * }
  * ```
  */
-export const FPSCounterTunnel: Tunnel = createTunnel({ id: 'fps-counter' });
+export const FPSCounterTunnel: Tunnel = createTunnel();
 
 /**
  * Pre-configured tunnel for stats panel display.
@@ -184,7 +186,7 @@ export const FPSCounterTunnel: Tunnel = createTunnel({ id: 'fps-counter' });
  * }
  * ```
  */
-export const StatsPanelTunnel: Tunnel = createTunnel({ id: 'stats-panel' });
+export const StatsPanelTunnel: Tunnel = createTunnel();
 
 /**
  * Gets a pre-configured debug tunnel by ID.
@@ -210,7 +212,7 @@ export function getDebugTunnel(id: DebugTunnelId): Tunnel {
             return StatsPanelTunnel;
         case 'custom':
         default:
-            return createTunnel({ id });
+            return getTunnel(id);
     }
 }
 

@@ -34,8 +34,9 @@ export function useSeek(
 ): YUKA.SeekBehavior {
     const { weight = 1 } = options;
 
-    return useMemo(() => {
-        const behavior = new YUKA.SeekBehavior();
+    const behavior = useMemo(() => new YUKA.SeekBehavior(), []);
+
+    useEffect(() => {
         behavior.weight = weight;
 
         if (target instanceof YUKA.Vector3) {
@@ -45,9 +46,9 @@ export function useSeek(
         } else {
             behavior.target = threeToYukaVector3(target);
         }
+    }, [behavior, target, weight]);
 
-        return behavior;
-    }, [target, weight]);
+    return behavior;
 }
 
 // =============================================================================
@@ -65,8 +66,9 @@ export function useFlee(
 ): YUKA.FleeBehavior {
     const { weight = 1, panicDistance = 10 } = options;
 
-    return useMemo(() => {
-        const behavior = new YUKA.FleeBehavior();
+    const behavior = useMemo(() => new YUKA.FleeBehavior(), []);
+
+    useEffect(() => {
         behavior.weight = weight;
         behavior.panicDistance = panicDistance;
 
@@ -77,9 +79,9 @@ export function useFlee(
         } else {
             behavior.target = threeToYukaVector3(target);
         }
+    }, [behavior, target, weight, panicDistance]);
 
-        return behavior;
-    }, [target, weight, panicDistance]);
+    return behavior;
 }
 
 // =============================================================================
@@ -98,8 +100,9 @@ export function useArrive(
 ): YUKA.ArriveBehavior {
     const { weight = 1, deceleration = 3, tolerance = 0.1 } = options;
 
-    return useMemo(() => {
-        const behavior = new YUKA.ArriveBehavior();
+    const behavior = useMemo(() => new YUKA.ArriveBehavior(), []);
+
+    useEffect(() => {
         behavior.weight = weight;
         behavior.deceleration = deceleration;
         behavior.tolerance = tolerance;
@@ -111,9 +114,9 @@ export function useArrive(
         } else {
             behavior.target = threeToYukaVector3(target);
         }
+    }, [behavior, target, weight, deceleration, tolerance]);
 
-        return behavior;
-    }, [target, weight, deceleration, tolerance]);
+    return behavior;
 }
 
 // =============================================================================
@@ -130,11 +133,14 @@ export function usePursue(
 ): YUKA.PursuitBehavior {
     const { weight = 1 } = options;
 
-    return useMemo(() => {
-        const behavior = new YUKA.PursuitBehavior(evader);
+    const behavior = useMemo(() => new YUKA.PursuitBehavior(evader), []);
+
+    useEffect(() => {
         behavior.weight = weight;
-        return behavior;
-    }, [evader, weight]);
+        behavior.evader = evader;
+    }, [behavior, evader, weight]);
+
+    return behavior;
 }
 
 // =============================================================================
@@ -149,12 +155,15 @@ export interface UseEvadeOptions {
 export function useEvade(pursuer: YUKA.Vehicle, options: UseEvadeOptions = {}): YUKA.EvadeBehavior {
     const { weight = 1, panicDistance = 10 } = options;
 
-    return useMemo(() => {
-        const behavior = new YUKA.EvadeBehavior(pursuer);
+    const behavior = useMemo(() => new YUKA.EvadeBehavior(pursuer), []);
+
+    useEffect(() => {
         behavior.weight = weight;
         behavior.panicDistance = panicDistance;
-        return behavior;
-    }, [pursuer, weight, panicDistance]);
+        behavior.pursuer = pursuer;
+    }, [behavior, pursuer, weight, panicDistance]);
+
+    return behavior;
 }
 
 // =============================================================================
@@ -171,14 +180,16 @@ export interface UseWanderOptions {
 export function useWander(options: UseWanderOptions = {}): YUKA.WanderBehavior {
     const { weight = 1, radius = 1, distance = 5, jitter = 5 } = options;
 
-    return useMemo(() => {
-        const behavior = new YUKA.WanderBehavior();
+    const behavior = useMemo(() => new YUKA.WanderBehavior(), []);
+
+    useEffect(() => {
         behavior.weight = weight;
         behavior.radius = radius;
         behavior.distance = distance;
         behavior.jitter = jitter;
-        return behavior;
-    }, [weight, radius, distance, jitter]);
+    }, [behavior, weight, radius, distance, jitter]);
+
+    return behavior;
 }
 
 // =============================================================================
@@ -196,12 +207,15 @@ export function useFollowPath(
 ): YUKA.FollowPathBehavior {
     const { weight = 1, nextWaypointDistance = 1 } = options;
 
-    return useMemo(() => {
-        const behavior = new YUKA.FollowPathBehavior(path);
+    const behavior = useMemo(() => new YUKA.FollowPathBehavior(path), []);
+
+    useEffect(() => {
         behavior.weight = weight;
         behavior.nextWaypointDistance = nextWaypointDistance;
-        return behavior;
-    }, [path, weight, nextWaypointDistance]);
+        behavior.path = path;
+    }, [behavior, path, weight, nextWaypointDistance]);
+
+    return behavior;
 }
 
 // =============================================================================
@@ -331,18 +345,22 @@ export function useOffsetPursuit(
 ): YUKA.OffsetPursuitBehavior {
     const { weight = 1 } = options;
 
-    return useMemo(() => {
-        let yukaOffset: YUKA.Vector3;
-        if (offset instanceof YUKA.Vector3) {
-            yukaOffset = offset;
-        } else {
-            yukaOffset = threeToYukaVector3(offset);
-        }
+    const behavior = useMemo(() => {
+        const yukaOffset = offset instanceof YUKA.Vector3
+            ? offset
+            : threeToYukaVector3(offset);
+        return new YUKA.OffsetPursuitBehavior(leader, yukaOffset);
+    }, []);
 
-        const behavior = new YUKA.OffsetPursuitBehavior(leader, yukaOffset);
+    useEffect(() => {
         behavior.weight = weight;
-        return behavior;
-    }, [leader, offset, weight]);
+        behavior.leader = leader;
+        behavior.offset = offset instanceof YUKA.Vector3
+            ? offset
+            : threeToYukaVector3(offset);
+    }, [behavior, leader, offset, weight]);
+
+    return behavior;
 }
 
 // =============================================================================
@@ -360,11 +378,15 @@ export function useInterpose(
 ): YUKA.InterposeBehavior {
     const { weight = 1 } = options;
 
-    return useMemo(() => {
-        const behavior = new YUKA.InterposeBehavior(entity1, entity2);
+    const behavior = useMemo(() => new YUKA.InterposeBehavior(entity1, entity2), []);
+
+    useEffect(() => {
         behavior.weight = weight;
-        return behavior;
-    }, [entity1, entity2, weight]);
+        behavior.entity1 = entity1;
+        behavior.entity2 = entity2;
+    }, [behavior, entity1, entity2, weight]);
+
+    return behavior;
 }
 
 // =============================================================================

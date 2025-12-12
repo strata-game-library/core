@@ -244,10 +244,7 @@ export function calculateFocusDistance(
  * @param mesh Target mesh
  * @returns Distance from camera to mesh center
  */
-export function calculateFocusDistanceToMesh(
-    camera: THREE.Camera,
-    mesh: THREE.Object3D
-): number {
+export function calculateFocusDistanceToMesh(camera: THREE.Camera, mesh: THREE.Object3D): number {
     const meshWorldPos = new THREE.Vector3();
     mesh.getWorldPosition(meshWorldPos);
     return calculateFocusDistance(camera, meshWorldPos);
@@ -404,30 +401,73 @@ export function blendPostProcessingPresets(
         name: `${presetA.name} → ${presetB.name}`,
         description: `Blend between ${presetA.name} and ${presetB.name}`,
         mood: clampedT < 0.5 ? presetA.mood : presetB.mood,
-        bloom: presetA.bloom || presetB.bloom ? {
-            intensity: blend(presetA.bloom?.intensity, presetB.bloom?.intensity, 1),
-            luminanceThreshold: blend(presetA.bloom?.luminanceThreshold, presetB.bloom?.luminanceThreshold, 0.9),
-            luminanceSmoothing: blend(presetA.bloom?.luminanceSmoothing, presetB.bloom?.luminanceSmoothing, 0.025),
-            radius: blend(presetA.bloom?.radius, presetB.bloom?.radius, 0.85),
-        } : undefined,
-        vignette: presetA.vignette || presetB.vignette ? {
-            darkness: blend(presetA.vignette?.darkness, presetB.vignette?.darkness, 0.5),
-            offset: blend(presetA.vignette?.offset, presetB.vignette?.offset, 0.5),
-        } : undefined,
-        filmGrain: presetA.filmGrain || presetB.filmGrain ? {
-            intensity: blend(presetA.filmGrain?.intensity, presetB.filmGrain?.intensity, 0.1),
-        } : undefined,
-        colorGrading: presetA.colorGrading || presetB.colorGrading ? {
-            hue: blend(presetA.colorGrading?.hue, presetB.colorGrading?.hue, 0),
-            saturation: blend(presetA.colorGrading?.saturation, presetB.colorGrading?.saturation, 0),
-            brightness: blend(presetA.colorGrading?.brightness, presetB.colorGrading?.brightness, 0),
-        } : undefined,
-        chromaticAberration: presetA.chromaticAberration || presetB.chromaticAberration ? {
-            offset: {
-                x: blend(presetA.chromaticAberration?.offset?.x, presetB.chromaticAberration?.offset?.x, 0.002),
-                y: blend(presetA.chromaticAberration?.offset?.y, presetB.chromaticAberration?.offset?.y, 0.002),
-            },
-        } : undefined,
+        bloom:
+            presetA.bloom || presetB.bloom
+                ? {
+                      intensity: blend(presetA.bloom?.intensity, presetB.bloom?.intensity, 1),
+                      luminanceThreshold: blend(
+                          presetA.bloom?.luminanceThreshold,
+                          presetB.bloom?.luminanceThreshold,
+                          0.9
+                      ),
+                      luminanceSmoothing: blend(
+                          presetA.bloom?.luminanceSmoothing,
+                          presetB.bloom?.luminanceSmoothing,
+                          0.025
+                      ),
+                      radius: blend(presetA.bloom?.radius, presetB.bloom?.radius, 0.85),
+                  }
+                : undefined,
+        vignette:
+            presetA.vignette || presetB.vignette
+                ? {
+                      darkness: blend(presetA.vignette?.darkness, presetB.vignette?.darkness, 0.5),
+                      offset: blend(presetA.vignette?.offset, presetB.vignette?.offset, 0.5),
+                  }
+                : undefined,
+        filmGrain:
+            presetA.filmGrain || presetB.filmGrain
+                ? {
+                      intensity: blend(
+                          presetA.filmGrain?.intensity,
+                          presetB.filmGrain?.intensity,
+                          0.1
+                      ),
+                  }
+                : undefined,
+        colorGrading:
+            presetA.colorGrading || presetB.colorGrading
+                ? {
+                      hue: blend(presetA.colorGrading?.hue, presetB.colorGrading?.hue, 0),
+                      saturation: blend(
+                          presetA.colorGrading?.saturation,
+                          presetB.colorGrading?.saturation,
+                          0
+                      ),
+                      brightness: blend(
+                          presetA.colorGrading?.brightness,
+                          presetB.colorGrading?.brightness,
+                          0
+                      ),
+                  }
+                : undefined,
+        chromaticAberration:
+            presetA.chromaticAberration || presetB.chromaticAberration
+                ? {
+                      offset: {
+                          x: blend(
+                              presetA.chromaticAberration?.offset?.x,
+                              presetB.chromaticAberration?.offset?.x,
+                              0.002
+                          ),
+                          y: blend(
+                              presetA.chromaticAberration?.offset?.y,
+                              presetB.chromaticAberration?.offset?.y,
+                              0.002
+                          ),
+                      },
+                  }
+                : undefined,
     };
 }
 

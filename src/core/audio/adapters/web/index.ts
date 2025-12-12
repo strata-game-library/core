@@ -25,7 +25,7 @@ let unlockListenersAttached = false;
  * ```
  */
 export function isAudioContextUnlocked(): boolean {
-  return audioContextUnlocked;
+    return audioContextUnlocked;
 }
 
 /**
@@ -40,13 +40,13 @@ export function isAudioContextUnlocked(): boolean {
  * ```
  */
 export async function unlockAudioContext(): Promise<void> {
-  if (audioContextUnlocked) return;
+    if (audioContextUnlocked) return;
 
-  const ctx = Howler.ctx;
-  if (ctx && ctx.state === 'suspended') {
-    await ctx.resume();
-  }
-  audioContextUnlocked = true;
+    const ctx = Howler.ctx;
+    if (ctx && ctx.state === 'suspended') {
+        await ctx.resume();
+    }
+    audioContextUnlocked = true;
 }
 
 /**
@@ -59,20 +59,20 @@ export async function unlockAudioContext(): Promise<void> {
  * ```
  */
 export function setupAutoUnlock(): void {
-  if (unlockListenersAttached || typeof window === 'undefined') return;
+    if (unlockListenersAttached || typeof window === 'undefined') return;
 
-  const events = ['touchstart', 'touchend', 'click', 'keydown'];
-  const unlock = async () => {
-    await unlockAudioContext();
+    const events = ['touchstart', 'touchend', 'click', 'keydown'];
+    const unlock = async () => {
+        await unlockAudioContext();
+        for (const event of events) {
+            document.removeEventListener(event, unlock, true);
+        }
+    };
+
     for (const event of events) {
-      document.removeEventListener(event, unlock, true);
+        document.addEventListener(event, unlock, true);
     }
-  };
-
-  for (const event of events) {
-    document.addEventListener(event, unlock, true);
-  }
-  unlockListenersAttached = true;
+    unlockListenersAttached = true;
 }
 
 /**
@@ -89,7 +89,7 @@ export function setupAutoUnlock(): void {
  * ```
  */
 export function getAudioContext(): AudioContext | undefined {
-  return Howler.ctx ?? undefined;
+    return Howler.ctx ?? undefined;
 }
 
 /**
@@ -98,10 +98,10 @@ export function getAudioContext(): AudioContext | undefined {
  * @returns Promise that resolves when suspended
  */
 export async function suspendAudioContext(): Promise<void> {
-  const ctx = Howler.ctx;
-  if (ctx && ctx.state === 'running') {
-    await ctx.suspend();
-  }
+    const ctx = Howler.ctx;
+    if (ctx && ctx.state === 'running') {
+        await ctx.suspend();
+    }
 }
 
 /**
@@ -110,9 +110,9 @@ export async function suspendAudioContext(): Promise<void> {
  * @returns Promise that resolves when resumed
  */
 export async function resumeAudioContext(): Promise<void> {
-  const ctx = Howler.ctx;
-  if (ctx && ctx.state === 'suspended') {
-    await ctx.resume();
-    audioContextUnlocked = true;
-  }
+    const ctx = Howler.ctx;
+    if (ctx && ctx.state === 'suspended') {
+        await ctx.resume();
+        audioContextUnlocked = true;
+    }
 }

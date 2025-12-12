@@ -66,12 +66,7 @@ export type {
 } from './Camera';
 
 // Decals and Billboards
-export {
-    Decal,
-    Billboard,
-    AnimatedBillboard,
-    DecalPool,
-} from './Decals';
+export { Decal, Billboard, AnimatedBillboard, DecalPool } from './Decals';
 export type {
     DecalProps,
     DecalRef,
@@ -84,12 +79,7 @@ export type {
 } from './Decals';
 
 // LOD (Level of Detail)
-export {
-    LODMesh,
-    LODGroup,
-    Impostor,
-    LODVegetation,
-} from './LOD';
+export { LODMesh, LODGroup, Impostor, LODVegetation } from './LOD';
 export type {
     LODMeshProps,
     LODMeshRef,
@@ -102,12 +92,7 @@ export type {
 } from './LOD';
 
 // God Rays and Volumetric Lighting
-export {
-    GodRays,
-    LightShafts,
-    VolumetricSpotlight,
-    VolumetricPointLight,
-} from './GodRays';
+export { GodRays, LightShafts, VolumetricSpotlight, VolumetricPointLight } from './GodRays';
 export type {
     GodRaysProps,
     GodRaysRef,
@@ -118,13 +103,7 @@ export type {
 } from './GodRays';
 
 // Input Controls
-export {
-    Joystick3D,
-    GroundSwitch,
-    PressurePlate,
-    WallButton,
-    TriggerComposer,
-} from './Input';
+export { Joystick3D, GroundSwitch, PressurePlate, WallButton, TriggerComposer } from './Input';
 export type {
     InputControlRef,
     InputControlEvents,
@@ -204,13 +183,7 @@ export type {
 } from './Audio';
 
 // Physics
-export {
-    CharacterController,
-    VehicleBody,
-    Destructible,
-    Buoyancy,
-    Ragdoll,
-} from './Physics';
+export { CharacterController, VehicleBody, Destructible, Buoyancy, Ragdoll } from './Physics';
 export type {
     CharacterControllerProps,
     CharacterControllerRef,

@@ -1,6 +1,6 @@
 /**
  * Input Presets
- * 
+ *
  * Pre-configured input control setups for common use cases.
  */
 
@@ -42,7 +42,12 @@ export interface TriggerPreset extends InputPreset<TriggerComposerProps> {
     type: 'trigger';
 }
 
-export type InputPresetType = JoystickPreset | SwitchPreset | PlatePreset | ButtonPreset | TriggerPreset;
+export type InputPresetType =
+    | JoystickPreset
+    | SwitchPreset
+    | PlatePreset
+    | ButtonPreset
+    | TriggerPreset;
 
 export const WASD_JOYSTICK_PRESET: JoystickPreset = {
     type: 'joystick',
@@ -338,13 +343,16 @@ export const ALL_INPUT_PRESETS: InputPresetType[] = [
 ];
 
 export function getPresetByName(name: string): InputPresetType | undefined {
-    return ALL_INPUT_PRESETS.find(preset => preset.name === name);
+    return ALL_INPUT_PRESETS.find((preset) => preset.name === name);
 }
 
 export function getPresetsByType<T extends InputPresetType['type']>(
     type: T
 ): Extract<InputPresetType, { type: T }>[] {
-    return ALL_INPUT_PRESETS.filter(preset => preset.type === type) as Extract<InputPresetType, { type: T }>[];
+    return ALL_INPUT_PRESETS.filter((preset) => preset.type === type) as Extract<
+        InputPresetType,
+        { type: T }
+    >[];
 }
 
 export function createCustomJoystickPreset(

@@ -134,9 +134,7 @@ export const EffectStack: React.FC<EffectStackProps> = ({
     }
 
     if (preset.sepia) {
-        effects.push(
-            <Sepia key="sepia" intensity={preset.sepia.intensity ?? 1} />
-        );
+        effects.push(<Sepia key="sepia" intensity={preset.sepia.intensity ?? 1} />);
     }
 
     if (preset.filmGrain) {
@@ -231,11 +229,7 @@ export const CinematicEffects: React.FC<CinematicEffectsProps> = ({
 
     effects.push(<ToneMapping key="toneMap" mode={ToneMappingMode.ACES_FILMIC} />);
 
-    return (
-        <EffectComposer multisampling={multisampling}>
-            {effects}
-        </EffectComposer>
-    );
+    return <EffectComposer multisampling={multisampling}>{effects}</EffectComposer>;
 };
 
 /**
@@ -330,11 +324,7 @@ export const HorrorEffects: React.FC<HorrorEffectsProps> = ({
         );
     }
 
-    return (
-        <EffectComposer multisampling={multisampling}>
-            {effects}
-        </EffectComposer>
-    );
+    return <EffectComposer multisampling={multisampling}>{effects}</EffectComposer>;
 };
 
 /**
@@ -436,11 +426,7 @@ export const RealisticEffects: React.FC<RealisticEffectsProps> = ({
         <ToneMapping key="toneMap" mode={toneMappingMode} />
     );
 
-    return (
-        <EffectComposer multisampling={multisampling}>
-            {effects}
-        </EffectComposer>
-    );
+    return <EffectComposer multisampling={multisampling}>{effects}</EffectComposer>;
 };
 
 /**
@@ -485,11 +471,7 @@ export const VintageEffects: React.FC<VintageEffectsProps> = ({
         effects.push(<Noise key="noise" premultiply blendFunction={BlendFunction.SOFT_LIGHT} />);
     }
 
-    return (
-        <EffectComposer multisampling={multisampling}>
-            {effects}
-        </EffectComposer>
-    );
+    return <EffectComposer multisampling={multisampling}>{effects}</EffectComposer>;
 };
 
 /**
@@ -606,11 +588,7 @@ export const MotionBlurEffect: React.FC<MotionBlurEffectProps> = ({
 
     return (
         <EffectComposer multisampling={multisampling}>
-            <Bloom
-                intensity={intensity * 0.2}
-                luminanceThreshold={0.99}
-                mipmapBlur
-            />
+            <Bloom intensity={intensity * 0.2} luminanceThreshold={0.99} mipmapBlur />
         </EffectComposer>
     );
 };

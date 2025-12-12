@@ -22,23 +22,9 @@ interface EnvironmentConfig {
 
 type AudioSourceConfig = SpatialConfig;
 
-export type AudioPresetName =
-    | 'forest'
-    | 'cave'
-    | 'city'
-    | 'underwater'
-    | 'indoor'
-    | 'combat';
+export type AudioPresetName = 'forest' | 'cave' | 'city' | 'underwater' | 'indoor' | 'combat';
 
-export type SurfaceType =
-    | 'grass'
-    | 'dirt'
-    | 'stone'
-    | 'wood'
-    | 'metal'
-    | 'water'
-    | 'sand'
-    | 'snow';
+export type SurfaceType = 'grass' | 'dirt' | 'stone' | 'wood' | 'metal' | 'water' | 'sand' | 'snow';
 
 export interface AmbienceLayer {
     id: string;
@@ -109,7 +95,12 @@ export const audioPresets: Record<AudioPresetName, AudioPreset> = {
             lowpassFrequency: 8000,
         },
         ambience: [
-            { id: 'drips', volume: 0.5, loop: true, description: 'Water dripping from stalactites' },
+            {
+                id: 'drips',
+                volume: 0.5,
+                loop: true,
+                description: 'Water dripping from stalactites',
+            },
             { id: 'echo', volume: 0.3, loop: true, description: 'Distant echoes' },
             { id: 'rumble', volume: 0.2, loop: true, description: 'Deep ambient rumble' },
             { id: 'bats', volume: 0.1, loop: false, description: 'Occasional bat sounds' },

@@ -37,7 +37,10 @@ describe('createGuardPreset', () => {
 
     it('should create guard with custom detection radius', () => {
         const result = createGuardPreset({
-            patrolWaypoints: [[0, 0, 0], [5, 0, 0]],
+            patrolWaypoints: [
+                [0, 0, 0],
+                [5, 0, 0],
+            ],
             detectionRadius: 20,
         });
         expect(result.vehicle).toBeDefined();
@@ -45,7 +48,10 @@ describe('createGuardPreset', () => {
 
     it('should create guard with custom chase speed', () => {
         const result = createGuardPreset({
-            patrolWaypoints: [[0, 0, 0], [5, 0, 0]],
+            patrolWaypoints: [
+                [0, 0, 0],
+                [5, 0, 0],
+            ],
             chaseSpeed: 12,
         });
         expect(result.vehicle.maxSpeed).toBeLessThanOrEqual(12);
@@ -53,7 +59,10 @@ describe('createGuardPreset', () => {
 
     it('should create guard with custom patrol speed', () => {
         const result = createGuardPreset({
-            patrolWaypoints: [[0, 0, 0], [5, 0, 0]],
+            patrolWaypoints: [
+                [0, 0, 0],
+                [5, 0, 0],
+            ],
             patrolSpeed: 2,
         });
         expect(result.vehicle).toBeDefined();
@@ -61,21 +70,30 @@ describe('createGuardPreset', () => {
 
     it('should have follow path and seek behaviors', () => {
         const result = createGuardPreset({
-            patrolWaypoints: [[0, 0, 0], [5, 0, 0]],
+            patrolWaypoints: [
+                [0, 0, 0],
+                [5, 0, 0],
+            ],
         });
         expect(result.behaviors.length).toBe(2);
     });
 
     it('should have update function', () => {
         const result = createGuardPreset({
-            patrolWaypoints: [[0, 0, 0], [5, 0, 0]],
+            patrolWaypoints: [
+                [0, 0, 0],
+                [5, 0, 0],
+            ],
         });
         expect(typeof result.update).toBe('function');
     });
 
     it('should have state machine', () => {
         const result = createGuardPreset({
-            patrolWaypoints: [[0, 0, 0], [50, 0, 0]],
+            patrolWaypoints: [
+                [0, 0, 0],
+                [50, 0, 0],
+            ],
             detectionRadius: 15,
         });
         expect(result.stateMachine).toBeDefined();
@@ -226,17 +244,21 @@ describe('createFollowerPreset', () => {
 
     it('should update based on leader position', () => {
         const result = createFollowerPreset();
-        expect(() => result.update!(0.016, { 
-            leaderPosition: new YUKA.Vector3(10, 0, 0) 
-        })).not.toThrow();
+        expect(() =>
+            result.update!(0.016, {
+                leaderPosition: new YUKA.Vector3(10, 0, 0),
+            })
+        ).not.toThrow();
     });
 
     it('should update with leader rotation', () => {
         const result = createFollowerPreset();
-        expect(() => result.update!(0.016, { 
-            leaderPosition: new YUKA.Vector3(10, 0, 0),
-            leaderRotation: new YUKA.Quaternion(),
-        })).not.toThrow();
+        expect(() =>
+            result.update!(0.016, {
+                leaderPosition: new YUKA.Vector3(10, 0, 0),
+                leaderRotation: new YUKA.Quaternion(),
+            })
+        ).not.toThrow();
     });
 });
 

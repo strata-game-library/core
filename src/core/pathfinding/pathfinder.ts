@@ -9,13 +9,13 @@
 import { nba as createNbaPathfinder } from 'ngraph.path';
 import type { PathFinder as NPathFinder } from 'ngraph.path';
 import type {
-  NodeId,
-  NodeData,
-  EdgeData,
-  PathfinderConfig,
-  PathResult,
-  Position3D,
-  SmoothingOptions,
+    NodeId,
+    NodeData,
+    EdgeData,
+    PathfinderConfig,
+    PathResult,
+    Position3D,
+    SmoothingOptions,
 } from './types';
 import type { StrataGraphInstance } from './graph';
 import { calculateDistance } from './graph';
@@ -24,8 +24,8 @@ import { calculateDistance } from './graph';
  * Strata pathfinder instance.
  */
 export interface StrataPathfinderInstance {
-  readonly nativeFinder: NPathFinder<NodeData>;
-  find(fromId: NodeId, toId: NodeId): PathResult;
+    readonly nativeFinder: NPathFinder<NodeData>;
+    find(fromId: NodeId, toId: NodeId): PathResult;
 }
 
 /**
@@ -52,116 +52,112 @@ export interface StrataPathfinderInstance {
  * ```
  */
 export function createPathfinder(
-  graph: StrataGraphInstance<NodeData, EdgeData>,
-  config: PathfinderConfig = {}
+    graph: StrataGraphInstance<NodeData, EdgeData>,
+    config: PathfinderConfig = {}
 ): StrataPathfinderInstance {
-  const nativeFinder = createNbaPathfinder<NodeData, EdgeData>(graph.nativeGraph, {
-    oriented: config.oriented ?? false,
-    heuristic: config.heuristic
-      ? (fromNode, toNode) => config.heuristic!(fromNode.data, toNode.data)
-      : defaultHeuristic,
-    distance: config.distance
-      ? (fromNode, toNode, link) =>
-          config.distance!(fromNode.data, toNode.data, link.data)
-      : defaultDistance,
-    blocked: config.blocked
-      ? (node, fromNode) => config.blocked!(node.data, fromNode.data)
-      : undefined,
-  });
+    const nativeFinder = createNbaPathfinder<NodeData, EdgeData>(graph.nativeGraph, {
+        oriented: config.oriented ?? false,
+        heuristic: config.heuristic
+            ? (fromNode, toNode) => config.heuristic!(fromNode.data, toNode.data)
+            : defaultHeuristic,
+        distance: config.distance
+            ? (fromNode, toNode, link) => config.distance!(fromNode.data, toNode.data, link.data)
+            : defaultDistance,
+        blocked: config.blocked
+            ? (node, fromNode) => config.blocked!(node.data, fromNode.data)
+            : undefined,
+    });
 
-  return {
-    get nativeFinder() {
-      return nativeFinder;
-    },
+    return {
+        get nativeFinder() {
+            return nativeFinder;
+        },
 
-    find(fromId: NodeId, toId: NodeId): PathResult {
-      return findPathInternal(graph, nativeFinder, fromId, toId);
-    },
-  };
+        find(fromId: NodeId, toId: NodeId): PathResult {
+            return findPathInternal(graph, nativeFinder, fromId, toId);
+        },
+    };
 }
 
 /**
  * Default heuristic using Euclidean distance.
  */
-function defaultHeuristic(
-  fromNode: { data: NodeData },
-  toNode: { data: NodeData }
-): number {
-  const from = fromNode.data?.position;
-  const to = toNode.data?.position;
+function defaultHeuristic(fromNode: { data: NodeData }, toNode: { data: NodeData }): number {
+    const from = fromNode.data?.position;
+    const to = toNode.data?.position;
 
-  if (!from || !to) return 0;
-  return calculateDistance(from, to);
+    if (!from || !to) return 0;
+    return calculateDistance(from, to);
 }
 
 /**
  * Default distance function using edge weight.
  */
 function defaultDistance(
-  _fromNode: { data: NodeData },
-  _toNode: { data: NodeData },
-  link: { data: EdgeData }
+    _fromNode: { data: NodeData },
+    _toNode: { data: NodeData },
+    link: { data: EdgeData }
 ): number {
-  return link.data?.weight ?? 1;
+    return link.data?.weight ?? 1;
 }
 
 /**
  * Internal path finding implementation.
  */
 function findPathInternal(
-  graph: StrataGraphInstance<NodeData, EdgeData>,
-  finder: NPathFinder<NodeData>,
-  fromId: NodeId,
-  toId: NodeId
+    graph: StrataGraphInstance<NodeData, EdgeData>,
+    finder: NPathFinder<NodeData>,
+    fromId: NodeId,
+    toId: NodeId
 ): PathResult {
-  const emptyResult: PathResult = {
-    found: false,
-    path: [],
-    positions: [],
-    cost: 0,
-    nodeCount: 0,
-  };
+    const emptyResult: PathResult = {
+        found: false,
+        path: [],
+        positions: [],
+        cost: 0,
+        nodeCount: 0,
+    };
 
-  if (!graph.hasNode(fromId) || !graph.hasNode(toId)) {
-    return emptyResult;
-  }
-
-  const nodePath = finder.find(fromId, toId);
-
-  if (!nodePath || nodePath.length === 0) {
-    return emptyResult;
-  }
-
-  const path: NodeId[] = [];
-  const positions: Position3D[] = [];
-  let totalCost = 0;
-
-  for (let i = 0; i < nodePath.length; i++) {
-    const node = nodePath[i];
-    path.push(node.id);
-
-    if (node.data?.position) {
-      positions.push({ ...node.data.position });
+    if (!graph.hasNode(fromId) || !graph.hasNode(toId)) {
+        return emptyResult;
     }
 
-    if (i > 0) {
-      const prevNode = nodePath[i - 1];
-      if (prevNode.data?.position && node.data?.position) {
-        totalCost += calculateDistance(prevNode.data.position, node.data.position);
-      }
+    const nodePath = finder.find(fromId, toId);
+
+    if (!nodePath || nodePath.length === 0) {
+        return emptyResult;
     }
-  }
 
-  path.reverse();
-  positions.reverse();
+    const path: NodeId[] = [];
+    const positions: Position3D[] = [];
+    let totalCost = 0;
 
-  return {
-    found: true,
-    path,
-    positions,
-    cost: totalCost,
-    nodeCount: path.length,
-  };
+    for (let i = 0; i < nodePath.length; i++) {
+        const node = nodePath[i];
+        path.push(node.id);
+
+        if (node.data?.position) {
+            positions.push({ ...node.data.position });
+        }
+
+        if (i > 0) {
+            const prevNode = nodePath[i - 1];
+            if (prevNode.data?.position && node.data?.position) {
+                totalCost += calculateDistance(prevNode.data.position, node.data.position);
+            }
+        }
+    }
+
+    path.reverse();
+    positions.reverse();
+
+    return {
+        found: true,
+        path,
+        positions,
+        cost: totalCost,
+        nodeCount: path.length,
+    };
 }
 
 /**
@@ -174,12 +170,12 @@ function findPathInternal(
  * ```
  */
 export function findPath(
-  pathfinder: StrataPathfinderInstance,
-  _graph: StrataGraphInstance<NodeData, EdgeData>,
-  fromId: NodeId,
-  toId: NodeId
+    pathfinder: StrataPathfinderInstance,
+    _graph: StrataGraphInstance<NodeData, EdgeData>,
+    fromId: NodeId,
+    toId: NodeId
 ): PathResult {
-  return pathfinder.find(fromId, toId);
+    return pathfinder.find(fromId, toId);
 }
 
 /**
@@ -191,17 +187,17 @@ export function findPath(
  * ```
  */
 export function findPathDijkstra(
-  graph: StrataGraphInstance<NodeData, EdgeData>,
-  fromId: NodeId,
-  toId: NodeId
+    graph: StrataGraphInstance<NodeData, EdgeData>,
+    fromId: NodeId,
+    toId: NodeId
 ): PathResult {
-  const finder = createNbaPathfinder<NodeData, EdgeData>(graph.nativeGraph, {
-    oriented: false,
-    heuristic: () => 0,
-    distance: defaultDistance,
-  });
+    const finder = createNbaPathfinder<NodeData, EdgeData>(graph.nativeGraph, {
+        oriented: false,
+        heuristic: () => 0,
+        distance: defaultDistance,
+    });
 
-  return findPathInternal(graph, finder, fromId, toId);
+    return findPathInternal(graph, finder, fromId, toId);
 }
 
 /**
@@ -212,57 +208,54 @@ export function findPathDijkstra(
  * const smoothed = smoothPath(result.positions, { iterations: 2 });
  * ```
  */
-export function smoothPath(
-  positions: Position3D[],
-  options: SmoothingOptions = {}
-): Position3D[] {
-  const { iterations = 1, strength = 0.25, preserveEndpoints = true } = options;
+export function smoothPath(positions: Position3D[], options: SmoothingOptions = {}): Position3D[] {
+    const { iterations = 1, strength = 0.25, preserveEndpoints = true } = options;
 
-  if (positions.length < 3) {
-    return [...positions];
-  }
-
-  let result = positions.map((p) => ({ ...p }));
-
-  for (let iter = 0; iter < iterations; iter++) {
-    const smoothed: Position3D[] = [];
-
-    if (preserveEndpoints) {
-      smoothed.push({ ...result[0] });
+    if (positions.length < 3) {
+        return [...positions];
     }
 
-    for (let i = 0; i < result.length - 1; i++) {
-      const p0 = result[i];
-      const p1 = result[i + 1];
+    let result = positions.map((p) => ({ ...p }));
 
-      const q: Position3D = {
-        x: p0.x + strength * (p1.x - p0.x),
-        y: p0.y + strength * (p1.y - p0.y),
-        z: p0.z + strength * (p1.z - p0.z),
-      };
+    for (let iter = 0; iter < iterations; iter++) {
+        const smoothed: Position3D[] = [];
 
-      const r: Position3D = {
-        x: p0.x + (1 - strength) * (p1.x - p0.x),
-        y: p0.y + (1 - strength) * (p1.y - p0.y),
-        z: p0.z + (1 - strength) * (p1.z - p0.z),
-      };
+        if (preserveEndpoints) {
+            smoothed.push({ ...result[0] });
+        }
 
-      if (i > 0 || !preserveEndpoints) {
-        smoothed.push(q);
-      }
-      if (i < result.length - 2 || !preserveEndpoints) {
-        smoothed.push(r);
-      }
+        for (let i = 0; i < result.length - 1; i++) {
+            const p0 = result[i];
+            const p1 = result[i + 1];
+
+            const q: Position3D = {
+                x: p0.x + strength * (p1.x - p0.x),
+                y: p0.y + strength * (p1.y - p0.y),
+                z: p0.z + strength * (p1.z - p0.z),
+            };
+
+            const r: Position3D = {
+                x: p0.x + (1 - strength) * (p1.x - p0.x),
+                y: p0.y + (1 - strength) * (p1.y - p0.y),
+                z: p0.z + (1 - strength) * (p1.z - p0.z),
+            };
+
+            if (i > 0 || !preserveEndpoints) {
+                smoothed.push(q);
+            }
+            if (i < result.length - 2 || !preserveEndpoints) {
+                smoothed.push(r);
+            }
+        }
+
+        if (preserveEndpoints) {
+            smoothed.push({ ...result[result.length - 1] });
+        }
+
+        result = smoothed;
     }
 
-    if (preserveEndpoints) {
-      smoothed.push({ ...result[result.length - 1] });
-    }
-
-    result = smoothed;
-  }
-
-  return result;
+    return result;
 }
 
 /**
@@ -273,73 +266,70 @@ export function smoothPath(
  * const simplified = simplifyPath(result.positions, 0.5);
  * ```
  */
-export function simplifyPath(
-  positions: Position3D[],
-  epsilon: number = 0.1
-): Position3D[] {
-  if (positions.length < 3) {
-    return [...positions];
-  }
+export function simplifyPath(positions: Position3D[], epsilon: number = 0.1): Position3D[] {
+    if (positions.length < 3) {
+        return [...positions];
+    }
 
-  return rdpSimplify(positions, epsilon);
+    return rdpSimplify(positions, epsilon);
 }
 
 /**
  * Ramer-Douglas-Peucker simplification algorithm.
  */
 function rdpSimplify(points: Position3D[], epsilon: number): Position3D[] {
-  let maxDist = 0;
-  let maxIndex = 0;
+    let maxDist = 0;
+    let maxIndex = 0;
 
-  const first = points[0];
-  const last = points[points.length - 1];
+    const first = points[0];
+    const last = points[points.length - 1];
 
-  for (let i = 1; i < points.length - 1; i++) {
-    const dist = perpendicularDistance(points[i], first, last);
-    if (dist > maxDist) {
-      maxDist = dist;
-      maxIndex = i;
+    for (let i = 1; i < points.length - 1; i++) {
+        const dist = perpendicularDistance(points[i], first, last);
+        if (dist > maxDist) {
+            maxDist = dist;
+            maxIndex = i;
+        }
     }
-  }
 
-  if (maxDist > epsilon) {
-    const left = rdpSimplify(points.slice(0, maxIndex + 1), epsilon);
-    const right = rdpSimplify(points.slice(maxIndex), epsilon);
-    return [...left.slice(0, -1), ...right];
-  }
+    if (maxDist > epsilon) {
+        const left = rdpSimplify(points.slice(0, maxIndex + 1), epsilon);
+        const right = rdpSimplify(points.slice(maxIndex), epsilon);
+        return [...left.slice(0, -1), ...right];
+    }
 
-  return [first, last];
+    return [first, last];
 }
 
 /**
  * Calculates perpendicular distance from point to line.
  */
 function perpendicularDistance(
-  point: Position3D,
-  lineStart: Position3D,
-  lineEnd: Position3D
+    point: Position3D,
+    lineStart: Position3D,
+    lineEnd: Position3D
 ): number {
-  const dx = lineEnd.x - lineStart.x;
-  const dy = lineEnd.y - lineStart.y;
-  const dz = lineEnd.z - lineStart.z;
+    const dx = lineEnd.x - lineStart.x;
+    const dy = lineEnd.y - lineStart.y;
+    const dz = lineEnd.z - lineStart.z;
 
-  const lineLen = Math.sqrt(dx * dx + dy * dy + dz * dz);
+    const lineLen = Math.sqrt(dx * dx + dy * dy + dz * dz);
 
-  if (lineLen === 0) {
-    return calculateDistance(point, lineStart);
-  }
+    if (lineLen === 0) {
+        return calculateDistance(point, lineStart);
+    }
 
-  const px = point.x - lineStart.x;
-  const py = point.y - lineStart.y;
-  const pz = point.z - lineStart.z;
+    const px = point.x - lineStart.x;
+    const py = point.y - lineStart.y;
+    const pz = point.z - lineStart.z;
 
-  const crossX = py * dz - pz * dy;
-  const crossY = pz * dx - px * dz;
-  const crossZ = px * dy - py * dx;
+    const crossX = py * dz - pz * dy;
+    const crossY = pz * dx - px * dz;
+    const crossZ = px * dy - py * dx;
 
-  const crossLen = Math.sqrt(crossX * crossX + crossY * crossY + crossZ * crossZ);
+    const crossLen = Math.sqrt(crossX * crossX + crossY * crossY + crossZ * crossZ);
 
-  return crossLen / lineLen;
+    return crossLen / lineLen;
 }
 
 /**
@@ -351,23 +341,23 @@ function perpendicularDistance(
  * ```
  */
 export function findClosestNode(
-  graph: StrataGraphInstance<NodeData, EdgeData>,
-  position: Position3D
+    graph: StrataGraphInstance<NodeData, EdgeData>,
+    position: Position3D
 ): NodeId | undefined {
-  let closestId: NodeId | undefined;
-  let closestDist = Infinity;
+    let closestId: NodeId | undefined;
+    let closestDist = Infinity;
 
-  graph.forEachNode((node) => {
-    if (node.data?.position) {
-      const dist = calculateDistance(position, node.data.position);
-      if (dist < closestDist) {
-        closestDist = dist;
-        closestId = node.id;
-      }
-    }
-  });
+    graph.forEachNode((node) => {
+        if (node.data?.position) {
+            const dist = calculateDistance(position, node.data.position);
+            if (dist < closestDist) {
+                closestDist = dist;
+                closestId = node.id;
+            }
+        }
+    });
 
-  return closestId;
+    return closestId;
 }
 
 export type { NPathFinder };

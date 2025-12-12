@@ -11,10 +11,10 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
 import type { AnimationAction } from 'three';
 import type {
-  AnimationBlendReturn,
-  BlendWeights,
-  BlendTreeConfig,
-  UseAnimationBlendOptions,
+    AnimationBlendReturn,
+    BlendWeights,
+    BlendTreeConfig,
+    UseAnimationBlendOptions,
 } from './types';
 import { calculateBlendWeights, smoothStep } from './factory';
 
@@ -57,87 +57,87 @@ import { calculateBlendWeights, smoothStep } from './factory';
  * ```
  */
 export function useAnimationBlend(
-  blendTree: BlendTreeConfig,
-  options: UseAnimationBlendOptions = {}
+    blendTree: BlendTreeConfig,
+    options: UseAnimationBlendOptions = {}
 ): AnimationBlendReturn {
-  const { defaultDuration = 0.2, easing = smoothStep } = options;
+    const { defaultDuration = 0.2, easing = smoothStep } = options;
 
-  const [parameters, setParameters] = useState<Record<string, number>>({
-    [blendTree.parameter]: 0,
-  });
-  const [weights, setWeights] = useState<BlendWeights>({
-    weights: {},
-    hasActiveAnimations: false,
-  });
-  const [targetAnimation, setTargetAnimation] = useState<string | null>(null);
-  const blendProgressRef = useRef(0);
-  const blendDurationRef = useRef(0);
-  const previousWeightsRef = useRef<Record<string, number>>({});
+    const [parameters, setParameters] = useState<Record<string, number>>({
+        [blendTree.parameter]: 0,
+    });
+    const [weights, setWeights] = useState<BlendWeights>({
+        weights: {},
+        hasActiveAnimations: false,
+    });
+    const [targetAnimation, setTargetAnimation] = useState<string | null>(null);
+    const blendProgressRef = useRef(0);
+    const blendDurationRef = useRef(0);
+    const previousWeightsRef = useRef<Record<string, number>>({});
 
-  const updateWeights = useCallback(() => {
-    const paramValue = parameters[blendTree.parameter] ?? 0;
-    const newWeights = calculateBlendWeights(blendTree, paramValue);
-    setWeights(newWeights);
-    previousWeightsRef.current = newWeights.weights;
-  }, [blendTree, parameters]);
+    const updateWeights = useCallback(() => {
+        const paramValue = parameters[blendTree.parameter] ?? 0;
+        const newWeights = calculateBlendWeights(blendTree, paramValue);
+        setWeights(newWeights);
+        previousWeightsRef.current = newWeights.weights;
+    }, [blendTree, parameters]);
 
-  useFrame((_, delta) => {
-    if (targetAnimation && blendDurationRef.current > 0) {
-      blendProgressRef.current += delta / blendDurationRef.current;
+    useFrame((_, delta) => {
+        if (targetAnimation && blendDurationRef.current > 0) {
+            blendProgressRef.current += delta / blendDurationRef.current;
 
-      if (blendProgressRef.current >= 1) {
-        blendProgressRef.current = 1;
-        setTargetAnimation(null);
-        blendDurationRef.current = 0;
-      }
+            if (blendProgressRef.current >= 1) {
+                blendProgressRef.current = 1;
+                setTargetAnimation(null);
+                blendDurationRef.current = 0;
+            }
 
-      const easedProgress = easing(blendProgressRef.current);
-      const newWeights: Record<string, number> = {};
+            const easedProgress = easing(blendProgressRef.current);
+            const newWeights: Record<string, number> = {};
 
-      for (const [name, prevWeight] of Object.entries(previousWeightsRef.current)) {
-        const targetWeight = name === targetAnimation ? 1 : 0;
-        newWeights[name] = prevWeight + (targetWeight - prevWeight) * easedProgress;
-      }
+            for (const [name, prevWeight] of Object.entries(previousWeightsRef.current)) {
+                const targetWeight = name === targetAnimation ? 1 : 0;
+                newWeights[name] = prevWeight + (targetWeight - prevWeight) * easedProgress;
+            }
 
-      if (!(targetAnimation in newWeights)) {
-        newWeights[targetAnimation] = easedProgress;
-      }
+            if (!(targetAnimation in newWeights)) {
+                newWeights[targetAnimation] = easedProgress;
+            }
 
-      setWeights({
-        weights: newWeights,
-        hasActiveAnimations: Object.values(newWeights).some((w) => w > 0),
-      });
-    }
-  });
+            setWeights({
+                weights: newWeights,
+                hasActiveAnimations: Object.values(newWeights).some((w) => w > 0),
+            });
+        }
+    });
 
-  const blendTo = useCallback(
-    (animation: string, duration?: number) => {
-      previousWeightsRef.current = { ...weights.weights };
-      blendProgressRef.current = 0;
-      blendDurationRef.current = duration ?? defaultDuration;
-      setTargetAnimation(animation);
-    },
-    [weights.weights, defaultDuration]
-  );
+    const blendTo = useCallback(
+        (animation: string, duration?: number) => {
+            previousWeightsRef.current = { ...weights.weights };
+            blendProgressRef.current = 0;
+            blendDurationRef.current = duration ?? defaultDuration;
+            setTargetAnimation(animation);
+        },
+        [weights.weights, defaultDuration]
+    );
 
-  const setParameter = useCallback((name: string, value: number) => {
-    setParameters((prev) => ({ ...prev, [name]: value }));
-  }, []);
+    const setParameter = useCallback((name: string, value: number) => {
+        setParameters((prev) => ({ ...prev, [name]: value }));
+    }, []);
 
-  const getParameter = useCallback(
-    (name: string): number => {
-      return parameters[name] ?? 0;
-    },
-    [parameters]
-  );
+    const getParameter = useCallback(
+        (name: string): number => {
+            return parameters[name] ?? 0;
+        },
+        [parameters]
+    );
 
-  return {
-    weights,
-    blendTo,
-    setParameter,
-    getParameter,
-    updateWeights,
-  };
+    return {
+        weights,
+        blendTo,
+        setParameter,
+        getParameter,
+        updateWeights,
+    };
 }
 
 /**
@@ -162,23 +162,23 @@ export function useAnimationBlend(
  * ```
  */
 export function useSyncAnimationActions(
-  actions: Record<string, AnimationAction | null>,
-  weights: BlendWeights
+    actions: Record<string, AnimationAction | null>,
+    weights: BlendWeights
 ): void {
-  useEffect(() => {
-    for (const [name, weight] of Object.entries(weights.weights)) {
-      const action = actions[name];
-      if (action) {
-        if (weight > 0 && !action.isRunning()) {
-          action.play();
+    useEffect(() => {
+        for (const [name, weight] of Object.entries(weights.weights)) {
+            const action = actions[name];
+            if (action) {
+                if (weight > 0 && !action.isRunning()) {
+                    action.play();
+                }
+                action.setEffectiveWeight(weight);
+                if (weight === 0 && action.isRunning()) {
+                    action.stop();
+                }
+            }
         }
-        action.setEffectiveWeight(weight);
-        if (weight === 0 && action.isRunning()) {
-          action.stop();
-        }
-      }
-    }
-  }, [actions, weights.weights]);
+    }, [actions, weights.weights]);
 }
 
 /**
@@ -207,38 +207,38 @@ export function useSyncAnimationActions(
  * ```
  */
 export function useCrossFade(
-  fromAction: AnimationAction | null,
-  toAction: AnimationAction | null,
-  duration: number
+    fromAction: AnimationAction | null,
+    toAction: AnimationAction | null,
+    duration: number
 ): void {
-  const progressRef = useRef(0);
-  const isTransitioningRef = useRef(false);
+    const progressRef = useRef(0);
+    const isTransitioningRef = useRef(false);
 
-  useEffect(() => {
-    if (duration > 0 && fromAction && toAction) {
-      isTransitioningRef.current = true;
-      progressRef.current = 0;
+    useEffect(() => {
+        if (duration > 0 && fromAction && toAction) {
+            isTransitioningRef.current = true;
+            progressRef.current = 0;
 
-      if (!toAction.isRunning()) {
-        toAction.reset();
-        toAction.play();
-      }
-    }
-  }, [fromAction, toAction, duration]);
+            if (!toAction.isRunning()) {
+                toAction.reset();
+                toAction.play();
+            }
+        }
+    }, [fromAction, toAction, duration]);
 
-  useFrame((_, delta) => {
-    if (isTransitioningRef.current && fromAction && toAction && duration > 0) {
-      progressRef.current += delta / duration;
+    useFrame((_, delta) => {
+        if (isTransitioningRef.current && fromAction && toAction && duration > 0) {
+            progressRef.current += delta / duration;
 
-      if (progressRef.current >= 1) {
-        progressRef.current = 1;
-        isTransitioningRef.current = false;
-        fromAction.stop();
-      }
+            if (progressRef.current >= 1) {
+                progressRef.current = 1;
+                isTransitioningRef.current = false;
+                fromAction.stop();
+            }
 
-      const eased = smoothStep(progressRef.current);
-      fromAction.setEffectiveWeight(1 - eased);
-      toAction.setEffectiveWeight(eased);
-    }
-  });
+            const eased = smoothStep(progressRef.current);
+            fromAction.setEffectiveWeight(1 - eased);
+            toAction.setEffectiveWeight(eased);
+        }
+    });
 }

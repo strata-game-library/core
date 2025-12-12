@@ -146,10 +146,7 @@ export interface UseEvadeOptions {
     panicDistance?: number;
 }
 
-export function useEvade(
-    pursuer: YUKA.Vehicle,
-    options: UseEvadeOptions = {}
-): YUKA.EvadeBehavior {
+export function useEvade(pursuer: YUKA.Vehicle, options: UseEvadeOptions = {}): YUKA.EvadeBehavior {
     const { weight = 1, panicDistance = 10 } = options;
 
     return useMemo(() => {
@@ -365,6 +362,4 @@ export function useInterpose(
 // EXPORTS
 // =============================================================================
 
-export type {
-    YUKA,
-};
+export type { YUKA };

@@ -12,10 +12,10 @@ import { useRef, useEffect, useState, useCallback } from 'react';
 import type { PerformanceStats, StatsConfig } from './types';
 
 const DEFAULT_CONFIG: Required<StatsConfig> = {
-  updateInterval: 100,
-  trackMemory: true,
-  trackWebGL: true,
-  maxSamples: 60,
+    updateInterval: 100,
+    trackMemory: true,
+    trackWebGL: true,
+    maxSamples: 60,
 };
 
 /**
@@ -45,94 +45,93 @@ const DEFAULT_CONFIG: Required<StatsConfig> = {
  * ```
  */
 export function useStats(config: StatsConfig = {}): PerformanceStats {
-  const mergedConfig = { ...DEFAULT_CONFIG, ...config };
-  const frameTimesRef = useRef<number[]>([]);
-  const lastFrameTimeRef = useRef<number>(performance.now());
-  const rafIdRef = useRef<number | null>(null);
+    const mergedConfig = { ...DEFAULT_CONFIG, ...config };
+    const frameTimesRef = useRef<number[]>([]);
+    const lastFrameTimeRef = useRef<number>(performance.now());
+    const rafIdRef = useRef<number | null>(null);
 
-  const [stats, setStats] = useState<PerformanceStats>(() => ({
-    fps: 60,
-    frameTime: 16.67,
-    memory: undefined,
-    drawCalls: undefined,
-    triangles: undefined,
-    textures: undefined,
-    geometries: undefined,
-    timestamp: Date.now(),
-  }));
+    const [stats, setStats] = useState<PerformanceStats>(() => ({
+        fps: 60,
+        frameTime: 16.67,
+        memory: undefined,
+        drawCalls: undefined,
+        triangles: undefined,
+        textures: undefined,
+        geometries: undefined,
+        timestamp: Date.now(),
+    }));
 
-  const updateStats = useCallback(() => {
-    const now = performance.now();
-    const frameTime = now - lastFrameTimeRef.current;
-    lastFrameTimeRef.current = now;
+    const updateStats = useCallback(() => {
+        const now = performance.now();
+        const frameTime = now - lastFrameTimeRef.current;
+        lastFrameTimeRef.current = now;
 
-    frameTimesRef.current.push(frameTime);
-    if (frameTimesRef.current.length > mergedConfig.maxSamples) {
-      frameTimesRef.current.shift();
-    }
-
-    const avgFrameTime =
-      frameTimesRef.current.reduce((a, b) => a + b, 0) /
-      frameTimesRef.current.length;
-    const fps = 1000 / avgFrameTime;
-
-    let memory: PerformanceStats['memory'];
-    if (
-      mergedConfig.trackMemory &&
-      typeof performance !== 'undefined' &&
-      'memory' in performance
-    ) {
-      const perfMemory = (
-        performance as Performance & {
-          memory?: {
-            usedJSHeapSize: number;
-            totalJSHeapSize: number;
-            jsHeapSizeLimit: number;
-          };
+        frameTimesRef.current.push(frameTime);
+        if (frameTimesRef.current.length > mergedConfig.maxSamples) {
+            frameTimesRef.current.shift();
         }
-      ).memory;
-      if (perfMemory) {
-        memory = {
-          usedJSHeapSize: perfMemory.usedJSHeapSize,
-          totalJSHeapSize: perfMemory.totalJSHeapSize,
-          jsHeapSizeLimit: perfMemory.jsHeapSizeLimit,
+
+        const avgFrameTime =
+            frameTimesRef.current.reduce((a, b) => a + b, 0) / frameTimesRef.current.length;
+        const fps = 1000 / avgFrameTime;
+
+        let memory: PerformanceStats['memory'];
+        if (
+            mergedConfig.trackMemory &&
+            typeof performance !== 'undefined' &&
+            'memory' in performance
+        ) {
+            const perfMemory = (
+                performance as Performance & {
+                    memory?: {
+                        usedJSHeapSize: number;
+                        totalJSHeapSize: number;
+                        jsHeapSizeLimit: number;
+                    };
+                }
+            ).memory;
+            if (perfMemory) {
+                memory = {
+                    usedJSHeapSize: perfMemory.usedJSHeapSize,
+                    totalJSHeapSize: perfMemory.totalJSHeapSize,
+                    jsHeapSizeLimit: perfMemory.jsHeapSizeLimit,
+                };
+            }
+        }
+
+        setStats({
+            fps,
+            frameTime: avgFrameTime,
+            memory,
+            drawCalls: undefined,
+            triangles: undefined,
+            textures: undefined,
+            geometries: undefined,
+            timestamp: Date.now(),
+        });
+    }, [mergedConfig.maxSamples, mergedConfig.trackMemory]);
+
+    useEffect(() => {
+        let lastUpdate = 0;
+
+        const loop = (time: number) => {
+            if (time - lastUpdate >= mergedConfig.updateInterval) {
+                updateStats();
+                lastUpdate = time;
+            }
+            rafIdRef.current = requestAnimationFrame(loop);
         };
-      }
-    }
 
-    setStats({
-      fps,
-      frameTime: avgFrameTime,
-      memory,
-      drawCalls: undefined,
-      triangles: undefined,
-      textures: undefined,
-      geometries: undefined,
-      timestamp: Date.now(),
-    });
-  }, [mergedConfig.maxSamples, mergedConfig.trackMemory]);
+        rafIdRef.current = requestAnimationFrame(loop);
 
-  useEffect(() => {
-    let lastUpdate = 0;
+        return () => {
+            if (rafIdRef.current !== null) {
+                cancelAnimationFrame(rafIdRef.current);
+            }
+        };
+    }, [mergedConfig.updateInterval, updateStats]);
 
-    const loop = (time: number) => {
-      if (time - lastUpdate >= mergedConfig.updateInterval) {
-        updateStats();
-        lastUpdate = time;
-      }
-      rafIdRef.current = requestAnimationFrame(loop);
-    };
-
-    rafIdRef.current = requestAnimationFrame(loop);
-
-    return () => {
-      if (rafIdRef.current !== null) {
-        cancelAnimationFrame(rafIdRef.current);
-      }
-    };
-  }, [mergedConfig.updateInterval, updateStats]);
-
-  return stats;
+    return stats;
 }
 
 /**
@@ -157,40 +156,38 @@ export function useStats(config: StatsConfig = {}): PerformanceStats {
  * ```
  */
 export function formatStats(
-  stats: PerformanceStats,
-  options: FormatStatsOptions = {}
+    stats: PerformanceStats,
+    options: FormatStatsOptions = {}
 ): FormattedStats {
-  const { precision = 1, includeUnits = true } = options;
+    const { precision = 1, includeUnits = true } = options;
 
-  const formatNumber = (n: number, unit?: string): string => {
-    const formatted = n.toFixed(precision);
-    return includeUnits && unit ? `${formatted} ${unit}` : formatted;
-  };
+    const formatNumber = (n: number, unit?: string): string => {
+        const formatted = n.toFixed(precision);
+        return includeUnits && unit ? `${formatted} ${unit}` : formatted;
+    };
 
-  const formatBytes = (bytes: number): string => {
-    const mb = bytes / 1024 / 1024;
-    return formatNumber(mb, 'MB');
-  };
+    const formatBytes = (bytes: number): string => {
+        const mb = bytes / 1024 / 1024;
+        return formatNumber(mb, 'MB');
+    };
 
-  return {
-    fps: formatNumber(stats.fps, 'FPS'),
-    frameTime: formatNumber(stats.frameTime, 'ms'),
-    memory: stats.memory
-      ? {
-          used: formatBytes(stats.memory.usedJSHeapSize),
-          total: formatBytes(stats.memory.totalJSHeapSize),
-          limit: formatBytes(stats.memory.jsHeapSizeLimit),
-          percentage: `${((stats.memory.usedJSHeapSize / stats.memory.jsHeapSizeLimit) * 100).toFixed(1)}%`,
-        }
-      : undefined,
-    drawCalls: stats.drawCalls?.toString(),
-    triangles: stats.triangles
-      ? formatTriangles(stats.triangles, precision)
-      : undefined,
-    textures: stats.textures?.toString(),
-    geometries: stats.geometries?.toString(),
-    timestamp: new Date(stats.timestamp).toISOString(),
-  };
+    return {
+        fps: formatNumber(stats.fps, 'FPS'),
+        frameTime: formatNumber(stats.frameTime, 'ms'),
+        memory: stats.memory
+            ? {
+                  used: formatBytes(stats.memory.usedJSHeapSize),
+                  total: formatBytes(stats.memory.totalJSHeapSize),
+                  limit: formatBytes(stats.memory.jsHeapSizeLimit),
+                  percentage: `${((stats.memory.usedJSHeapSize / stats.memory.jsHeapSizeLimit) * 100).toFixed(1)}%`,
+              }
+            : undefined,
+        drawCalls: stats.drawCalls?.toString(),
+        triangles: stats.triangles ? formatTriangles(stats.triangles, precision) : undefined,
+        textures: stats.textures?.toString(),
+        geometries: stats.geometries?.toString(),
+        timestamp: new Date(stats.timestamp).toISOString(),
+    };
 }
 
 /**
@@ -199,10 +196,10 @@ export function formatStats(
  * @public
  */
 export interface FormatStatsOptions {
-  /** Decimal precision for numbers */
-  precision?: number;
-  /** Whether to include units in output */
-  includeUnits?: boolean;
+    /** Decimal precision for numbers */
+    precision?: number;
+    /** Whether to include units in output */
+    includeUnits?: boolean;
 }
 
 /**
@@ -211,19 +208,19 @@ export interface FormatStatsOptions {
  * @public
  */
 export interface FormattedStats {
-  fps: string;
-  frameTime: string;
-  memory?: {
-    used: string;
-    total: string;
-    limit: string;
-    percentage: string;
-  };
-  drawCalls?: string;
-  triangles?: string;
-  textures?: string;
-  geometries?: string;
-  timestamp: string;
+    fps: string;
+    frameTime: string;
+    memory?: {
+        used: string;
+        total: string;
+        limit: string;
+        percentage: string;
+    };
+    drawCalls?: string;
+    triangles?: string;
+    textures?: string;
+    geometries?: string;
+    timestamp: string;
 }
 
 /**
@@ -234,13 +231,13 @@ export interface FormattedStats {
  * @returns Formatted string
  */
 function formatTriangles(count: number, precision: number): string {
-  if (count >= 1_000_000) {
-    return `${(count / 1_000_000).toFixed(precision)}M`;
-  }
-  if (count >= 1_000) {
-    return `${(count / 1_000).toFixed(precision)}K`;
-  }
-  return count.toString();
+    if (count >= 1_000_000) {
+        return `${(count / 1_000_000).toFixed(precision)}M`;
+    }
+    if (count >= 1_000) {
+        return `${(count / 1_000).toFixed(precision)}K`;
+    }
+    return count.toString();
 }
 
 /**
@@ -266,16 +263,16 @@ function formatTriangles(count: number, precision: number): string {
  * ```
  */
 export function createStatsSnapshot(stats: PerformanceStats): StatsSnapshot {
-  return {
-    fps: Math.round(stats.fps),
-    frameTime: Math.round(stats.frameTime * 100) / 100,
-    memoryMB: stats.memory
-      ? Math.round((stats.memory.usedJSHeapSize / 1024 / 1024) * 10) / 10
-      : undefined,
-    drawCalls: stats.drawCalls,
-    triangles: stats.triangles,
-    timestamp: stats.timestamp,
-  };
+    return {
+        fps: Math.round(stats.fps),
+        frameTime: Math.round(stats.frameTime * 100) / 100,
+        memoryMB: stats.memory
+            ? Math.round((stats.memory.usedJSHeapSize / 1024 / 1024) * 10) / 10
+            : undefined,
+        drawCalls: stats.drawCalls,
+        triangles: stats.triangles,
+        timestamp: stats.timestamp,
+    };
 }
 
 /**
@@ -284,12 +281,12 @@ export function createStatsSnapshot(stats: PerformanceStats): StatsSnapshot {
  * @public
  */
 export interface StatsSnapshot {
-  fps: number;
-  frameTime: number;
-  memoryMB?: number;
-  drawCalls?: number;
-  triangles?: number;
-  timestamp: number;
+    fps: number;
+    frameTime: number;
+    memoryMB?: number;
+    drawCalls?: number;
+    triangles?: number;
+    timestamp: number;
 }
 
 /**
@@ -307,34 +304,32 @@ export interface StatsSnapshot {
  * console.log(`Average FPS: ${average.fps}`);
  * ```
  */
-export function calculateAverageStats(
-  samples: PerformanceStats[]
-): PerformanceStats {
-  if (samples.length === 0) {
+export function calculateAverageStats(samples: PerformanceStats[]): PerformanceStats {
+    if (samples.length === 0) {
+        return {
+            fps: 0,
+            frameTime: 0,
+            timestamp: Date.now(),
+        };
+    }
+
+    const sum = samples.reduce(
+        (acc, s) => ({
+            fps: acc.fps + s.fps,
+            frameTime: acc.frameTime + s.frameTime,
+            drawCalls: (acc.drawCalls ?? 0) + (s.drawCalls ?? 0),
+            triangles: (acc.triangles ?? 0) + (s.triangles ?? 0),
+        }),
+        { fps: 0, frameTime: 0, drawCalls: 0, triangles: 0 }
+    );
+
+    const count = samples.length;
+
     return {
-      fps: 0,
-      frameTime: 0,
-      timestamp: Date.now(),
+        fps: sum.fps / count,
+        frameTime: sum.frameTime / count,
+        drawCalls: sum.drawCalls ? Math.round(sum.drawCalls / count) : undefined,
+        triangles: sum.triangles ? Math.round(sum.triangles / count) : undefined,
+        timestamp: Date.now(),
     };
-  }
-
-  const sum = samples.reduce(
-    (acc, s) => ({
-      fps: acc.fps + s.fps,
-      frameTime: acc.frameTime + s.frameTime,
-      drawCalls: (acc.drawCalls ?? 0) + (s.drawCalls ?? 0),
-      triangles: (acc.triangles ?? 0) + (s.triangles ?? 0),
-    }),
-    { fps: 0, frameTime: 0, drawCalls: 0, triangles: 0 }
-  );
-
-  const count = samples.length;
-
-  return {
-    fps: sum.fps / count,
-    frameTime: sum.frameTime / count,
-    drawCalls: sum.drawCalls ? Math.round(sum.drawCalls / count) : undefined,
-    triangles: sum.triangles ? Math.round(sum.triangles / count) : undefined,
-    timestamp: Date.now(),
-  };
 }

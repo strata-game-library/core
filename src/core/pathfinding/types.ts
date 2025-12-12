@@ -15,9 +15,9 @@ import type { Vector3 as YukaVector3, NavMesh } from 'yuka';
  * @property z - Z coordinate
  */
 export interface Position3D {
-  x: number;
-  y: number;
-  z: number;
+    x: number;
+    y: number;
+    z: number;
 }
 
 /**
@@ -28,9 +28,9 @@ export interface Position3D {
  * @property cost - Movement cost multiplier for this node
  */
 export interface NodeData {
-  position: Position3D;
-  walkable?: boolean;
-  cost?: number;
+    position: Position3D;
+    walkable?: boolean;
+    cost?: number;
 }
 
 /**
@@ -40,8 +40,8 @@ export interface NodeData {
  * @property bidirectional - Whether edge allows two-way travel
  */
 export interface EdgeData {
-  weight: number;
-  bidirectional?: boolean;
+    weight: number;
+    bidirectional?: boolean;
 }
 
 /**
@@ -58,10 +58,10 @@ export type NodeId = string | number;
  * @property blocked - Function to check if node is blocked
  */
 export interface PathfinderConfig {
-  oriented?: boolean;
-  heuristic?: (fromNode: NodeData, toNode: NodeData) => number;
-  distance?: (fromNode: NodeData, toNode: NodeData, link: EdgeData) => number;
-  blocked?: (nodeData: NodeData, fromData: NodeData) => boolean;
+    oriented?: boolean;
+    heuristic?: (fromNode: NodeData, toNode: NodeData) => number;
+    distance?: (fromNode: NodeData, toNode: NodeData, link: EdgeData) => number;
+    blocked?: (nodeData: NodeData, fromData: NodeData) => boolean;
 }
 
 /**
@@ -74,11 +74,11 @@ export interface PathfinderConfig {
  * @property nodeCount - Number of nodes in the path
  */
 export interface PathResult {
-  found: boolean;
-  path: NodeId[];
-  positions: Position3D[];
-  cost: number;
-  nodeCount: number;
+    found: boolean;
+    path: NodeId[];
+    positions: Position3D[];
+    cost: number;
+    nodeCount: number;
 }
 
 /**
@@ -89,9 +89,9 @@ export interface PathResult {
  * @property preserveEndpoints - Keep start/end positions unchanged
  */
 export interface SmoothingOptions {
-  iterations?: number;
-  strength?: number;
-  preserveEndpoints?: boolean;
+    iterations?: number;
+    strength?: number;
+    preserveEndpoints?: boolean;
 }
 
 /**
@@ -101,8 +101,8 @@ export interface SmoothingOptions {
  * @property edgeWeight - Default edge weight
  */
 export interface NavMeshConversionOptions {
-  connectNeighbors?: boolean;
-  edgeWeight?: number;
+    connectNeighbors?: boolean;
+    edgeWeight?: number;
 }
 
 /**
@@ -112,8 +112,8 @@ export interface NavMeshConversionOptions {
  * @property data - Node data including position
  */
 export interface GraphNode<T = NodeData> {
-  id: NodeId;
-  data: T;
+    id: NodeId;
+    data: T;
 }
 
 /**
@@ -124,9 +124,9 @@ export interface GraphNode<T = NodeData> {
  * @property data - Edge data including weight
  */
 export interface GraphEdge<T = EdgeData> {
-  fromId: NodeId;
-  toId: NodeId;
-  data: T;
+    fromId: NodeId;
+    toId: NodeId;
+    data: T;
 }
 
 /**
@@ -138,17 +138,17 @@ export interface GraphEdge<T = EdgeData> {
  * @property hasEdge - Check if edge exists
  */
 export interface StrataGraph<N = NodeData, E = EdgeData> {
-  getNodeCount(): number;
-  getEdgeCount(): number;
-  hasNode(nodeId: NodeId): boolean;
-  hasEdge(fromId: NodeId, toId: NodeId): boolean;
-  addNode(nodeId: NodeId, data?: N): void;
-  addEdge(fromId: NodeId, toId: NodeId, data?: E): void;
-  removeNode(nodeId: NodeId): void;
-  removeEdge(fromId: NodeId, toId: NodeId): void;
-  getNode(nodeId: NodeId): GraphNode<N> | undefined;
-  forEachNode(callback: (node: GraphNode<N>) => void | boolean): void;
-  forEachEdge(callback: (edge: GraphEdge<E>) => void | boolean): void;
+    getNodeCount(): number;
+    getEdgeCount(): number;
+    hasNode(nodeId: NodeId): boolean;
+    hasEdge(fromId: NodeId, toId: NodeId): boolean;
+    addNode(nodeId: NodeId, data?: N): void;
+    addEdge(fromId: NodeId, toId: NodeId, data?: E): void;
+    removeNode(nodeId: NodeId): void;
+    removeEdge(fromId: NodeId, toId: NodeId): void;
+    getNode(nodeId: NodeId): GraphNode<N> | undefined;
+    forEachNode(callback: (node: GraphNode<N>) => void | boolean): void;
+    forEachEdge(callback: (edge: GraphEdge<E>) => void | boolean): void;
 }
 
 /**
@@ -158,8 +158,8 @@ export interface StrataGraph<N = NodeData, E = EdgeData> {
  * @property findDijkstra - Find path using Dijkstra's algorithm
  */
 export interface StrataPathfinder {
-  find(fromId: NodeId, toId: NodeId): PathResult;
-  findDijkstra(fromId: NodeId, toId: NodeId): PathResult;
+    find(fromId: NodeId, toId: NodeId): PathResult;
+    findDijkstra(fromId: NodeId, toId: NodeId): PathResult;
 }
 
 export type { NavMesh, YukaVector3 };

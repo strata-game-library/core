@@ -168,8 +168,24 @@ export function GrassInstances({
         const h = height;
 
         const positions = new Float32Array([
-            -0.05, 0, 0, 0.05, 0, 0, 0, h, 0,
-            0.05, 0, 0, 0.03, h, 0, 0, h, 0,
+            -0.05,
+            0,
+            0,
+            0.05,
+            0,
+            0,
+            0,
+            h,
+            0,
+            0.05,
+            0,
+            0,
+            0.03,
+            h,
+            0,
+            0,
+            h,
+            0,
         ]);
 
         const normals = new Float32Array([0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1]);

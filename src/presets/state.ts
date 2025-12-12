@@ -1,6 +1,6 @@
 /**
  * State Presets
- * 
+ *
  * Pre-configured state templates for common game types.
  */
 
@@ -304,7 +304,7 @@ export const ALL_STATE_PRESETS: StatePreset<unknown>[] = [
 ];
 
 export function getStatePreset<T>(name: StatePresetName): StatePreset<T> | undefined {
-    return ALL_STATE_PRESETS.find(preset => preset.name === name) as StatePreset<T> | undefined;
+    return ALL_STATE_PRESETS.find((preset) => preset.name === name) as StatePreset<T> | undefined;
 }
 
 export const AUTOSAVE_CONFIG_FREQUENT: Partial<AutoSaveConfig> = {
@@ -358,7 +358,7 @@ export function createSandboxState(overrides?: Partial<SandboxState>): SandboxSt
 export function addExperience(state: RPGState, amount: number): RPGState {
     const newExp = state.player.experience + amount;
     const expToLevel = state.player.level * 100;
-    
+
     if (newExp >= expToLevel) {
         return {
             ...state,
@@ -373,7 +373,7 @@ export function addExperience(state: RPGState, amount: number): RPGState {
             },
         };
     }
-    
+
     return {
         ...state,
         player: {
@@ -384,8 +384,10 @@ export function addExperience(state: RPGState, amount: number): RPGState {
 }
 
 export function addInventoryItem(state: RPGState, item: InventoryItem): RPGState {
-    const existingIndex = state.inventory.findIndex(i => i.id === item.id && i.type !== 'weapon' && i.type !== 'armor');
-    
+    const existingIndex = state.inventory.findIndex(
+        (i) => i.id === item.id && i.type !== 'weapon' && i.type !== 'armor'
+    );
+
     if (existingIndex >= 0) {
         const inventory = [...state.inventory];
         inventory[existingIndex] = {
@@ -394,7 +396,7 @@ export function addInventoryItem(state: RPGState, item: InventoryItem): RPGState
         };
         return { ...state, inventory };
     }
-    
+
     return {
         ...state,
         inventory: [...state.inventory, item],
@@ -402,22 +404,22 @@ export function addInventoryItem(state: RPGState, item: InventoryItem): RPGState
 }
 
 export function completeQuest(state: RPGState, questId: string): RPGState {
-    const questIndex = state.quests.findIndex(q => q.id === questId);
+    const questIndex = state.quests.findIndex((q) => q.id === questId);
     if (questIndex < 0) return state;
-    
+
     const quest = state.quests[questIndex];
     const quests = [...state.quests];
     quests[questIndex] = { ...quest, status: 'completed' };
-    
+
     let newState: RPGState = { ...state, quests };
-    
+
     if (quest.rewards?.experience) {
         newState = addExperience(newState, quest.rewards.experience);
     }
     if (quest.rewards?.gold) {
         newState = { ...newState, gold: newState.gold + quest.rewards.gold };
     }
-    
+
     return newState;
 }
 
@@ -434,7 +436,7 @@ export function unlockLevel(state: PuzzleGameState, levelNumber: number): Puzzle
 export function collectCoin(state: PlatformerState, value: number = 1): PlatformerState {
     const newCoins = state.coins + value;
     const extraLives = Math.floor(newCoins / 100) - Math.floor(state.coins / 100);
-    
+
     return {
         ...state,
         coins: newCoins % 100,
@@ -452,17 +454,18 @@ export function loseLife(state: PlatformerState): PlatformerState {
 
 export function placeBlock(state: SandboxState, block: SandboxBlock): SandboxState {
     const existingIndex = state.blocks.findIndex(
-        b => b.position.x === block.position.x && 
-             b.position.y === block.position.y && 
-             b.position.z === block.position.z
+        (b) =>
+            b.position.x === block.position.x &&
+            b.position.y === block.position.y &&
+            b.position.z === block.position.z
     );
-    
+
     if (existingIndex >= 0) {
         const blocks = [...state.blocks];
         blocks[existingIndex] = block;
         return { ...state, blocks };
     }
-    
+
     return {
         ...state,
         blocks: [...state.blocks, block],
@@ -473,9 +476,12 @@ export function removeBlock(state: SandboxState, position: Vec3): SandboxState {
     return {
         ...state,
         blocks: state.blocks.filter(
-            b => !(b.position.x === position.x && 
-                   b.position.y === position.y && 
-                   b.position.z === position.z)
+            (b) =>
+                !(
+                    b.position.x === position.x &&
+                    b.position.y === position.y &&
+                    b.position.z === position.z
+                )
         ),
     };
 }

@@ -90,7 +90,7 @@ describe('Screen Space Positioning', () => {
     it('should convert world position to screen coordinates', () => {
         const position = new THREE.Vector3(0, 0, 0);
         const result = worldToScreen(position, camera, 1920, 1080);
-        
+
         expect(result.x).toBeCloseTo(960, 0);
         expect(result.y).toBeCloseTo(540, 0);
         expect(result.visible).toBe(true);
@@ -99,14 +99,14 @@ describe('Screen Space Positioning', () => {
     it('should mark position behind camera as not visible', () => {
         const position = new THREE.Vector3(0, 0, 15);
         const result = worldToScreen(position, camera, 1920, 1080);
-        
+
         expect(result.visible).toBe(false);
     });
 
     it('should calculate distance correctly', () => {
         const position = new THREE.Vector3(0, 0, 0);
         const result = worldToScreen(position, camera, 1920, 1080);
-        
+
         expect(result.distance).toBeCloseTo(10, 1);
     });
 });
@@ -220,7 +220,7 @@ describe('Text Direction Detection', () => {
 describe('Default Factory Functions', () => {
     it('should create default progress bar config', () => {
         const config = createDefaultProgressBar();
-        
+
         expect(config.value).toBe(100);
         expect(config.maxValue).toBe(100);
         expect(config.width).toBe(100);
@@ -231,7 +231,7 @@ describe('Default Factory Functions', () => {
 
     it('should create default inventory config', () => {
         const config = createDefaultInventory(4, 3);
-        
+
         expect(config.columns).toBe(4);
         expect(config.rows).toBe(3);
         expect(config.slots.length).toBe(12);
@@ -242,7 +242,7 @@ describe('Default Factory Functions', () => {
 
     it('should create default inventory with correct slot IDs', () => {
         const config = createDefaultInventory(2, 2);
-        
+
         expect(config.slots[0].id).toBe('slot-0');
         expect(config.slots[1].id).toBe('slot-1');
         expect(config.slots[2].id).toBe('slot-2');
@@ -251,7 +251,7 @@ describe('Default Factory Functions', () => {
 
     it('should create default dialog config', () => {
         const config = createDefaultDialog();
-        
+
         expect(config.lines).toEqual([]);
         expect(config.currentLine).toBe(0);
         expect(config.typewriterSpeed).toBe(30);
@@ -261,7 +261,7 @@ describe('Default Factory Functions', () => {
 
     it('should create default tooltip config', () => {
         const config = createDefaultTooltip();
-        
+
         expect(config.maxWidth).toBe(250);
         expect(config.fontSize).toBe(14);
         expect(config.padding).toBe(12);
@@ -270,7 +270,7 @@ describe('Default Factory Functions', () => {
 
     it('should create default notification config', () => {
         const config = createDefaultNotification();
-        
+
         expect(config.type).toBe('info');
         expect(config.duration).toBe(5000);
         expect(config.dismissible).toBe(true);
@@ -279,7 +279,7 @@ describe('Default Factory Functions', () => {
 
     it('should create default minimap config', () => {
         const config = createDefaultMinimap();
-        
+
         expect(config.size).toBe(150);
         expect(config.zoom).toBe(1);
         expect(config.followPlayer).toBe(true);
@@ -288,7 +288,7 @@ describe('Default Factory Functions', () => {
 
     it('should create default crosshair config', () => {
         const config = createDefaultCrosshair();
-        
+
         expect(config.type).toBe('cross');
         expect(config.size).toBe(20);
         expect(config.dot).toBe(true);
@@ -297,7 +297,7 @@ describe('Default Factory Functions', () => {
 
     it('should create default damage number config', () => {
         const config = createDefaultDamageNumber();
-        
+
         expect(config.value).toBe(0);
         expect(config.type).toBe('normal');
         expect(config.duration).toBe(1500);
@@ -306,7 +306,7 @@ describe('Default Factory Functions', () => {
 
     it('should create default nameplate config', () => {
         const config = createDefaultNameplate();
-        
+
         expect(config.name).toBe('Unknown');
         expect(config.showHealthBar).toBe(true);
         expect(config.showLevel).toBe(true);

@@ -323,13 +323,13 @@ export function cloneLightingPreset(preset: LightingPreset): LightingPreset {
             ...preset.godRays,
             color: preset.godRays.color.clone(),
         },
-        spotlights: preset.spotlights.map(spot => ({
+        spotlights: preset.spotlights.map((spot) => ({
             ...spot,
             position: spot.position.clone(),
             target: spot.target.clone(),
             color: spot.color.clone(),
         })),
-        pointLights: preset.pointLights.map(point => ({
+        pointLights: preset.pointLights.map((point) => ({
             ...point,
             position: point.position.clone(),
             color: point.color.clone(),
@@ -338,10 +338,12 @@ export function cloneLightingPreset(preset: LightingPreset): LightingPreset {
             ...preset.ambient,
             color: preset.ambient.color.clone(),
         },
-        fog: preset.fog ? {
-            ...preset.fog,
-            color: preset.fog.color.clone(),
-        } : undefined,
+        fog: preset.fog
+            ? {
+                  ...preset.fog,
+                  color: preset.fog.color.clone(),
+              }
+            : undefined,
     };
 }
 
@@ -357,24 +359,71 @@ export function blendLightingPresets(
         description: `Blended preset at ${Math.round(clampedT * 100)}%`,
         godRays: {
             enabled: clampedT < 0.5 ? presetA.godRays.enabled : presetB.godRays.enabled,
-            intensity: THREE.MathUtils.lerp(presetA.godRays.intensity, presetB.godRays.intensity, clampedT),
+            intensity: THREE.MathUtils.lerp(
+                presetA.godRays.intensity,
+                presetB.godRays.intensity,
+                clampedT
+            ),
             decay: THREE.MathUtils.lerp(presetA.godRays.decay, presetB.godRays.decay, clampedT),
-            density: THREE.MathUtils.lerp(presetA.godRays.density, presetB.godRays.density, clampedT),
-            samples: Math.round(THREE.MathUtils.lerp(presetA.godRays.samples, presetB.godRays.samples, clampedT)),
-            exposure: THREE.MathUtils.lerp(presetA.godRays.exposure, presetB.godRays.exposure, clampedT),
-            scattering: THREE.MathUtils.lerp(presetA.godRays.scattering, presetB.godRays.scattering, clampedT),
-            noiseFactor: THREE.MathUtils.lerp(presetA.godRays.noiseFactor, presetB.godRays.noiseFactor, clampedT),
-            color: new THREE.Color().lerpColors(presetA.godRays.color, presetB.godRays.color, clampedT),
+            density: THREE.MathUtils.lerp(
+                presetA.godRays.density,
+                presetB.godRays.density,
+                clampedT
+            ),
+            samples: Math.round(
+                THREE.MathUtils.lerp(presetA.godRays.samples, presetB.godRays.samples, clampedT)
+            ),
+            exposure: THREE.MathUtils.lerp(
+                presetA.godRays.exposure,
+                presetB.godRays.exposure,
+                clampedT
+            ),
+            scattering: THREE.MathUtils.lerp(
+                presetA.godRays.scattering,
+                presetB.godRays.scattering,
+                clampedT
+            ),
+            noiseFactor: THREE.MathUtils.lerp(
+                presetA.godRays.noiseFactor,
+                presetB.godRays.noiseFactor,
+                clampedT
+            ),
+            color: new THREE.Color().lerpColors(
+                presetA.godRays.color,
+                presetB.godRays.color,
+                clampedT
+            ),
         },
         spotlights: clampedT < 0.5 ? presetA.spotlights : presetB.spotlights,
         pointLights: clampedT < 0.5 ? presetA.pointLights : presetB.pointLights,
         ambient: {
-            color: new THREE.Color().lerpColors(presetA.ambient.color, presetB.ambient.color, clampedT),
-            intensity: THREE.MathUtils.lerp(presetA.ambient.intensity, presetB.ambient.intensity, clampedT),
+            color: new THREE.Color().lerpColors(
+                presetA.ambient.color,
+                presetB.ambient.color,
+                clampedT
+            ),
+            intensity: THREE.MathUtils.lerp(
+                presetA.ambient.intensity,
+                presetB.ambient.intensity,
+                clampedT
+            ),
         },
-        fog: presetA.fog && presetB.fog ? {
-            color: new THREE.Color().lerpColors(presetA.fog.color, presetB.fog.color, clampedT),
-            density: THREE.MathUtils.lerp(presetA.fog.density, presetB.fog.density, clampedT),
-        } : (clampedT < 0.5 ? presetA.fog : presetB.fog),
+        fog:
+            presetA.fog && presetB.fog
+                ? {
+                      color: new THREE.Color().lerpColors(
+                          presetA.fog.color,
+                          presetB.fog.color,
+                          clampedT
+                      ),
+                      density: THREE.MathUtils.lerp(
+                          presetA.fog.density,
+                          presetB.fog.density,
+                          clampedT
+                      ),
+                  }
+                : clampedT < 0.5
+                  ? presetA.fog
+                  : presetB.fog,
     };
 }

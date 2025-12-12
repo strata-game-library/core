@@ -31,38 +31,26 @@
  * ```
  */
 
-export {
-  createAnimationMachine,
-  calculateBlendWeights,
-  smoothStep,
-  smootherStep,
-} from './factory';
+export { createAnimationMachine, calculateBlendWeights, smoothStep, smootherStep } from './factory';
 
-export {
-  createLocomotionMachine,
-  createCombatMachine,
-} from './presets';
+export { createLocomotionMachine, createCombatMachine } from './presets';
 
 export { useAnimationMachine } from './hooks';
 
-export {
-  useAnimationBlend,
-  useSyncAnimationActions,
-  useCrossFade,
-} from './blend-hooks';
+export { useAnimationBlend, useSyncAnimationActions, useCrossFade } from './blend-hooks';
 
 export type {
-  AnimationStateName,
-  AnimationStateConfig,
-  AnimationContext,
-  AnimationEvent,
-  AnimationTransitionConfig,
-  BlendTreeConfig,
-  BlendTreeNode,
-  AnimationMachineConfig,
-  BlendWeights,
-  UseAnimationMachineOptions,
-  UseAnimationBlendOptions,
-  AnimationMachineReturn,
-  AnimationBlendReturn,
+    AnimationStateName,
+    AnimationStateConfig,
+    AnimationContext,
+    AnimationEvent,
+    AnimationTransitionConfig,
+    BlendTreeConfig,
+    BlendTreeNode,
+    AnimationMachineConfig,
+    BlendWeights,
+    UseAnimationMachineOptions,
+    UseAnimationBlendOptions,
+    AnimationMachineReturn,
+    AnimationBlendReturn,
 } from './types';

@@ -21,14 +21,14 @@ import type { AudioListenerProps } from './types';
  * ```
  */
 export function AudioListener({ camera: propCamera }: AudioListenerProps) {
-  const { camera: defaultCamera } = useThree();
-  const listener = useAudioListener();
-  const camera = propCamera ?? defaultCamera;
+    const { camera: defaultCamera } = useThree();
+    const listener = useAudioListener();
+    const camera = propCamera ?? defaultCamera;
 
-  if (listener && listener.parent !== camera) {
-    listener.parent?.remove(listener);
-    camera.add(listener);
-  }
+    if (listener && listener.parent !== camera) {
+        listener.parent?.remove(listener);
+        camera.add(listener);
+    }
 
-  return null;
+    return null;
 }

@@ -21,29 +21,29 @@ import type { AudioEnvironmentProps } from './types';
  * ```
  */
 export function AudioEnvironment({
-  type,
-  reverbDecay,
-  reverbWet,
-  lowpassFrequency,
-  highpassFrequency,
+    type,
+    reverbDecay,
+    reverbWet,
+    lowpassFrequency,
+    highpassFrequency,
 }: AudioEnvironmentProps) {
-  useEffect(() => {
-    const preset = ENVIRONMENT_PRESETS[type];
-    if (!preset) return;
+    useEffect(() => {
+        const preset = ENVIRONMENT_PRESETS[type];
+        if (!preset) return;
 
-    // Environment effects would require Web Audio API nodes
-    // For now, log the configuration for debugging
-    if (process.env.NODE_ENV === 'development') {
-      console.debug('AudioEnvironment:', {
-        type,
-        preset,
-        customDecay: reverbDecay,
-        customWet: reverbWet,
-        lowpassFrequency,
-        highpassFrequency,
-      });
-    }
-  }, [type, reverbDecay, reverbWet, lowpassFrequency, highpassFrequency]);
+        // Environment effects would require Web Audio API nodes
+        // For now, log the configuration for debugging
+        if (process.env.NODE_ENV === 'development') {
+            console.debug('AudioEnvironment:', {
+                type,
+                preset,
+                customDecay: reverbDecay,
+                customWet: reverbWet,
+                lowpassFrequency,
+                highpassFrequency,
+            });
+        }
+    }, [type, reverbDecay, reverbWet, lowpassFrequency, highpassFrequency]);
 
-  return null;
+    return null;
 }

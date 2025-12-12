@@ -1,6 +1,6 @@
 /**
  * Physics Presets
- * 
+ *
  * Pre-configured physics settings for common use cases.
  * @module presets/physics
  */

@@ -46,7 +46,7 @@ describe('CollisionLayer', () => {
         expect(CollisionLayer.Character).toBe(0x0008);
         expect(CollisionLayer.Vehicle).toBe(0x0010);
         expect(CollisionLayer.Projectile).toBe(0x0020);
-        expect(CollisionLayer.All).toBe(0xFFFF);
+        expect(CollisionLayer.All).toBe(0xffff);
     });
 
     it('should allow combining layers with bitwise OR', () => {
@@ -78,7 +78,7 @@ describe('calculateImpulse', () => {
         const mass = 80;
 
         const impulse = calculateImpulse(current, target, mass);
-        
+
         expect(impulse.x).toBe(800);
         expect(impulse.y).toBe(0);
         expect(impulse.z).toBe(0);
@@ -90,7 +90,7 @@ describe('calculateImpulse', () => {
         const mass = 50;
 
         const impulse = calculateImpulse(current, target, mass);
-        
+
         expect(impulse.x).toBe(-500);
         expect(impulse.y).toBe(-250);
     });
@@ -104,7 +104,7 @@ describe('calculateForce', () => {
         const deltaTime = 0.016;
 
         const force = calculateForce(current, target, mass, deltaTime);
-        
+
         expect(force.x).toBeCloseTo(50000, 0);
     });
 });
@@ -116,7 +116,7 @@ describe('calculateJumpImpulse', () => {
         const mass = 80;
 
         const impulse = calculateJumpImpulse(jumpHeight, gravity, mass);
-        
+
         expect(impulse).toBeGreaterThan(0);
         expect(impulse).toBeCloseTo(Math.sqrt(2 * 9.81 * 2) * 80, 1);
     });
@@ -135,7 +135,7 @@ describe('calculateLandingVelocity', () => {
         const gravity = 9.81;
 
         const velocity = calculateLandingVelocity(fallHeight, gravity);
-        
+
         expect(velocity).toBeCloseTo(14, 0);
     });
 });
@@ -147,7 +147,7 @@ describe('applyDrag', () => {
         const deltaTime = 0.1;
 
         const result = applyDrag(velocity, dragCoefficient, deltaTime);
-        
+
         expect(result.x).toBeLessThan(velocity.x);
         expect(result.z).toBeLessThan(velocity.z);
     });
@@ -155,7 +155,7 @@ describe('applyDrag', () => {
     it('should not go negative', () => {
         const velocity = new THREE.Vector3(1, 0, 0);
         const result = applyDrag(velocity, 100, 1);
-        
+
         expect(result.x).toBe(0);
     });
 });
@@ -216,7 +216,7 @@ describe('projectVelocityOntoGround', () => {
         const normal = new THREE.Vector3(0, 1, 0);
 
         const result = projectVelocityOntoGround(velocity, normal);
-        
+
         expect(result.x).toBeCloseTo(5, 5);
         expect(result.y).toBeCloseTo(0, 5);
         expect(result.z).toBeCloseTo(3, 5);
@@ -281,7 +281,7 @@ describe('generateDebrisVelocity', () => {
         const debris = new THREE.Vector3(1, 0, 0);
 
         const velocity = generateDebrisVelocity(center, debris, 10);
-        
+
         expect(velocity.x).toBeGreaterThan(0);
     });
 
@@ -291,7 +291,7 @@ describe('generateDebrisVelocity', () => {
 
         const vel1 = generateDebrisVelocity(center, debris, 10);
         const vel2 = generateDebrisVelocity(center, debris, 10);
-        
+
         expect(vel1.equals(vel2)).toBe(false);
     });
 });
@@ -299,7 +299,7 @@ describe('generateDebrisVelocity', () => {
 describe('createDefaultPhysicsConfig', () => {
     it('should return valid config', () => {
         const config = createDefaultPhysicsConfig();
-        
+
         expect(config.gravity).toEqual([0, -9.81, 0]);
         expect(config.timeStep).toBe(1 / 60);
         expect(config.maxVelocityIterations).toBeGreaterThan(0);
@@ -309,7 +309,7 @@ describe('createDefaultPhysicsConfig', () => {
 describe('createDefaultCharacterConfig', () => {
     it('should return valid character config', () => {
         const config = createDefaultCharacterConfig();
-        
+
         expect(config.capsuleRadius).toBeGreaterThan(0);
         expect(config.capsuleHeight).toBeGreaterThan(0);
         expect(config.mass).toBeGreaterThan(0);
@@ -321,7 +321,7 @@ describe('createDefaultCharacterConfig', () => {
 describe('createDefaultVehicleConfig', () => {
     it('should return valid vehicle config', () => {
         const config = createDefaultVehicleConfig();
-        
+
         expect(config.chassisMass).toBeGreaterThan(0);
         expect(config.wheelPositions.length).toBeGreaterThanOrEqual(2);
         expect(config.motorForce).toBeGreaterThan(0);
@@ -331,7 +331,7 @@ describe('createDefaultVehicleConfig', () => {
 describe('createHumanoidRagdoll', () => {
     it('should create ragdoll with body parts', () => {
         const ragdoll = createHumanoidRagdoll(1);
-        
+
         expect(ragdoll.bodyParts.length).toBeGreaterThan(0);
         expect(ragdoll.joints.length).toBeGreaterThan(0);
     });
@@ -340,15 +340,15 @@ describe('createHumanoidRagdoll', () => {
         const ragdoll1 = createHumanoidRagdoll(1);
         const ragdoll2 = createHumanoidRagdoll(2);
 
-        const pelvis1 = ragdoll1.bodyParts.find(p => p.name === 'pelvis');
-        const pelvis2 = ragdoll2.bodyParts.find(p => p.name === 'pelvis');
+        const pelvis1 = ragdoll1.bodyParts.find((p) => p.name === 'pelvis');
+        const pelvis2 = ragdoll2.bodyParts.find((p) => p.name === 'pelvis');
 
         expect(pelvis2!.position[1]).toBeCloseTo(pelvis1!.position[1] * 2, 1);
     });
 
     it('should have valid joint connections', () => {
         const ragdoll = createHumanoidRagdoll(1);
-        const partNames = ragdoll.bodyParts.map(p => p.name);
+        const partNames = ragdoll.bodyParts.map((p) => p.name);
 
         for (const joint of ragdoll.joints) {
             expect(partNames).toContain(joint.parent);
@@ -360,7 +360,7 @@ describe('createHumanoidRagdoll', () => {
 describe('createDefaultDestructibleConfig', () => {
     it('should return valid destructible config', () => {
         const config = createDefaultDestructibleConfig();
-        
+
         expect(config.health).toBeGreaterThan(0);
         expect(config.shardCount).toBeGreaterThan(0);
         expect(config.explosionForce).toBeGreaterThan(0);
@@ -370,7 +370,7 @@ describe('createDefaultDestructibleConfig', () => {
 describe('createDefaultBuoyancyConfig', () => {
     it('should return valid buoyancy config', () => {
         const config = createDefaultBuoyancyConfig();
-        
+
         expect(config.buoyancyForce).toBeGreaterThan(0);
         expect(config.waterDrag).toBeGreaterThan(0);
     });
@@ -392,7 +392,9 @@ describe('characterPresets', () => {
     });
 
     it('should have different configs', () => {
-        expect(characterPresets.fps.config.maxSpeed).not.toBe(characterPresets.tank.config.maxSpeed);
+        expect(characterPresets.fps.config.maxSpeed).not.toBe(
+            characterPresets.tank.config.maxSpeed
+        );
     });
 });
 
@@ -404,7 +406,9 @@ describe('vehiclePresets', () => {
 
     it('should have truck preset', () => {
         expect(vehiclePresets.truck).toBeDefined();
-        expect(vehiclePresets.truck.config.chassisMass).toBeGreaterThan(vehiclePresets.car.config.chassisMass);
+        expect(vehiclePresets.truck.config.chassisMass).toBeGreaterThan(
+            vehiclePresets.car.config.chassisMass
+        );
     });
 
     it('should have motorcycle preset', () => {
@@ -457,14 +461,18 @@ describe('destructiblePresets', () => {
     });
 
     it('should have glass preset with low health', () => {
-        expect(destructiblePresets.glass.config.health).toBeLessThan(destructiblePresets.stone.config.health);
+        expect(destructiblePresets.glass.config.health).toBeLessThan(
+            destructiblePresets.stone.config.health
+        );
     });
 });
 
 describe('buoyancyPresets', () => {
     it('should have light preset', () => {
         expect(buoyancyPresets.light).toBeDefined();
-        expect(buoyancyPresets.light.config.buoyancyForce).toBeGreaterThan(buoyancyPresets.heavy.config.buoyancyForce);
+        expect(buoyancyPresets.light.config.buoyancyForce).toBeGreaterThan(
+            buoyancyPresets.heavy.config.buoyancyForce
+        );
     });
 
     it('should have boat preset', () => {

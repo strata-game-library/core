@@ -18,7 +18,7 @@ let entityIdCounter = 0;
  * ```
  */
 export function generateEntityId(): string {
-  return `entity_${++entityIdCounter}`;
+    return `entity_${++entityIdCounter}`;
 }
 
 /**
@@ -30,7 +30,7 @@ export function generateEntityId(): string {
  * ```
  */
 export function resetEntityIdCounter(): void {
-  entityIdCounter = 0;
+    entityIdCounter = 0;
 }
 
 /**
@@ -46,47 +46,55 @@ export function resetEntityIdCounter(): void {
  * ```
  */
 export function createWorld<T extends BaseEntity>(config: WorldConfig<T> = {}): StrataWorld<T> {
-  const miniplexWorld = new World<T>();
-  const { enableLogging = false, maxEntities, initialEntities = [] } = config;
-  const log = (msg: string) => { if (enableLogging) console.debug(`[Strata ECS] ${msg}`); };
+    const miniplexWorld = new World<T>();
+    const { enableLogging = false, maxEntities, initialEntities = [] } = config;
+    const log = (msg: string) => {
+        if (enableLogging) console.debug(`[Strata ECS] ${msg}`);
+    };
 
-  const spawn = (entity: T): T => {
-    if (maxEntities && miniplexWorld.entities.length >= maxEntities) {
-      throw new Error(`Maximum entity limit (${maxEntities}) reached`);
-    }
-    const e: T = { ...entity, id: entity.id ?? generateEntityId() };
-    miniplexWorld.add(e);
-    log(`Spawned entity: ${e.id}`);
-    return e;
-  };
+    const spawn = (entity: T): T => {
+        if (maxEntities && miniplexWorld.entities.length >= maxEntities) {
+            throw new Error(`Maximum entity limit (${maxEntities}) reached`);
+        }
+        const e: T = { ...entity, id: entity.id ?? generateEntityId() };
+        miniplexWorld.add(e);
+        log(`Spawned entity: ${e.id}`);
+        return e;
+    };
 
-  const despawn = (entity: T): void => {
-    miniplexWorld.remove(entity);
-    log(`Despawned entity: ${entity.id}`);
-  };
+    const despawn = (entity: T): void => {
+        miniplexWorld.remove(entity);
+        log(`Despawned entity: ${entity.id}`);
+    };
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const query = <K extends keyof T>(...c: K[]) => miniplexWorld.with(...(c as any)) as Iterable<T>;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const queryWithout = <K extends keyof T>(...c: K[]) => miniplexWorld.without(...(c as any)) as Iterable<T>;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const query = <K extends keyof T>(...c: K[]) =>
+        miniplexWorld.with(...(c as any)) as Iterable<T>;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const queryWithout = <K extends keyof T>(...c: K[]) =>
+        miniplexWorld.without(...(c as any)) as Iterable<T>;
 
-  const clear = (): void => {
-    [...miniplexWorld.entities].forEach((e) => miniplexWorld.remove(e));
-    log('Cleared all entities');
-  };
+    const clear = (): void => {
+        [...miniplexWorld.entities].forEach((e) => miniplexWorld.remove(e));
+        log('Cleared all entities');
+    };
 
-  for (const entity of initialEntities) spawn(entity);
+    for (const entity of initialEntities) spawn(entity);
 
-  return {
-    world: miniplexWorld,
-    spawn,
-    despawn,
-    query,
-    queryWithout,
-    get entities() { return miniplexWorld.entities as T[]; },
-    get size() { return miniplexWorld.entities.length; },
-    clear,
-  };
+    return {
+        world: miniplexWorld,
+        spawn,
+        despawn,
+        query,
+        queryWithout,
+        get entities() {
+            return miniplexWorld.entities as T[];
+        },
+        get size() {
+            return miniplexWorld.entities.length;
+        },
+        clear,
+    };
 }
 
 /**
@@ -99,19 +107,31 @@ export function createWorld<T extends BaseEntity>(config: WorldConfig<T> = {}): 
  * const player = createFromArchetype(playerArchetype, { position: { x: 0, y: 0, z: 0 } });
  * ```
  */
-export function createFromArchetype<T extends BaseEntity>(archetype: Archetype<T>, components: Partial<T>): T {
-  for (const key of archetype.components) {
-    if (!(key in components)) throw new Error(`Archetype '${archetype.name}' requires component '${String(key)}'`);
-  }
-  return { id: generateEntityId(), ...components } as T;
+export function createFromArchetype<T extends BaseEntity>(
+    archetype: Archetype<T>,
+    components: Partial<T>
+): T {
+    for (const key of archetype.components) {
+        if (!(key in components))
+            throw new Error(`Archetype '${archetype.name}' requires component '${String(key)}'`);
+    }
+    return { id: generateEntityId(), ...components } as T;
 }
 
 /** Common game entity archetypes for quick entity creation. @public */
 export const ARCHETYPES = {
-  MOVABLE: { name: 'movable', components: ['position', 'velocity'] as const, tags: ['physics'] },
-  RENDERABLE: { name: 'renderable', components: ['position', 'mesh'] as const, tags: ['graphics'] },
-  LIVING: { name: 'living', components: ['health'] as const, tags: ['combat'] },
-  INTERACTIVE: { name: 'interactive', components: ['position', 'collider'] as const, tags: ['physics', 'interaction'] },
+    MOVABLE: { name: 'movable', components: ['position', 'velocity'] as const, tags: ['physics'] },
+    RENDERABLE: {
+        name: 'renderable',
+        components: ['position', 'mesh'] as const,
+        tags: ['graphics'],
+    },
+    LIVING: { name: 'living', components: ['health'] as const, tags: ['combat'] },
+    INTERACTIVE: {
+        name: 'interactive',
+        components: ['position', 'collider'] as const,
+        tags: ['physics', 'interaction'],
+    },
 } as const;
 
 /**
@@ -124,8 +144,11 @@ export const ARCHETYPES = {
  * hasComponents(entity, 'position', 'health'); // true or false
  * ```
  */
-export function hasComponents<T extends BaseEntity>(entity: T, ...components: (keyof T)[]): boolean {
-  return components.every((key) => key in entity && entity[key] !== undefined);
+export function hasComponents<T extends BaseEntity>(
+    entity: T,
+    ...components: (keyof T)[]
+): boolean {
+    return components.every((key) => key in entity && entity[key] !== undefined);
 }
 
 /**
@@ -140,10 +163,13 @@ export function hasComponents<T extends BaseEntity>(entity: T, ...components: (k
  * ```
  */
 export function addComponent<T extends BaseEntity, K extends keyof T>(
-  world: StrataWorld<T>, entity: T, component: K, value: T[K]
+    world: StrataWorld<T>,
+    entity: T,
+    component: K,
+    value: T[K]
 ): void {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  world.world.addComponent(entity, component as any, value);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    world.world.addComponent(entity, component as any, value);
 }
 
 /**
@@ -157,10 +183,12 @@ export function addComponent<T extends BaseEntity, K extends keyof T>(
  * ```
  */
 export function removeComponent<T extends BaseEntity, K extends keyof T>(
-  world: StrataWorld<T>, entity: T, component: K
+    world: StrataWorld<T>,
+    entity: T,
+    component: K
 ): void {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  world.world.removeComponent(entity, component as any);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    world.world.removeComponent(entity, component as any);
 }
 
 /**
@@ -173,8 +201,11 @@ export function removeComponent<T extends BaseEntity, K extends keyof T>(
  * const player = findEntityById(world, 'entity_1');
  * ```
  */
-export function findEntityById<T extends BaseEntity>(world: StrataWorld<T>, id: string): T | undefined {
-  return world.entities.find((e) => e.id === id);
+export function findEntityById<T extends BaseEntity>(
+    world: StrataWorld<T>,
+    id: string
+): T | undefined {
+    return world.entities.find((e) => e.id === id);
 }
 
 /**
@@ -187,8 +218,11 @@ export function findEntityById<T extends BaseEntity>(world: StrataWorld<T>, id: 
  * const movingCount = countEntities(world, 'position', 'velocity');
  * ```
  */
-export function countEntities<T extends BaseEntity>(world: StrataWorld<T>, ...components: (keyof T)[]): number {
-  let count = 0;
-  for (const _ of world.query(...components)) count++;
-  return count;
+export function countEntities<T extends BaseEntity>(
+    world: StrataWorld<T>,
+    ...components: (keyof T)[]
+): number {
+    let count = 0;
+    for (const _ of world.query(...components)) count++;
+    return count;
 }

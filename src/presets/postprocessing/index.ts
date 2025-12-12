@@ -1021,7 +1021,9 @@ export const vignettePresets = {
  * @param name Preset name
  * @returns The preset configuration
  */
-export function getPostProcessingPreset(name: keyof typeof postProcessingPresets): PostProcessingPreset {
+export function getPostProcessingPreset(
+    name: keyof typeof postProcessingPresets
+): PostProcessingPreset {
     return postProcessingPresets[name];
 }
 

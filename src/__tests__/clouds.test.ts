@@ -60,18 +60,24 @@ describe('createCloudLayerMaterial', () => {
     });
 
     it('should throw error for invalid coverage', () => {
-        expect(() => createCloudLayerMaterial({
-            layer: { coverage: 1.5 },
-        })).toThrow();
-        expect(() => createCloudLayerMaterial({
-            layer: { coverage: -0.5 },
-        })).toThrow();
+        expect(() =>
+            createCloudLayerMaterial({
+                layer: { coverage: 1.5 },
+            })
+        ).toThrow();
+        expect(() =>
+            createCloudLayerMaterial({
+                layer: { coverage: -0.5 },
+            })
+        ).toThrow();
     });
 
     it('should throw error for negative density', () => {
-        expect(() => createCloudLayerMaterial({
-            layer: { density: -1 },
-        })).toThrow();
+        expect(() =>
+            createCloudLayerMaterial({
+                layer: { density: -1 },
+            })
+        ).toThrow();
     });
 });
 
@@ -100,15 +106,19 @@ describe('createVolumetricCloudMaterial', () => {
     });
 
     it('should throw error for invalid coverage', () => {
-        expect(() => createVolumetricCloudMaterial({
-            coverage: 2.0,
-        })).toThrow();
+        expect(() =>
+            createVolumetricCloudMaterial({
+                coverage: 2.0,
+            })
+        ).toThrow();
     });
 
     it('should throw error for negative density', () => {
-        expect(() => createVolumetricCloudMaterial({
-            density: -1,
-        })).toThrow();
+        expect(() =>
+            createVolumetricCloudMaterial({
+                density: -1,
+            })
+        ).toThrow();
     });
 });
 

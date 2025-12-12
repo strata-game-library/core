@@ -222,7 +222,10 @@ function createDecalFromNormal(
         up.set(0, 0, 1);
     }
 
-    const quaternion = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 0, 1), normal);
+    const quaternion = new THREE.Quaternion().setFromUnitVectors(
+        new THREE.Vector3(0, 0, 1),
+        normal
+    );
     const rotQuat = new THREE.Quaternion().setFromAxisAngle(normal, rotationAngle);
     quaternion.premultiply(rotQuat);
     const rotation = new THREE.Euler().setFromQuaternion(quaternion);

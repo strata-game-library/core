@@ -70,11 +70,7 @@ export class WeatherSystem {
         const progress = Math.min(this.transition.elapsed / this.transition.duration, 1);
         const t = smoothStep(progress);
 
-        this.currentState = blendWeatherStates(
-            this.transition.from,
-            this.transition.to,
-            t
-        );
+        this.currentState = blendWeatherStates(this.transition.from, this.transition.to, t);
 
         if (progress >= 1) {
             this.currentState = { ...this.transition.to };
@@ -105,7 +101,7 @@ export class WeatherSystem {
     subscribe(listener: (state: WeatherStateConfig) => void): () => void {
         this.listeners.push(listener);
         return () => {
-            this.listeners = this.listeners.filter(l => l !== listener);
+            this.listeners = this.listeners.filter((l) => l !== listener);
         };
     }
 

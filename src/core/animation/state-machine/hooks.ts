@@ -11,12 +11,12 @@ import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useMachine } from '@xstate/react';
 import { useFrame } from '@react-three/fiber';
 import type {
-  AnimationMachineConfig,
-  AnimationContext,
-  AnimationEvent,
-  AnimationStateName,
-  AnimationMachineReturn,
-  UseAnimationMachineOptions,
+    AnimationMachineConfig,
+    AnimationContext,
+    AnimationEvent,
+    AnimationStateName,
+    AnimationMachineReturn,
+    UseAnimationMachineOptions,
 } from './types';
 import { createAnimationMachine } from './factory';
 
@@ -57,79 +57,79 @@ import { createAnimationMachine } from './factory';
  * ```
  */
 export function useAnimationMachine(
-  config: AnimationMachineConfig,
-  options: UseAnimationMachineOptions = {}
+    config: AnimationMachineConfig,
+    options: UseAnimationMachineOptions = {}
 ): AnimationMachineReturn {
-  const { autoPlay = true, initialSpeed = 1.0, onStateChange, onAnimationComplete } = options;
+    const { autoPlay = true, initialSpeed = 1.0, onStateChange, onAnimationComplete } = options;
 
-  const machine = useMemo(() => createAnimationMachine(config), [config]);
-  const [state, send] = useMachine(machine);
+    const machine = useMemo(() => createAnimationMachine(config), [config]);
+    const [state, send] = useMachine(machine);
 
-  const previousStateRef = useRef<string>(config.initial);
+    const previousStateRef = useRef<string>(config.initial);
 
-  useFrame((_, delta) => {
-    if (!state.context.isPaused) {
-      send({ type: 'TICK', delta });
-    }
-  });
+    useFrame((_, delta) => {
+        if (!state.context.isPaused) {
+            send({ type: 'TICK', delta });
+        }
+    });
 
-  useEffect(() => {
-    const currentStateName = String(state.value);
-    if (currentStateName !== previousStateRef.current) {
-      previousStateRef.current = currentStateName;
-      onStateChange?.(currentStateName as AnimationStateName);
-    }
-  }, [state.value, onStateChange]);
+    useEffect(() => {
+        const currentStateName = String(state.value);
+        if (currentStateName !== previousStateRef.current) {
+            previousStateRef.current = currentStateName;
+            onStateChange?.(currentStateName as AnimationStateName);
+        }
+    }, [state.value, onStateChange]);
 
-  useEffect(() => {
-    if (autoPlay && initialSpeed !== 1.0) {
-      send({ type: 'SET_SPEED', speed: initialSpeed });
-    }
-  }, [autoPlay, initialSpeed, send]);
+    useEffect(() => {
+        if (autoPlay && initialSpeed !== 1.0) {
+            send({ type: 'SET_SPEED', speed: initialSpeed });
+        }
+    }, [autoPlay, initialSpeed, send]);
 
-  const transitionTo = useCallback(
-    (targetState: AnimationStateName, duration?: number) => {
-      send({
-        type: 'BLEND',
-        target: targetState,
-        duration: duration ?? config.defaultCrossFadeDuration ?? 0.2,
-      });
-    },
-    [send, config.defaultCrossFadeDuration]
-  );
+    const transitionTo = useCallback(
+        (targetState: AnimationStateName, duration?: number) => {
+            send({
+                type: 'BLEND',
+                target: targetState,
+                duration: duration ?? config.defaultCrossFadeDuration ?? 0.2,
+            });
+        },
+        [send, config.defaultCrossFadeDuration]
+    );
 
-  const isInState = useCallback(
-    (stateName: AnimationStateName): boolean => {
-      return String(state.value) === stateName;
-    },
-    [state.value]
-  );
+    const isInState = useCallback(
+        (stateName: AnimationStateName): boolean => {
+            return String(state.value) === stateName;
+        },
+        [state.value]
+    );
 
-  const pause = useCallback(() => {
-    send({ type: 'PAUSE' });
-  }, [send]);
+    const pause = useCallback(() => {
+        send({ type: 'PAUSE' });
+    }, [send]);
 
-  const resume = useCallback(() => {
-    send({ type: 'RESUME' });
-  }, [send]);
+    const resume = useCallback(() => {
+        send({ type: 'RESUME' });
+    }, [send]);
 
-  const setSpeed = useCallback(
-    (speed: number) => {
-      send({ type: 'SET_SPEED', speed });
-    },
-    [send]
-  );
+    const setSpeed = useCallback(
+        (speed: number) => {
+            send({ type: 'SET_SPEED', speed });
+        },
+        [send]
+    );
 
-  return {
-    currentState: String(state.value) as AnimationStateName,
-    context: state.context as AnimationContext,
-    send: send as (event: AnimationEvent) => void,
-    transitionTo,
-    isInState,
-    pause,
-    resume,
-    setSpeed,
-  };
+    return {
+        currentState: String(state.value) as AnimationStateName,
+        context: state.context as AnimationContext,
+        send: send as (event: AnimationEvent) => void,
+        transitionTo,
+        isInState,
+        pause,
+        resume,
+        setSpeed,
+    };
 }
 
 export { useAnimationBlend, useSyncAnimationActions, useCrossFade } from './blend-hooks';

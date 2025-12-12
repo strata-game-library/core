@@ -100,7 +100,7 @@ describe('updateBillboardRotation', () => {
         const object = new THREE.Mesh();
         const camera = new THREE.PerspectiveCamera();
         camera.position.set(0, 0, 10);
-        
+
         expect(() => updateBillboardRotation(object, camera)).not.toThrow();
     });
 
@@ -108,7 +108,7 @@ describe('updateBillboardRotation', () => {
         const object = new THREE.Mesh();
         const camera = new THREE.PerspectiveCamera();
         camera.position.set(5, 5, 5);
-        
+
         expect(() => updateBillboardRotation(object, camera, { lockY: true })).not.toThrow();
     });
 
@@ -116,10 +116,12 @@ describe('updateBillboardRotation', () => {
         const object = new THREE.Mesh();
         const camera = new THREE.PerspectiveCamera();
         camera.position.set(0, 0, 10);
-        
-        expect(() => updateBillboardRotation(object, camera, { 
-            offset: new THREE.Vector3(0, 1, 0) 
-        })).not.toThrow();
+
+        expect(() =>
+            updateBillboardRotation(object, camera, {
+                offset: new THREE.Vector3(0, 1, 0),
+            })
+        ).not.toThrow();
     });
 });
 
@@ -128,7 +130,7 @@ describe('createBillboardMatrix', () => {
         const position = new THREE.Vector3(0, 0, 0);
         const cameraPos = new THREE.Vector3(0, 0, 10);
         const cameraQuat = new THREE.Quaternion();
-        
+
         const matrix = createBillboardMatrix(position, cameraPos, cameraQuat);
         expect(matrix).toBeInstanceOf(THREE.Matrix4);
     });
@@ -137,7 +139,7 @@ describe('createBillboardMatrix', () => {
         const position = new THREE.Vector3(0, 0, 0);
         const cameraPos = new THREE.Vector3(5, 5, 5);
         const cameraQuat = new THREE.Quaternion();
-        
+
         const matrix = createBillboardMatrix(position, cameraPos, cameraQuat, true);
         expect(matrix).toBeInstanceOf(THREE.Matrix4);
     });
@@ -151,10 +153,10 @@ describe('sortBillboardsByDepth', () => {
         b1.position.set(0, 0, 5);
         b2.position.set(0, 0, 10);
         b3.position.set(0, 0, 2);
-        
+
         const camera = new THREE.PerspectiveCamera();
         camera.position.set(0, 0, 0);
-        
+
         const sorted = sortBillboardsByDepth([b1, b2, b3], camera);
         expect(sorted.length).toBe(3);
     });

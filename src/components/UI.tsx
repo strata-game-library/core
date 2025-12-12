@@ -90,7 +90,7 @@ export const HealthBar = forwardRef<HealthBarRef, HealthBarProps>(
     ) => {
         const [displayValue, setDisplayValue] = useState(value);
         const [isFlashing, setIsFlashing] = useState(false);
-        const animationRef = useRef<number>(undefined);
+        const animationRef = useRef<number>();
         const startValueRef = useRef(value);
         const startTimeRef = useRef(0);
         const { camera } = useThree();
@@ -791,7 +791,7 @@ export const DialogBox = forwardRef<DialogBoxRef, DialogBoxProps>(
         const [displayedText, setDisplayedText] = useState('');
         const [isTyping, setIsTyping] = useState(false);
         const [showContinue, setShowContinue] = useState(false);
-        const typewriterRef = useRef<NodeJS.Timeout>(undefined);
+        const typewriterRef = useRef<NodeJS.Timeout>();
 
         const line = lines[lineIndex];
 

@@ -1,6 +1,6 @@
 /**
  * Core Physics Utilities
- * 
+ *
  * Pure TypeScript physics helper functions and type definitions
  * for use with @react-three/rapier.
  * @module core/physics
@@ -35,7 +35,7 @@ export enum CollisionLayer {
     Trigger = 0x0040,
     Debris = 0x0080,
     Water = 0x0100,
-    All = 0xFFFF,
+    All = 0xffff,
 }
 
 /**
@@ -57,7 +57,11 @@ export const collisionFilters: Record<string, CollisionFilter> = {
     },
     character: {
         memberships: CollisionLayer.Character,
-        filter: CollisionLayer.Static | CollisionLayer.Dynamic | CollisionLayer.Trigger | CollisionLayer.Water,
+        filter:
+            CollisionLayer.Static |
+            CollisionLayer.Dynamic |
+            CollisionLayer.Trigger |
+            CollisionLayer.Water,
     },
     vehicle: {
         memberships: CollisionLayer.Vehicle,
@@ -65,7 +69,11 @@ export const collisionFilters: Record<string, CollisionFilter> = {
     },
     projectile: {
         memberships: CollisionLayer.Projectile,
-        filter: CollisionLayer.Static | CollisionLayer.Dynamic | CollisionLayer.Character | CollisionLayer.Vehicle,
+        filter:
+            CollisionLayer.Static |
+            CollisionLayer.Dynamic |
+            CollisionLayer.Character |
+            CollisionLayer.Vehicle,
     },
     debris: {
         memberships: CollisionLayer.Debris,
@@ -77,7 +85,11 @@ export const collisionFilters: Record<string, CollisionFilter> = {
     },
     water: {
         memberships: CollisionLayer.Water,
-        filter: CollisionLayer.Character | CollisionLayer.Dynamic | CollisionLayer.Vehicle | CollisionLayer.Debris,
+        filter:
+            CollisionLayer.Character |
+            CollisionLayer.Dynamic |
+            CollisionLayer.Vehicle |
+            CollisionLayer.Debris,
     },
 };
 
@@ -269,11 +281,7 @@ export function calculateForce(
  * @param mass - Character mass
  * @returns Upward impulse magnitude
  */
-export function calculateJumpImpulse(
-    jumpHeight: number,
-    gravity: number,
-    mass: number
-): number {
+export function calculateJumpImpulse(jumpHeight: number, gravity: number, mass: number): number {
     return Math.sqrt(2 * Math.abs(gravity) * jumpHeight) * mass;
 }
 
@@ -402,7 +410,7 @@ export function calculateExplosionForce(
     maxForce: number
 ): number {
     if (distance >= explosionRadius) return 0;
-    const falloff = 1 - (distance / explosionRadius);
+    const falloff = 1 - distance / explosionRadius;
     return maxForce * falloff * falloff;
 }
 
@@ -422,11 +430,11 @@ export function generateDebrisVelocity(
 ): THREE.Vector3 {
     const direction = debrisPosition.clone().sub(explosionCenter).normalize();
     const force = baseForce * (1 + (Math.random() - 0.5) * randomness);
-    
+
     direction.x += (Math.random() - 0.5) * randomness;
     direction.y += Math.random() * randomness * 0.5;
     direction.z += (Math.random() - 0.5) * randomness;
-    
+
     return direction.normalize().multiplyScalar(force);
 }
 
@@ -513,34 +521,185 @@ export function createDefaultVehicleConfig(): VehicleConfig {
  */
 export function createHumanoidRagdoll(scale: number = 1): RagdollConfig {
     const s = scale;
-    
+
     return {
         bodyParts: [
-            { name: 'pelvis', type: 'box', size: [0.25 * s, 0.2 * s, 0.15 * s], position: [0, 1 * s, 0], mass: 10 },
-            { name: 'torso', type: 'box', size: [0.25 * s, 0.3 * s, 0.12 * s], position: [0, 1.35 * s, 0], mass: 15 },
-            { name: 'chest', type: 'box', size: [0.28 * s, 0.25 * s, 0.14 * s], position: [0, 1.65 * s, 0], mass: 15 },
+            {
+                name: 'pelvis',
+                type: 'box',
+                size: [0.25 * s, 0.2 * s, 0.15 * s],
+                position: [0, 1 * s, 0],
+                mass: 10,
+            },
+            {
+                name: 'torso',
+                type: 'box',
+                size: [0.25 * s, 0.3 * s, 0.12 * s],
+                position: [0, 1.35 * s, 0],
+                mass: 15,
+            },
+            {
+                name: 'chest',
+                type: 'box',
+                size: [0.28 * s, 0.25 * s, 0.14 * s],
+                position: [0, 1.65 * s, 0],
+                mass: 15,
+            },
             { name: 'head', type: 'sphere', size: [0.12 * s], position: [0, 1.95 * s, 0], mass: 5 },
-            { name: 'upperArmL', type: 'capsule', size: [0.05 * s, 0.25 * s], position: [-0.35 * s, 1.6 * s, 0], rotation: [0, 0, Math.PI / 2], mass: 3 },
-            { name: 'upperArmR', type: 'capsule', size: [0.05 * s, 0.25 * s], position: [0.35 * s, 1.6 * s, 0], rotation: [0, 0, -Math.PI / 2], mass: 3 },
-            { name: 'forearmL', type: 'capsule', size: [0.04 * s, 0.23 * s], position: [-0.6 * s, 1.6 * s, 0], rotation: [0, 0, Math.PI / 2], mass: 2 },
-            { name: 'forearmR', type: 'capsule', size: [0.04 * s, 0.23 * s], position: [0.6 * s, 1.6 * s, 0], rotation: [0, 0, -Math.PI / 2], mass: 2 },
-            { name: 'thighL', type: 'capsule', size: [0.07 * s, 0.35 * s], position: [-0.1 * s, 0.65 * s, 0], mass: 6 },
-            { name: 'thighR', type: 'capsule', size: [0.07 * s, 0.35 * s], position: [0.1 * s, 0.65 * s, 0], mass: 6 },
-            { name: 'calfL', type: 'capsule', size: [0.05 * s, 0.35 * s], position: [-0.1 * s, 0.25 * s, 0], mass: 4 },
-            { name: 'calfR', type: 'capsule', size: [0.05 * s, 0.35 * s], position: [0.1 * s, 0.25 * s, 0], mass: 4 },
+            {
+                name: 'upperArmL',
+                type: 'capsule',
+                size: [0.05 * s, 0.25 * s],
+                position: [-0.35 * s, 1.6 * s, 0],
+                rotation: [0, 0, Math.PI / 2],
+                mass: 3,
+            },
+            {
+                name: 'upperArmR',
+                type: 'capsule',
+                size: [0.05 * s, 0.25 * s],
+                position: [0.35 * s, 1.6 * s, 0],
+                rotation: [0, 0, -Math.PI / 2],
+                mass: 3,
+            },
+            {
+                name: 'forearmL',
+                type: 'capsule',
+                size: [0.04 * s, 0.23 * s],
+                position: [-0.6 * s, 1.6 * s, 0],
+                rotation: [0, 0, Math.PI / 2],
+                mass: 2,
+            },
+            {
+                name: 'forearmR',
+                type: 'capsule',
+                size: [0.04 * s, 0.23 * s],
+                position: [0.6 * s, 1.6 * s, 0],
+                rotation: [0, 0, -Math.PI / 2],
+                mass: 2,
+            },
+            {
+                name: 'thighL',
+                type: 'capsule',
+                size: [0.07 * s, 0.35 * s],
+                position: [-0.1 * s, 0.65 * s, 0],
+                mass: 6,
+            },
+            {
+                name: 'thighR',
+                type: 'capsule',
+                size: [0.07 * s, 0.35 * s],
+                position: [0.1 * s, 0.65 * s, 0],
+                mass: 6,
+            },
+            {
+                name: 'calfL',
+                type: 'capsule',
+                size: [0.05 * s, 0.35 * s],
+                position: [-0.1 * s, 0.25 * s, 0],
+                mass: 4,
+            },
+            {
+                name: 'calfR',
+                type: 'capsule',
+                size: [0.05 * s, 0.35 * s],
+                position: [0.1 * s, 0.25 * s, 0],
+                mass: 4,
+            },
         ],
         joints: [
-            { parent: 'pelvis', child: 'torso', type: 'spherical', anchor1: [0, 0.1 * s, 0], anchor2: [0, -0.15 * s, 0], limits: { min: -0.3, max: 0.3 } },
-            { parent: 'torso', child: 'chest', type: 'spherical', anchor1: [0, 0.15 * s, 0], anchor2: [0, -0.125 * s, 0], limits: { min: -0.3, max: 0.3 } },
-            { parent: 'chest', child: 'head', type: 'spherical', anchor1: [0, 0.125 * s, 0], anchor2: [0, -0.1 * s, 0], limits: { min: -0.5, max: 0.5 } },
-            { parent: 'chest', child: 'upperArmL', type: 'spherical', anchor1: [-0.18 * s, 0.08 * s, 0], anchor2: [0.125 * s, 0, 0], limits: { min: -1.5, max: 1.5 } },
-            { parent: 'chest', child: 'upperArmR', type: 'spherical', anchor1: [0.18 * s, 0.08 * s, 0], anchor2: [-0.125 * s, 0, 0], limits: { min: -1.5, max: 1.5 } },
-            { parent: 'upperArmL', child: 'forearmL', type: 'revolute', anchor1: [-0.125 * s, 0, 0], anchor2: [0.115 * s, 0, 0], axis: [0, 1, 0], limits: { min: 0, max: 2.5 } },
-            { parent: 'upperArmR', child: 'forearmR', type: 'revolute', anchor1: [0.125 * s, 0, 0], anchor2: [-0.115 * s, 0, 0], axis: [0, 1, 0], limits: { min: -2.5, max: 0 } },
-            { parent: 'pelvis', child: 'thighL', type: 'spherical', anchor1: [-0.1 * s, -0.1 * s, 0], anchor2: [0, 0.175 * s, 0], limits: { min: -1.2, max: 1.2 } },
-            { parent: 'pelvis', child: 'thighR', type: 'spherical', anchor1: [0.1 * s, -0.1 * s, 0], anchor2: [0, 0.175 * s, 0], limits: { min: -1.2, max: 1.2 } },
-            { parent: 'thighL', child: 'calfL', type: 'revolute', anchor1: [0, -0.175 * s, 0], anchor2: [0, 0.175 * s, 0], axis: [1, 0, 0], limits: { min: -2.5, max: 0 } },
-            { parent: 'thighR', child: 'calfR', type: 'revolute', anchor1: [0, -0.175 * s, 0], anchor2: [0, 0.175 * s, 0], axis: [1, 0, 0], limits: { min: -2.5, max: 0 } },
+            {
+                parent: 'pelvis',
+                child: 'torso',
+                type: 'spherical',
+                anchor1: [0, 0.1 * s, 0],
+                anchor2: [0, -0.15 * s, 0],
+                limits: { min: -0.3, max: 0.3 },
+            },
+            {
+                parent: 'torso',
+                child: 'chest',
+                type: 'spherical',
+                anchor1: [0, 0.15 * s, 0],
+                anchor2: [0, -0.125 * s, 0],
+                limits: { min: -0.3, max: 0.3 },
+            },
+            {
+                parent: 'chest',
+                child: 'head',
+                type: 'spherical',
+                anchor1: [0, 0.125 * s, 0],
+                anchor2: [0, -0.1 * s, 0],
+                limits: { min: -0.5, max: 0.5 },
+            },
+            {
+                parent: 'chest',
+                child: 'upperArmL',
+                type: 'spherical',
+                anchor1: [-0.18 * s, 0.08 * s, 0],
+                anchor2: [0.125 * s, 0, 0],
+                limits: { min: -1.5, max: 1.5 },
+            },
+            {
+                parent: 'chest',
+                child: 'upperArmR',
+                type: 'spherical',
+                anchor1: [0.18 * s, 0.08 * s, 0],
+                anchor2: [-0.125 * s, 0, 0],
+                limits: { min: -1.5, max: 1.5 },
+            },
+            {
+                parent: 'upperArmL',
+                child: 'forearmL',
+                type: 'revolute',
+                anchor1: [-0.125 * s, 0, 0],
+                anchor2: [0.115 * s, 0, 0],
+                axis: [0, 1, 0],
+                limits: { min: 0, max: 2.5 },
+            },
+            {
+                parent: 'upperArmR',
+                child: 'forearmR',
+                type: 'revolute',
+                anchor1: [0.125 * s, 0, 0],
+                anchor2: [-0.115 * s, 0, 0],
+                axis: [0, 1, 0],
+                limits: { min: -2.5, max: 0 },
+            },
+            {
+                parent: 'pelvis',
+                child: 'thighL',
+                type: 'spherical',
+                anchor1: [-0.1 * s, -0.1 * s, 0],
+                anchor2: [0, 0.175 * s, 0],
+                limits: { min: -1.2, max: 1.2 },
+            },
+            {
+                parent: 'pelvis',
+                child: 'thighR',
+                type: 'spherical',
+                anchor1: [0.1 * s, -0.1 * s, 0],
+                anchor2: [0, 0.175 * s, 0],
+                limits: { min: -1.2, max: 1.2 },
+            },
+            {
+                parent: 'thighL',
+                child: 'calfL',
+                type: 'revolute',
+                anchor1: [0, -0.175 * s, 0],
+                anchor2: [0, 0.175 * s, 0],
+                axis: [1, 0, 0],
+                limits: { min: -2.5, max: 0 },
+            },
+            {
+                parent: 'thighR',
+                child: 'calfR',
+                type: 'revolute',
+                anchor1: [0, -0.175 * s, 0],
+                anchor2: [0, 0.175 * s, 0],
+                axis: [1, 0, 0],
+                limits: { min: -2.5, max: 0 },
+            },
         ],
         linearDamping: 0.4,
         angularDamping: 0.8,

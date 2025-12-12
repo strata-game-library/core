@@ -6,7 +6,15 @@
  * @module components/LOD
  */
 
-import React, { useRef, useMemo, useEffect, useCallback, forwardRef, useImperativeHandle, useState } from 'react';
+import React, {
+    useRef,
+    useMemo,
+    useEffect,
+    useCallback,
+    forwardRef,
+    useImperativeHandle,
+    useState,
+} from 'react';
 import { useThree, useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import {
@@ -31,7 +39,7 @@ import { updateBillboardRotation } from '../core/decals';
 
 /**
  * Props for the LODMesh component
- * 
+ *
  * @property levels - Array of LOD levels with distance thresholds and geometry
  * @property baseMaterial - Material to use if level doesn't specify one
  * @property position - World position of the mesh
@@ -76,7 +84,7 @@ export interface LODMeshRef {
 /**
  * Distance-based level of detail mesh component.
  * Automatically switches between geometry detail levels based on camera distance.
- * 
+ *
  * @example
  * ```tsx
  * // Three-level LOD mesh
@@ -89,7 +97,7 @@ export interface LODMeshRef {
  *   baseMaterial={material}
  *   position={[0, 0, 0]}
  * />
- * 
+ *
  * // With crossfade transitions
  * <LODMesh
  *   levels={lodLevels}
@@ -97,7 +105,7 @@ export interface LODMeshRef {
  *   transitionDuration={0.5}
  *   onLevelChange={(level) => console.log('LOD:', level)}
  * />
- * 
+ *
  * // Per-level materials
  * <LODMesh
  *   levels={[
@@ -106,7 +114,7 @@ export interface LODMeshRef {
  *   ]}
  * />
  * ```
- * 
+ *
  * @param props - LODMeshProps configuration
  * @returns React element containing the LOD mesh group
  */
@@ -153,10 +161,7 @@ export const LODMesh = forwardRef<LODMeshRef, LODMeshProps>(
             return new THREE.Vector3(...scale);
         }, [scale]);
 
-        const lodLevels = useMemo(
-            () => createLODLevels(levels.map((l) => l.distance)),
-            [levels]
-        );
+        const lodLevels = useMemo(() => createLODLevels(levels.map((l) => l.distance)), [levels]);
 
         const materials = useMemo(() => {
             return levels.map((level) => {
@@ -260,7 +265,7 @@ LODMesh.displayName = 'LODMesh';
 
 /**
  * Props for the LODGroup component
- * 
+ *
  * @property children - Child elements to show/hide based on LOD
  * @property levels - LOD levels with distance and which children to show
  * @property hysteresis - LOD switching buffer
@@ -294,7 +299,7 @@ export interface LODGroupRef {
 /**
  * LOD group component that shows/hides children based on distance.
  * More flexible than LODMesh for complex multi-object LOD setups.
- * 
+ *
  * @example
  * ```tsx
  * // Show different children at each LOD
@@ -309,7 +314,7 @@ export interface LODGroupRef {
  *   <MediumDetailModel />
  *   <LowDetailModel />
  * </LODGroup>
- * 
+ *
  * // Complex building with multiple LOD levels
  * <LODGroup
  *   levels={[
@@ -323,7 +328,7 @@ export interface LODGroupRef {
  *   <SimplifiedBuilding />
  * </LODGroup>
  * ```
- * 
+ *
  * @param props - LODGroupProps configuration
  * @returns React element containing the LOD group
  */
@@ -362,10 +367,7 @@ export const LODGroup = forwardRef<LODGroupRef, LODGroupProps>(
             return new THREE.Vector3(...scale);
         }, [scale]);
 
-        const lodLevels = useMemo(
-            () => createLODLevels(levels.map((l) => l.distance)),
-            [levels]
-        );
+        const lodLevels = useMemo(() => createLODLevels(levels.map((l) => l.distance)), [levels]);
 
         const forceLevel = useCallback((level: number) => {
             setForcedLevel(level);
@@ -423,7 +425,7 @@ LODGroup.displayName = 'LODGroup';
 
 /**
  * Props for the Impostor component
- * 
+ *
  * @property texture - Impostor sprite atlas texture
  * @property position - World position
  * @property size - Billboard size (number or [width, height])
@@ -466,7 +468,7 @@ export interface ImpostorRef {
 /**
  * View-dependent impostor billboard for distant LOD replacement.
  * Automatically selects the correct view from a sprite atlas based on camera angle.
- * 
+ *
  * @example
  * ```tsx
  * // 8-view tree impostor
@@ -476,7 +478,7 @@ export interface ImpostorRef {
  *   size={5}
  *   views={8}
  * />
- * 
+ *
  * // Cylindrical building impostor
  * <Impostor
  *   texture={buildingAtlas}
@@ -485,7 +487,7 @@ export interface ImpostorRef {
  *   views={16}
  *   billboardMode="cylindrical"
  * />
- * 
+ *
  * // Character impostor for crowds
  * <Impostor
  *   texture={characterAtlas}
@@ -495,7 +497,7 @@ export interface ImpostorRef {
  *   alphaTest={0.5}
  * />
  * ```
- * 
+ *
  * @param props - ImpostorProps configuration
  * @returns React element containing the impostor mesh
  */
@@ -612,7 +614,7 @@ Impostor.displayName = 'Impostor';
 
 /**
  * Props for the LODVegetation component
- * 
+ *
  * @property count - Number of vegetation instances
  * @property instances - Array of instance transforms
  * @property highDetailGeometry - Highest detail geometry
@@ -663,7 +665,7 @@ interface VegetationInstance {
 /**
  * Specialized LOD system for large-scale vegetation rendering.
  * Manages thousands of instances with automatic geometry simplification and impostors.
- * 
+ *
  * @example
  * ```tsx
  * // Forest with auto-generated LOD levels
@@ -674,7 +676,7 @@ interface VegetationInstance {
  *   impostorTexture={treeImpostor}
  *   material={treeMaterial}
  * />
- * 
+ *
  * // Custom LOD distances
  * <LODVegetation
  *   count={500}
@@ -689,7 +691,7 @@ interface VegetationInstance {
  *     cullDistance: 200
  *   }}
  * />
- * 
+ *
  * // Grass patches
  * <LODVegetation
  *   count={5000}
@@ -702,7 +704,7 @@ interface VegetationInstance {
  *   castShadow={false}
  * />
  * ```
- * 
+ *
  * @param props - LODVegetationProps configuration
  * @returns React element containing all vegetation instances
  */
@@ -742,21 +744,24 @@ export const LODVegetation = forwardRef<LODVegetationRef, LODVegetationProps>(
 
         const [vegetationInstances, setVegetationInstances] = useState<VegetationInstance[]>(() =>
             instances.slice(0, count).map((inst) => ({
-                position: inst.position instanceof THREE.Vector3
-                    ? inst.position.clone()
-                    : new THREE.Vector3(...inst.position),
-                rotation: inst.rotation instanceof THREE.Euler
-                    ? inst.rotation.clone()
-                    : inst.rotation
-                    ? new THREE.Euler(...inst.rotation)
-                    : new THREE.Euler(0, Math.random() * Math.PI * 2, 0),
-                scale: inst.scale instanceof THREE.Vector3
-                    ? inst.scale.clone()
-                    : typeof inst.scale === 'number'
-                    ? new THREE.Vector3(inst.scale, inst.scale, inst.scale)
-                    : inst.scale
-                    ? new THREE.Vector3(...inst.scale)
-                    : new THREE.Vector3(1, 1, 1),
+                position:
+                    inst.position instanceof THREE.Vector3
+                        ? inst.position.clone()
+                        : new THREE.Vector3(...inst.position),
+                rotation:
+                    inst.rotation instanceof THREE.Euler
+                        ? inst.rotation.clone()
+                        : inst.rotation
+                          ? new THREE.Euler(...inst.rotation)
+                          : new THREE.Euler(0, Math.random() * Math.PI * 2, 0),
+                scale:
+                    inst.scale instanceof THREE.Vector3
+                        ? inst.scale.clone()
+                        : typeof inst.scale === 'number'
+                          ? new THREE.Vector3(inst.scale, inst.scale, inst.scale)
+                          : inst.scale
+                            ? new THREE.Vector3(...inst.scale)
+                            : new THREE.Vector3(1, 1, 1),
                 lodLevel: 0,
                 visible: true,
             }))
@@ -770,18 +775,27 @@ export const LODVegetation = forwardRef<LODVegetationRef, LODVegetationProps>(
         });
 
         const baseMaterial = useMemo(() => {
-            return material ?? new THREE.MeshStandardMaterial({
-                color: 0x4a7c23,
-                roughness: 0.8,
-                side: THREE.DoubleSide,
-            });
+            return (
+                material ??
+                new THREE.MeshStandardMaterial({
+                    color: 0x4a7c23,
+                    roughness: 0.8,
+                    side: THREE.DoubleSide,
+                })
+            );
         }, [material]);
 
-        const geometries = useMemo(() => ({
-            high: highDetailGeometry,
-            medium: mediumDetailGeometry ?? simplifyGeometry(highDetailGeometry, { targetRatio: 0.5 }),
-            low: lowDetailGeometry ?? simplifyGeometry(highDetailGeometry, { targetRatio: 0.2 }),
-        }), [highDetailGeometry, mediumDetailGeometry, lowDetailGeometry]);
+        const geometries = useMemo(
+            () => ({
+                high: highDetailGeometry,
+                medium:
+                    mediumDetailGeometry ??
+                    simplifyGeometry(highDetailGeometry, { targetRatio: 0.5 }),
+                low:
+                    lowDetailGeometry ?? simplifyGeometry(highDetailGeometry, { targetRatio: 0.2 }),
+            }),
+            [highDetailGeometry, mediumDetailGeometry, lowDetailGeometry]
+        );
 
         const updateLOD = useCallback(() => {
             const cameraPos = camera.position;
@@ -843,10 +857,10 @@ export const LODVegetation = forwardRef<LODVegetationRef, LODVegetationProps>(
                         inst.lodLevel === 0
                             ? geometries.high
                             : inst.lodLevel === 1
-                            ? geometries.medium
-                            : inst.lodLevel === 2
-                            ? geometries.low
-                            : geometries.low;
+                              ? geometries.medium
+                              : inst.lodLevel === 2
+                                ? geometries.low
+                                : geometries.low;
 
                     if (inst.lodLevel >= 3 && impostorTexture) {
                         return (
@@ -881,10 +895,4 @@ export const LODVegetation = forwardRef<LODVegetationRef, LODVegetationProps>(
 
 LODVegetation.displayName = 'LODVegetation';
 
-export type {
-    LODLevel,
-    LODConfig,
-    LODState,
-    ImpostorConfig,
-    VegetationLODConfig,
-};
+export type { LODLevel, LODConfig, LODState, ImpostorConfig, VegetationLODConfig };

@@ -4,7 +4,13 @@
  */
 
 import * as THREE from 'three';
-import { ShaderChunks, noiseSnippet, lightingSnippet, colorSnippet, animationSnippet } from '../../core/shaders';
+import {
+    ShaderChunks,
+    noiseSnippet,
+    lightingSnippet,
+    colorSnippet,
+    animationSnippet,
+} from '../../core/shaders';
 
 export interface ToonMaterialOptions {
     color?: THREE.ColorRepresentation;
@@ -16,12 +22,7 @@ export interface ToonMaterialOptions {
 }
 
 export function createToonMaterial(options: ToonMaterialOptions = {}): THREE.ShaderMaterial {
-    const {
-        color = 0xffffff,
-        levels = 4,
-        rimColor = 0x4488ff,
-        rimPower = 2.0,
-    } = options;
+    const { color = 0xffffff, levels = 4, rimColor = 0x4488ff, rimPower = 2.0 } = options;
 
     return new THREE.ShaderMaterial({
         uniforms: {
@@ -80,7 +81,9 @@ export interface HologramMaterialOptions {
     alpha?: number;
 }
 
-export function createHologramMaterial(options: HologramMaterialOptions = {}): THREE.ShaderMaterial {
+export function createHologramMaterial(
+    options: HologramMaterialOptions = {}
+): THREE.ShaderMaterial {
     const {
         color = 0x00ffff,
         scanlineIntensity = 0.5,
@@ -165,7 +168,9 @@ export interface DissolveMaterialOptions {
     noiseScale?: number;
 }
 
-export function createDissolveMaterial(options: DissolveMaterialOptions = {}): THREE.ShaderMaterial {
+export function createDissolveMaterial(
+    options: DissolveMaterialOptions = {}
+): THREE.ShaderMaterial {
     const {
         color = 0xffffff,
         edgeColor = 0xff6600,
@@ -236,7 +241,9 @@ export interface ForcefieldMaterialOptions {
     alpha?: number;
 }
 
-export function createForcefieldMaterial(options: ForcefieldMaterialOptions = {}): THREE.ShaderMaterial {
+export function createForcefieldMaterial(
+    options: ForcefieldMaterialOptions = {}
+): THREE.ShaderMaterial {
     const {
         color = 0x00ffff,
         secondaryColor = 0x0088ff,
@@ -430,11 +437,7 @@ export interface CrystalMaterialOptions {
 }
 
 export function createCrystalMaterial(options: CrystalMaterialOptions = {}): THREE.ShaderMaterial {
-    const {
-        color = 0xffffff,
-        fresnelPower = 4.0,
-        rainbowIntensity = 0.3,
-    } = options;
+    const { color = 0xffffff, fresnelPower = 4.0, rainbowIntensity = 0.3 } = options;
 
     return new THREE.ShaderMaterial({
         uniforms: {
@@ -502,10 +505,7 @@ export interface OutlineMaterialOptions {
 }
 
 export function createOutlineMaterial(options: OutlineMaterialOptions = {}): THREE.ShaderMaterial {
-    const {
-        color = 0x000000,
-        outlineWidth = 0.03,
-    } = options;
+    const { color = 0x000000, outlineWidth = 0.03 } = options;
 
     return new THREE.ShaderMaterial({
         uniforms: {
@@ -537,7 +537,9 @@ export interface GradientMaterialOptions {
     useThreeColors?: boolean;
 }
 
-export function createGradientMaterial(options: GradientMaterialOptions = {}): THREE.ShaderMaterial {
+export function createGradientMaterial(
+    options: GradientMaterialOptions = {}
+): THREE.ShaderMaterial {
     const {
         colorStart = 0xff0000,
         colorEnd = 0x0000ff,
@@ -608,7 +610,9 @@ export interface ScanlineMaterialOptions {
     curvature?: number;
 }
 
-export function createScanlineMaterial(options: ScanlineMaterialOptions = {}): THREE.ShaderMaterial {
+export function createScanlineMaterial(
+    options: ScanlineMaterialOptions = {}
+): THREE.ShaderMaterial {
     const {
         color = 0x00ff00,
         backgroundColor = 0x001100,

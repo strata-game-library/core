@@ -26,25 +26,32 @@ export function DeviceProvider({ children }: { children: ReactNode }) {
   const [profile, setProfile] = useState<DeviceProfile>(defaultProfile);
 
   useEffect(() => {
-    let mounted = true;
+    // Track mounted state to prevent race condition where cleanup runs before
+    // addListener promise resolves, causing memory leaks and React warnings
+    let isMounted = true;
     let removeListener: (() => void) | undefined;
 
-    Strata.getDeviceProfile().then(p => {
-      if (mounted) setProfile(p);
+    Strata.getDeviceProfile().then(profile => {
+      if (isMounted) {
+        setProfile(profile);
+      }
     });
 
     Strata.addListener('deviceChange', (newProfile: DeviceProfile) => {
-      if (mounted) setProfile(newProfile);
+      if (isMounted) {
+        setProfile(newProfile);
+      }
     }).then(handle => {
-      if (mounted) {
+      if (isMounted) {
         removeListener = handle.remove;
       } else {
+        // Already unmounted - clean up immediately to prevent memory leak
         handle.remove();
       }
     });
 
     return () => {
-      mounted = false;
+      isMounted = false;
       removeListener?.();
     };
   }, []);

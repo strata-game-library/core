@@ -27,83 +27,83 @@ import { createAnimationMachine } from './factory';
  * ```
  */
 export function createLocomotionMachine(
-  animations: Partial<Record<'idle' | 'walk' | 'run' | 'jump' | 'fall' | 'land', string>>
+    animations: Partial<Record<'idle' | 'walk' | 'run' | 'jump' | 'fall' | 'land', string>>
 ) {
-  const states: AnimationMachineConfig['states'] = {};
-  const transitions: AnimationMachineConfig['transitions'] = [];
+    const states: AnimationMachineConfig['states'] = {};
+    const transitions: AnimationMachineConfig['transitions'] = [];
 
-  if (animations.idle) {
-    states.idle = { animation: animations.idle, loop: true };
-    if (animations.walk) {
-      transitions.push({ from: 'idle', to: 'walk', event: 'MOVE' });
-    }
-    if (animations.jump) {
-      transitions.push({ from: 'idle', to: 'jump', event: 'JUMP' });
-    }
-  }
-
-  if (animations.walk) {
-    states.walk = { animation: animations.walk, loop: true };
     if (animations.idle) {
-      transitions.push({ from: 'walk', to: 'idle', event: 'STOP' });
+        states.idle = { animation: animations.idle, loop: true };
+        if (animations.walk) {
+            transitions.push({ from: 'idle', to: 'walk', event: 'MOVE' });
+        }
+        if (animations.jump) {
+            transitions.push({ from: 'idle', to: 'jump', event: 'JUMP' });
+        }
     }
+
+    if (animations.walk) {
+        states.walk = { animation: animations.walk, loop: true };
+        if (animations.idle) {
+            transitions.push({ from: 'walk', to: 'idle', event: 'STOP' });
+        }
+        if (animations.run) {
+            transitions.push({ from: 'walk', to: 'run', event: 'SPRINT' });
+        }
+        if (animations.jump) {
+            transitions.push({ from: 'walk', to: 'jump', event: 'JUMP' });
+        }
+    }
+
     if (animations.run) {
-      transitions.push({ from: 'walk', to: 'run', event: 'SPRINT' });
+        states.run = { animation: animations.run, loop: true };
+        if (animations.walk) {
+            transitions.push({ from: 'run', to: 'walk', event: 'WALK' });
+        }
+        if (animations.idle) {
+            transitions.push({ from: 'run', to: 'idle', event: 'STOP' });
+        }
+        if (animations.jump) {
+            transitions.push({ from: 'run', to: 'jump', event: 'JUMP' });
+        }
     }
-    if (animations.jump) {
-      transitions.push({ from: 'walk', to: 'jump', event: 'JUMP' });
-    }
-  }
 
-  if (animations.run) {
-    states.run = { animation: animations.run, loop: true };
-    if (animations.walk) {
-      transitions.push({ from: 'run', to: 'walk', event: 'WALK' });
-    }
-    if (animations.idle) {
-      transitions.push({ from: 'run', to: 'idle', event: 'STOP' });
-    }
     if (animations.jump) {
-      transitions.push({ from: 'run', to: 'jump', event: 'JUMP' });
+        states.jump = { animation: animations.jump, loop: false };
+        if (animations.fall) {
+            transitions.push({ from: 'jump', to: 'fall', event: 'ANIMATION_COMPLETE' });
+        } else if (animations.land) {
+            transitions.push({ from: 'jump', to: 'land', event: 'ANIMATION_COMPLETE' });
+        } else if (animations.idle) {
+            transitions.push({ from: 'jump', to: 'idle', event: 'ANIMATION_COMPLETE' });
+        }
     }
-  }
 
-  if (animations.jump) {
-    states.jump = { animation: animations.jump, loop: false };
     if (animations.fall) {
-      transitions.push({ from: 'jump', to: 'fall', event: 'ANIMATION_COMPLETE' });
-    } else if (animations.land) {
-      transitions.push({ from: 'jump', to: 'land', event: 'ANIMATION_COMPLETE' });
-    } else if (animations.idle) {
-      transitions.push({ from: 'jump', to: 'idle', event: 'ANIMATION_COMPLETE' });
+        states.fall = { animation: animations.fall, loop: true };
+        if (animations.land) {
+            transitions.push({ from: 'fall', to: 'land', event: 'GROUND' });
+        } else if (animations.idle) {
+            transitions.push({ from: 'fall', to: 'idle', event: 'GROUND' });
+        }
     }
-  }
 
-  if (animations.fall) {
-    states.fall = { animation: animations.fall, loop: true };
     if (animations.land) {
-      transitions.push({ from: 'fall', to: 'land', event: 'GROUND' });
-    } else if (animations.idle) {
-      transitions.push({ from: 'fall', to: 'idle', event: 'GROUND' });
+        states.land = { animation: animations.land, loop: false };
+        if (animations.idle) {
+            transitions.push({ from: 'land', to: 'idle', event: 'ANIMATION_COMPLETE' });
+        }
     }
-  }
 
-  if (animations.land) {
-    states.land = { animation: animations.land, loop: false };
-    if (animations.idle) {
-      transitions.push({ from: 'land', to: 'idle', event: 'ANIMATION_COMPLETE' });
-    }
-  }
+    const initial = animations.idle ? 'idle' : Object.keys(states)[0];
 
-  const initial = animations.idle ? 'idle' : Object.keys(states)[0];
-
-  return createAnimationMachine({
-    id: 'locomotion',
-    initial: initial as AnimationStateName,
-    states,
-    transitions,
-    defaultCrossFadeDuration: 0.2,
-  });
+    return createAnimationMachine({
+        id: 'locomotion',
+        initial: initial as AnimationStateName,
+        states,
+        transitions,
+        defaultCrossFadeDuration: 0.2,
+    });
 }
 
 /**
@@ -123,59 +123,59 @@ export function createLocomotionMachine(
  * ```
  */
 export function createCombatMachine(
-  animations: Partial<Record<'idle' | 'attack' | 'hit' | 'death' | 'dodge' | 'block', string>>
+    animations: Partial<Record<'idle' | 'attack' | 'hit' | 'death' | 'dodge' | 'block', string>>
 ) {
-  const states: AnimationMachineConfig['states'] = {};
-  const transitions: AnimationMachineConfig['transitions'] = [];
+    const states: AnimationMachineConfig['states'] = {};
+    const transitions: AnimationMachineConfig['transitions'] = [];
 
-  if (animations.idle) {
-    states.idle = { animation: animations.idle, loop: true };
-  }
-
-  if (animations.attack) {
-    states.attack = { animation: animations.attack, loop: false, crossFadeDuration: 0.1 };
     if (animations.idle) {
-      transitions.push({ from: 'idle', to: 'attack', event: 'ATTACK' });
-      transitions.push({ from: 'attack', to: 'idle', event: 'ANIMATION_COMPLETE' });
+        states.idle = { animation: animations.idle, loop: true };
     }
-  }
 
-  if (animations.hit) {
-    states.hit = { animation: animations.hit, loop: false, crossFadeDuration: 0.05 };
-    transitions.push({ from: '*', to: 'hit', event: 'HIT' });
-    if (animations.idle) {
-      transitions.push({ from: 'hit', to: 'idle', event: 'ANIMATION_COMPLETE' });
+    if (animations.attack) {
+        states.attack = { animation: animations.attack, loop: false, crossFadeDuration: 0.1 };
+        if (animations.idle) {
+            transitions.push({ from: 'idle', to: 'attack', event: 'ATTACK' });
+            transitions.push({ from: 'attack', to: 'idle', event: 'ANIMATION_COMPLETE' });
+        }
     }
-  }
 
-  if (animations.death) {
-    states.death = { animation: animations.death, loop: false };
-    transitions.push({ from: '*', to: 'death', event: 'DIE' });
-  }
-
-  if (animations.dodge) {
-    states.dodge = { animation: animations.dodge, loop: false, crossFadeDuration: 0.1 };
-    if (animations.idle) {
-      transitions.push({ from: 'idle', to: 'dodge', event: 'DODGE' });
-      transitions.push({ from: 'dodge', to: 'idle', event: 'ANIMATION_COMPLETE' });
+    if (animations.hit) {
+        states.hit = { animation: animations.hit, loop: false, crossFadeDuration: 0.05 };
+        transitions.push({ from: '*', to: 'hit', event: 'HIT' });
+        if (animations.idle) {
+            transitions.push({ from: 'hit', to: 'idle', event: 'ANIMATION_COMPLETE' });
+        }
     }
-  }
 
-  if (animations.block) {
-    states.block = { animation: animations.block, loop: true };
-    if (animations.idle) {
-      transitions.push({ from: 'idle', to: 'block', event: 'BLOCK' });
-      transitions.push({ from: 'block', to: 'idle', event: 'RELEASE' });
+    if (animations.death) {
+        states.death = { animation: animations.death, loop: false };
+        transitions.push({ from: '*', to: 'death', event: 'DIE' });
     }
-  }
 
-  const initial = animations.idle ? 'idle' : Object.keys(states)[0];
+    if (animations.dodge) {
+        states.dodge = { animation: animations.dodge, loop: false, crossFadeDuration: 0.1 };
+        if (animations.idle) {
+            transitions.push({ from: 'idle', to: 'dodge', event: 'DODGE' });
+            transitions.push({ from: 'dodge', to: 'idle', event: 'ANIMATION_COMPLETE' });
+        }
+    }
 
-  return createAnimationMachine({
-    id: 'combat',
-    initial: initial as AnimationStateName,
-    states,
-    transitions,
-    defaultCrossFadeDuration: 0.15,
-  });
+    if (animations.block) {
+        states.block = { animation: animations.block, loop: true };
+        if (animations.idle) {
+            transitions.push({ from: 'idle', to: 'block', event: 'BLOCK' });
+            transitions.push({ from: 'block', to: 'idle', event: 'RELEASE' });
+        }
+    }
+
+    const initial = animations.idle ? 'idle' : Object.keys(states)[0];
+
+    return createAnimationMachine({
+        id: 'combat',
+        initial: initial as AnimationStateName,
+        states,
+        transitions,
+        defaultCrossFadeDuration: 0.15,
+    });
 }

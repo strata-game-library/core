@@ -6,7 +6,14 @@
  * @module components/Decals
  */
 
-import React, { useRef, useMemo, useEffect, useCallback, forwardRef, useImperativeHandle } from 'react';
+import React, {
+    useRef,
+    useMemo,
+    useEffect,
+    useCallback,
+    forwardRef,
+    useImperativeHandle,
+} from 'react';
 import { useThree, useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import {
@@ -25,7 +32,7 @@ import {
 
 /**
  * Props for the Decal component
- * 
+ *
  * @property position - World position of the decal center
  * @property normal - Surface normal direction for orientation
  * @property size - Size of decal (single number or [width, height])
@@ -63,7 +70,7 @@ export interface DecalRef {
 /**
  * Surface-projected decal component for bullet holes, splashes, and marks.
  * Automatically orients to the surface normal with optional fade-out.
- * 
+ *
  * @example
  * ```tsx
  * // Basic bullet hole decal
@@ -73,7 +80,7 @@ export interface DecalRef {
  *   texture={bulletHoleTexture}
  *   size={0.2}
  * />
- * 
+ *
  * // Fading blood splatter
  * <Decal
  *   position={[0, 0.01, 0]}
@@ -83,7 +90,7 @@ export interface DecalRef {
  *   fadeTime={10}
  *   opacity={0.9}
  * />
- * 
+ *
  * // Rotated graffiti
  * <Decal
  *   position={wallPosition}
@@ -93,7 +100,7 @@ export interface DecalRef {
  *   size={2}
  * />
  * ```
- * 
+ *
  * @param props - DecalProps configuration
  * @returns React element containing the decal mesh
  */
@@ -201,7 +208,7 @@ Decal.displayName = 'Decal';
 
 /**
  * Props for the Billboard component
- * 
+ *
  * @property position - World position of the billboard
  * @property size - Size (single number or [width, height])
  * @property texture - Texture to display
@@ -239,7 +246,7 @@ export interface BillboardRef {
 /**
  * Camera-facing billboard component for sprites, labels, and impostors.
  * Can be configured for spherical or cylindrical billboarding.
- * 
+ *
  * @example
  * ```tsx
  * // Basic sprite billboard
@@ -248,7 +255,7 @@ export interface BillboardRef {
  *   texture={treeTexture}
  *   size={3}
  * />
- * 
+ *
  * // Cylindrical billboard (locked Y rotation)
  * <Billboard
  *   position={characterPosition}
@@ -256,7 +263,7 @@ export interface BillboardRef {
  *   size={[1, 2]}
  *   lockY={true}
  * />
- * 
+ *
  * // Transparent health bar
  * <Billboard
  *   position={[0, 3, 0]}
@@ -266,7 +273,7 @@ export interface BillboardRef {
  *   renderOrder={100}
  * />
  * ```
- * 
+ *
  * @param props - BillboardProps configuration
  * @returns React element containing the billboard
  */
@@ -351,7 +358,7 @@ Billboard.displayName = 'Billboard';
 
 /**
  * Props for the AnimatedBillboard component
- * 
+ *
  * @property texture - Sprite sheet texture
  * @property columns - Number of columns in sprite sheet
  * @property rows - Number of rows in sprite sheet
@@ -388,7 +395,7 @@ export interface AnimatedBillboardRef extends BillboardRef {
 /**
  * Animated sprite sheet billboard for effects and character sprites.
  * Supports looping, ping-pong, and manual frame control.
- * 
+ *
  * @example
  * ```tsx
  * // Explosion animation
@@ -401,7 +408,7 @@ export interface AnimatedBillboardRef extends BillboardRef {
  *   loop={false}
  *   onAnimationComplete={() => removeExplosion()}
  * />
- * 
+ *
  * // Looping fire effect
  * <AnimatedBillboard
  *   position={[0, 1, 0]}
@@ -412,7 +419,7 @@ export interface AnimatedBillboardRef extends BillboardRef {
  *   loop={true}
  *   size={2}
  * />
- * 
+ *
  * // Character idle animation
  * <AnimatedBillboard
  *   position={characterPos}
@@ -425,7 +432,7 @@ export interface AnimatedBillboardRef extends BillboardRef {
  *   lockY={true}
  * />
  * ```
- * 
+ *
  * @param props - AnimatedBillboardProps configuration
  * @returns React element containing the animated billboard
  */
@@ -578,7 +585,7 @@ AnimatedBillboard.displayName = 'AnimatedBillboard';
 
 /**
  * Props for the DecalPool component
- * 
+ *
  * @property maxDecals - Maximum number of decals in the pool
  * @property fadeTime - Default fade-out time in seconds
  * @property defaultSize - Default decal size
@@ -631,12 +638,12 @@ interface PooledDecal {
 /**
  * Managed pool of decals with automatic lifecycle and fade-out.
  * Efficiently handles many temporary decals like bullet holes and blood splatters.
- * 
+ *
  * @example
  * ```tsx
  * // Bullet hole pool
  * const decalPoolRef = useRef<DecalPoolRef>(null);
- * 
+ *
  * <DecalPool
  *   ref={decalPoolRef}
  *   maxDecals={100}
@@ -644,21 +651,21 @@ interface PooledDecal {
  *   defaultTexture={bulletHoleTexture}
  *   defaultSize={0.1}
  * />
- * 
+ *
  * // Add decal on hit
  * const handleHit = (point, normal) => {
  *   decalPoolRef.current?.addDecal(point, normal, {
  *     rotation: Math.random() * Math.PI * 2
  *   });
  * };
- * 
+ *
  * // Blood splatter pool with custom textures
  * <DecalPool
  *   ref={bloodPoolRef}
  *   maxDecals={50}
  *   fadeTime={60}
  * />
- * 
+ *
  * // Add with custom options
  * bloodPoolRef.current?.addDecal(hitPos, hitNormal, {
  *   texture: bloodTextures[Math.floor(Math.random() * 3)],
@@ -666,7 +673,7 @@ interface PooledDecal {
  *   color: 0x880000
  * });
  * ```
- * 
+ *
  * @param props - DecalPoolProps configuration
  * @returns React element containing all pool decals
  */

@@ -7,8 +7,10 @@ import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.os.VibratorManager;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Display;
 import android.view.InputDevice;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowInsets;
@@ -32,12 +34,15 @@ import java.util.Map;
 @CapacitorPlugin(name = "Strata")
 public class StrataPlugin extends Plugin {
 
-    private static final int MAX_INPUT_MAPPING_SIZE = 5;
-    private static final int MAX_INPUT_ACTION_LENGTH = 32;
+    private static final String TAG = "StrataPlugin";
+    private static final float GAMEPAD_DEADZONE = 0.15f;
 
     private Map<String, List<String>> inputMapping = new HashMap<>();
     private Map<Integer, JSObject> activeTouches = new HashMap<>();
     private Vibrator vibrator;
+    // Cache last gamepad MotionEvent for reading axis values in getInputSnapshot
+    private MotionEvent lastGamepadEvent = null;
+    private boolean[] lastGamepadButtons = new boolean[20];
 
     @Override
     public void load() {
@@ -169,6 +174,7 @@ public class StrataPlugin extends Plugin {
                     insets.put("left", systemInsets.left / density);
                 }
             } catch (Exception e) {
+                Log.w(TAG, "Failed to get system bar insets", e);
             }
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             try {
@@ -185,6 +191,7 @@ public class StrataPlugin extends Plugin {
                     }
                 }
             } catch (Exception e) {
+                Log.w(TAG, "Failed to get display cutout insets", e);
             }
         }
 
@@ -275,17 +282,28 @@ public class StrataPlugin extends Plugin {
         triggers.put("left", 0);
         triggers.put("right", 0);
 
-        int[] deviceIds = InputDevice.getDeviceIds();
-        for (int deviceId : deviceIds) {
-            InputDevice device = InputDevice.getDevice(deviceId);
-            if (device != null) {
-                int sources = device.getSources();
-                if ((sources & InputDevice.SOURCE_GAMEPAD) == InputDevice.SOURCE_GAMEPAD ||
-                    (sources & InputDevice.SOURCE_JOYSTICK) == InputDevice.SOURCE_JOYSTICK) {
-                    break;
-                }
-            }
+        // Read actual gamepad axis values from cached MotionEvent
+        if (lastGamepadEvent != null) {
+            float lx = lastGamepadEvent.getAxisValue(MotionEvent.AXIS_X);
+            float ly = lastGamepadEvent.getAxisValue(MotionEvent.AXIS_Y);
+            float rx = lastGamepadEvent.getAxisValue(MotionEvent.AXIS_Z);
+            float ry = lastGamepadEvent.getAxisValue(MotionEvent.AXIS_RZ);
+            float lt = lastGamepadEvent.getAxisValue(MotionEvent.AXIS_LTRIGGER);
+            float rt = lastGamepadEvent.getAxisValue(MotionEvent.AXIS_RTRIGGER);
+            
+            if (Math.abs(lx) > GAMEPAD_DEADZONE) leftStick.put("x", lx);
+            if (Math.abs(ly) > GAMEPAD_DEADZONE) leftStick.put("y", ly);
+            if (Math.abs(rx) > GAMEPAD_DEADZONE) rightStick.put("x", rx);
+            if (Math.abs(ry) > GAMEPAD_DEADZONE) rightStick.put("y", ry);
+            
+            triggers.put("left", lt);
+            triggers.put("right", rt);
         }
+        
+        // Read cached button states
+        buttons.put("jump", lastGamepadButtons[KeyEvent.KEYCODE_BUTTON_A]);
+        buttons.put("action", lastGamepadButtons[KeyEvent.KEYCODE_BUTTON_B]);
+        buttons.put("cancel", lastGamepadButtons[KeyEvent.KEYCODE_BUTTON_X]);
 
         JSArray touchesArray = new JSArray();
         for (Map.Entry<Integer, JSObject> entry : activeTouches.entrySet()) {
@@ -295,6 +313,7 @@ public class StrataPlugin extends Plugin {
                 touchData.put("position", entry.getValue().get("position"));
                 touchData.put("phase", entry.getValue().getString("phase"));
             } catch (JSONException e) {
+                Log.e(TAG, "Failed to serialize touch data", e);
             }
             touchesArray.put(touchData);
         }
@@ -311,42 +330,21 @@ public class StrataPlugin extends Plugin {
 
     @PluginMethod
     public void setInputMapping(PluginCall call) {
+        // Refactored to use a loop instead of repetitive code blocks
+        String[] actionNames = {
+            "moveForward", "moveBackward", "moveLeft", "moveRight",
+            "jump", "action", "cancel"
+        };
+        
         try {
-            JSArray moveForward = call.getArray("moveForward");
-            if (moveForward != null) {
-                inputMapping.put("moveForward", jsArrayToStringList(moveForward));
-            }
-            
-            JSArray moveBackward = call.getArray("moveBackward");
-            if (moveBackward != null) {
-                inputMapping.put("moveBackward", jsArrayToStringList(moveBackward));
-            }
-            
-            JSArray moveLeft = call.getArray("moveLeft");
-            if (moveLeft != null) {
-                inputMapping.put("moveLeft", jsArrayToStringList(moveLeft));
-            }
-            
-            JSArray moveRight = call.getArray("moveRight");
-            if (moveRight != null) {
-                inputMapping.put("moveRight", jsArrayToStringList(moveRight));
-            }
-            
-            JSArray jump = call.getArray("jump");
-            if (jump != null) {
-                inputMapping.put("jump", jsArrayToStringList(jump));
-            }
-            
-            JSArray action = call.getArray("action");
-            if (action != null) {
-                inputMapping.put("action", jsArrayToStringList(action));
-            }
-            
-            JSArray cancel = call.getArray("cancel");
-            if (cancel != null) {
-                inputMapping.put("cancel", jsArrayToStringList(cancel));
+            for (String actionName : actionNames) {
+                JSArray array = call.getArray(actionName);
+                if (array != null) {
+                    inputMapping.put(actionName, jsArrayToStringList(array));
+                }
             }
         } catch (JSONException e) {
+            Log.e(TAG, "Failed to parse input mapping", e);
         }
         
         call.resolve();
@@ -354,10 +352,10 @@ public class StrataPlugin extends Plugin {
 
     private List<String> jsArrayToStringList(JSArray array) throws JSONException {
         List<String> list = new ArrayList<>();
-        int length = Math.min(array.length(), MAX_INPUT_MAPPING_SIZE);
+        int length = Math.min(array.length(), 5);
         for (int i = 0; i < length; i++) {
             String val = array.getString(i);
-            if (val != null && val.length() < MAX_INPUT_ACTION_LENGTH) {
+            if (val != null && val.length() < 32) {
                 list.add(val);
             }
         }
@@ -366,81 +364,38 @@ public class StrataPlugin extends Plugin {
 
     @PluginMethod
     public void triggerHaptics(PluginCall call) {
+        String intensity = call.getString("intensity", "medium");
+        Integer duration = call.getInt("duration");
+        
         if (vibrator == null || !vibrator.hasVibrator()) {
             call.resolve();
             return;
         }
 
-        // Check for pattern array first (takes precedence)
-        JSArray patternArray = call.getArray("pattern");
-        if (patternArray != null && patternArray.length() > 0) {
-            try {
-                long[] pattern = new long[patternArray.length()];
-                for (int i = 0; i < patternArray.length(); i++) {
-                    pattern[i] = patternArray.getLong(i);
-                }
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    // Pattern vibration with default amplitude
-                    vibrator.vibrate(VibrationEffect.createWaveform(pattern, -1));
-                } else {
-                    vibrator.vibrate(pattern, -1);
-                }
-                call.resolve();
-                return;
-            } catch (JSONException e) {
-                // Fall through to standard intensity-based haptics
-            }
-        }
-
-        // Determine amplitude from customIntensity or preset intensity
-        int amplitude;
-        Double customIntensity = call.getDouble("customIntensity");
-
-        if (customIntensity != null) {
-            // Map custom intensity (0-1) to amplitude (1-255)
-            double clampedIntensity = Math.max(0.0, Math.min(1.0, customIntensity));
-            amplitude = (int) Math.max(1, Math.min(255, clampedIntensity * 255));
-        } else {
-            // Use preset intensity
-            String intensity = call.getString("intensity", "medium");
-            switch (intensity) {
-                case "light":
-                    amplitude = 50;
-                    break;
-                case "heavy":
-                    amplitude = 255;
-                    break;
-                default:
-                    amplitude = 150;
-                    break;
-            }
-        }
-
-        // Determine duration
-        Integer duration = call.getInt("duration");
         long vibrationDuration;
-
-        if (duration != null) {
-            vibrationDuration = duration;
-        } else {
-            // Default durations based on intensity
-            if (amplitude <= 50) {
-                vibrationDuration = 10;
-            } else if (amplitude >= 200) {
-                vibrationDuration = 50;
-            } else {
-                vibrationDuration = 25;
-            }
+        int amplitude;
+        
+        switch (intensity) {
+            case "light":
+                vibrationDuration = duration != null ? duration : 10;
+                amplitude = 50;
+                break;
+            case "heavy":
+                vibrationDuration = duration != null ? duration : 50;
+                amplitude = 255;
+                break;
+            default:
+                vibrationDuration = duration != null ? duration : 25;
+                amplitude = 150;
+                break;
         }
 
-        // Vibrate with amplitude control (Android O+) or simple vibration (older)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             vibrator.vibrate(VibrationEffect.createOneShot(vibrationDuration, amplitude));
         } else {
             vibrator.vibrate(vibrationDuration);
         }
-
+        
         call.resolve();
     }
 
@@ -549,5 +504,32 @@ public class StrataPlugin extends Plugin {
         JSObject data = new JSObject();
         data.put("index", index);
         notifyListeners("gamepadDisconnected", data);
+    }
+
+    /**
+     * Handle gamepad motion events (joystick/trigger axis values).
+     * Call this from your Activity's onGenericMotionEvent.
+     */
+    public boolean handleGamepadMotionEvent(MotionEvent event) {
+        if ((event.getSource() & InputDevice.SOURCE_JOYSTICK) == InputDevice.SOURCE_JOYSTICK ||
+            (event.getSource() & InputDevice.SOURCE_GAMEPAD) == InputDevice.SOURCE_GAMEPAD) {
+            // Cache the event for reading in getInputSnapshot
+            lastGamepadEvent = MotionEvent.obtain(event);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Handle gamepad key events (button presses).
+     * Call this from your Activity's onKeyDown/onKeyUp.
+     */
+    public boolean handleGamepadKeyEvent(KeyEvent event) {
+        int keyCode = event.getKeyCode();
+        if (keyCode >= 0 && keyCode < lastGamepadButtons.length) {
+            lastGamepadButtons[keyCode] = (event.getAction() == KeyEvent.ACTION_DOWN);
+            return true;
+        }
+        return false;
     }
 }

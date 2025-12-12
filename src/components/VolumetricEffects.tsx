@@ -37,12 +37,7 @@ interface EnhancedFogProps {
 /**
  * Simple fog implementation using Three.js built-in fog with enhanced visuals
  */
-export function EnhancedFog({
-    color = 0xb3c8d9,
-    density = 0.02,
-    near,
-    far,
-}: EnhancedFogProps) {
+export function EnhancedFog({ color = 0xb3c8d9, density = 0.02, near, far }: EnhancedFogProps) {
     const { scene } = useThree();
 
     useEffect(() => {

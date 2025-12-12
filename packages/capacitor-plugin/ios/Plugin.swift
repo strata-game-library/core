@@ -134,18 +134,29 @@ public class StrataPlugin: CAPPlugin, CAPBridgedPlugin {
     private func getSafeAreaInsets() -> [String: CGFloat] {
         var insets: [String: CGFloat] = ["top": 0, "right": 0, "bottom": 0, "left": 0]
         
-        DispatchQueue.main.sync {
+        // Fix: Check if already on main thread to prevent deadlock
+        // DispatchQueue.main.sync from main thread causes deadlock
+        let getInsets = {
             if let window = UIApplication.shared.connectedScenes
                 .compactMap({ $0 as? UIWindowScene })
                 .flatMap({ $0.windows })
                 .first(where: { $0.isKeyWindow }) {
                 let safeArea = window.safeAreaInsets
-                insets = [
+                return [
                     "top": safeArea.top,
                     "right": safeArea.right,
                     "bottom": safeArea.bottom,
                     "left": safeArea.left
                 ]
+            }
+            return insets
+        }
+        
+        if Thread.isMainThread {
+            insets = getInsets()
+        } else {
+            DispatchQueue.main.sync {
+                insets = getInsets()
             }
         }
         
@@ -226,8 +237,12 @@ public class StrataPlugin: CAPPlugin, CAPBridgedPlugin {
         ]
         var triggers: [String: Float] = ["left": 0, "right": 0]
         
-        if let controller = GCController.controllers().first,
-           let gamepad = controller.extendedGamepad {
+        // Support multiple controllers via optional controllerIndex parameter
+        let controllerIndex = call.getInt("controllerIndex") ?? 0
+        let controllers = GCController.controllers()
+        
+        if controllerIndex < controllers.count,
+           let gamepad = controllers[controllerIndex].extendedGamepad {
             let deadzone: Float = 0.15
             
             let lx = gamepad.leftThumbstick.xAxis.value
@@ -256,13 +271,15 @@ public class StrataPlugin: CAPPlugin, CAPBridgedPlugin {
             ]
         }
         
+        // Include controller count for multi-controller awareness
         let snapshot: [String: Any] = [
             "timestamp": CACurrentMediaTime() * 1000,
             "leftStick": leftStick,
             "rightStick": rightStick,
             "buttons": buttons,
             "triggers": triggers,
-            "touches": touchesArray
+            "touches": touchesArray,
+            "controllerCount": controllers.count
         ]
         
         call.resolve(snapshot)

@@ -10,13 +10,13 @@
 
 import { useControls, folder, button, Leva, LevaPanel, useCreateStore } from 'leva';
 import type {
-  DebugPanelConfig,
-  DebugSchema,
-  DebugStore,
-  CameraDebugValues,
-  PhysicsDebugValues,
-  LightingDebugValues,
-  PostProcessingDebugValues,
+    DebugPanelConfig,
+    DebugSchema,
+    DebugStore,
+    CameraDebugValues,
+    PhysicsDebugValues,
+    LightingDebugValues,
+    PostProcessingDebugValues,
 } from './types';
 
 /**
@@ -24,26 +24,26 @@ import type {
  * Use with LevaPanel to apply the configuration.
  */
 export interface DebugPanelInstance {
-  /** The leva store instance */
-  store: ReturnType<typeof useCreateStore>;
-  /** The original configuration */
-  config: DebugPanelConfig;
-  /** Props to spread on LevaPanel/Leva component */
-  levaProps: {
-    titleBar: { title?: string };
-    collapsed?: boolean;
-    hideTitleBar?: boolean;
-  };
+    /** The leva store instance */
+    store: ReturnType<typeof useCreateStore>;
+    /** The original configuration */
+    config: DebugPanelConfig;
+    /** Props to spread on LevaPanel/Leva component */
+    levaProps: {
+        titleBar: { title?: string };
+        collapsed?: boolean;
+        hideTitleBar?: boolean;
+    };
 }
 
 /**
  * Default panel position mapping for Leva.
  */
 const POSITION_MAP = {
-  'top-left': { x: 0, y: 0 },
-  'top-right': { x: -1, y: 0 },
-  'bottom-left': { x: 0, y: -1 },
-  'bottom-right': { x: -1, y: -1 },
+    'top-left': { x: 0, y: 0 },
+    'top-right': { x: -1, y: 0 },
+    'bottom-left': { x: 0, y: -1 },
+    'bottom-right': { x: -1, y: -1 },
 } as const;
 
 /**
@@ -69,15 +69,15 @@ const POSITION_MAP = {
  * ```
  */
 export function createDebugPanel(config: DebugPanelConfig = {}): DebugPanelInstance {
-  const store = useCreateStore();
-  
-  const levaProps = {
-    titleBar: { title: config.name },
-    collapsed: config.collapsed,
-    hideTitleBar: !config.name,
-  };
-  
-  return { store, config, levaProps };
+    const store = useCreateStore();
+
+    const levaProps = {
+        titleBar: { title: config.name },
+        collapsed: config.collapsed,
+        hideTitleBar: !config.name,
+    };
+
+    return { store, config, levaProps };
 }
 
 /**
@@ -109,10 +109,13 @@ export function createDebugPanel(config: DebugPanelConfig = {}): DebugPanelInsta
  * ```
  */
 export function useDebugControls(
-  schema: Record<string, unknown>,
-  deps?: unknown[]
+    schema: Record<string, unknown>,
+    deps?: unknown[]
 ): Record<string, unknown> {
-  return useControls(schema as Parameters<typeof useControls>[0], deps ?? []) as Record<string, unknown>;
+    return useControls(schema as Parameters<typeof useControls>[0], deps ?? []) as Record<
+        string,
+        unknown
+    >;
 }
 
 /**
@@ -139,11 +142,13 @@ export function useDebugControls(
  * ```
  */
 export function useDebugFolder(
-  folderName: string,
-  schema: Record<string, unknown>,
-  collapsed = false
+    folderName: string,
+    schema: Record<string, unknown>,
+    collapsed = false
 ): Record<string, unknown> {
-  return useControls({ [folderName]: folder(schema as Parameters<typeof folder>[0], { collapsed }) }) as Record<string, unknown>;
+    return useControls({
+        [folderName]: folder(schema as Parameters<typeof folder>[0], { collapsed }),
+    }) as Record<string, unknown>;
 }
 
 /**
@@ -169,21 +174,19 @@ export function useDebugFolder(
  * }
  * ```
  */
-export function useCameraDebug(
-  defaults: Partial<CameraDebugValues> = {}
-): CameraDebugValues {
-  return useControls('Camera', {
-    fov: { value: defaults.fov ?? 75, min: 10, max: 150, step: 1 },
-    near: { value: defaults.near ?? 0.1, min: 0.01, max: 10, step: 0.01 },
-    far: { value: defaults.far ?? 1000, min: 100, max: 10000, step: 100 },
-    position: {
-      value: defaults.position ?? { x: 0, y: 5, z: 10 },
-    },
-    target: {
-      value: defaults.target ?? { x: 0, y: 0, z: 0 },
-    },
-    zoom: { value: defaults.zoom ?? 1, min: 0.1, max: 10, step: 0.1 },
-  }) as CameraDebugValues;
+export function useCameraDebug(defaults: Partial<CameraDebugValues> = {}): CameraDebugValues {
+    return useControls('Camera', {
+        fov: { value: defaults.fov ?? 75, min: 10, max: 150, step: 1 },
+        near: { value: defaults.near ?? 0.1, min: 0.01, max: 10, step: 0.01 },
+        far: { value: defaults.far ?? 1000, min: 100, max: 10000, step: 100 },
+        position: {
+            value: defaults.position ?? { x: 0, y: 5, z: 10 },
+        },
+        target: {
+            value: defaults.target ?? { x: 0, y: 0, z: 0 },
+        },
+        zoom: { value: defaults.zoom ?? 1, min: 0.1, max: 10, step: 0.1 },
+    }) as CameraDebugValues;
 }
 
 /**
@@ -207,18 +210,16 @@ export function useCameraDebug(
  * }
  * ```
  */
-export function usePhysicsDebug(
-  defaults: Partial<PhysicsDebugValues> = {}
-): PhysicsDebugValues {
-  return useControls('Physics', {
-    gravity: {
-      value: defaults.gravity ?? { x: 0, y: -9.81, z: 0 },
-    },
-    timeScale: { value: defaults.timeScale ?? 1, min: 0, max: 2, step: 0.1 },
-    showColliders: defaults.showColliders ?? false,
-    showVelocities: defaults.showVelocities ?? false,
-    showContacts: defaults.showContacts ?? false,
-  }) as PhysicsDebugValues;
+export function usePhysicsDebug(defaults: Partial<PhysicsDebugValues> = {}): PhysicsDebugValues {
+    return useControls('Physics', {
+        gravity: {
+            value: defaults.gravity ?? { x: 0, y: -9.81, z: 0 },
+        },
+        timeScale: { value: defaults.timeScale ?? 1, min: 0, max: 2, step: 0.1 },
+        showColliders: defaults.showColliders ?? false,
+        showVelocities: defaults.showVelocities ?? false,
+        showContacts: defaults.showContacts ?? false,
+    }) as PhysicsDebugValues;
 }
 
 /**
@@ -245,33 +246,31 @@ export function usePhysicsDebug(
  * }
  * ```
  */
-export function useLightingDebug(
-  defaults: Partial<LightingDebugValues> = {}
-): LightingDebugValues {
-  return useControls('Lighting', {
-    ambientIntensity: {
-      value: defaults.ambientIntensity ?? 0.5,
-      min: 0,
-      max: 2,
-      step: 0.1,
-    },
-    ambientColor: defaults.ambientColor ?? '#ffffff',
-    sunIntensity: {
-      value: defaults.sunIntensity ?? 1,
-      min: 0,
-      max: 5,
-      step: 0.1,
-    },
-    sunColor: defaults.sunColor ?? '#fffaf0',
-    sunPosition: {
-      value: defaults.sunPosition ?? { x: 10, y: 20, z: 10 },
-    },
-    shadowsEnabled: defaults.shadowsEnabled ?? true,
-    shadowMapSize: {
-      value: defaults.shadowMapSize ?? 2048,
-      options: [512, 1024, 2048, 4096],
-    },
-  }) as LightingDebugValues;
+export function useLightingDebug(defaults: Partial<LightingDebugValues> = {}): LightingDebugValues {
+    return useControls('Lighting', {
+        ambientIntensity: {
+            value: defaults.ambientIntensity ?? 0.5,
+            min: 0,
+            max: 2,
+            step: 0.1,
+        },
+        ambientColor: defaults.ambientColor ?? '#ffffff',
+        sunIntensity: {
+            value: defaults.sunIntensity ?? 1,
+            min: 0,
+            max: 5,
+            step: 0.1,
+        },
+        sunColor: defaults.sunColor ?? '#fffaf0',
+        sunPosition: {
+            value: defaults.sunPosition ?? { x: 10, y: 20, z: 10 },
+        },
+        shadowsEnabled: defaults.shadowsEnabled ?? true,
+        shadowMapSize: {
+            value: defaults.shadowMapSize ?? 2048,
+            options: [512, 1024, 2048, 4096],
+        },
+    }) as LightingDebugValues;
 }
 
 /**
@@ -295,37 +294,37 @@ export function useLightingDebug(
  * ```
  */
 export function usePostProcessingDebug(
-  defaults: Partial<PostProcessingDebugValues> = {}
+    defaults: Partial<PostProcessingDebugValues> = {}
 ): PostProcessingDebugValues {
-  return useControls('Post Processing', {
-    bloomEnabled: defaults.bloomEnabled ?? true,
-    bloomIntensity: {
-      value: defaults.bloomIntensity ?? 1,
-      min: 0,
-      max: 5,
-      step: 0.1,
-    },
-    bloomThreshold: {
-      value: defaults.bloomThreshold ?? 0.9,
-      min: 0,
-      max: 1,
-      step: 0.01,
-    },
-    vignetteEnabled: defaults.vignetteEnabled ?? false,
-    vignetteIntensity: {
-      value: defaults.vignetteIntensity ?? 0.5,
-      min: 0,
-      max: 1,
-      step: 0.01,
-    },
-    chromaticAberration: {
-      value: defaults.chromaticAberration ?? 0,
-      min: 0,
-      max: 0.1,
-      step: 0.001,
-    },
-    noise: { value: defaults.noise ?? 0, min: 0, max: 1, step: 0.01 },
-  }) as PostProcessingDebugValues;
+    return useControls('Post Processing', {
+        bloomEnabled: defaults.bloomEnabled ?? true,
+        bloomIntensity: {
+            value: defaults.bloomIntensity ?? 1,
+            min: 0,
+            max: 5,
+            step: 0.1,
+        },
+        bloomThreshold: {
+            value: defaults.bloomThreshold ?? 0.9,
+            min: 0,
+            max: 1,
+            step: 0.01,
+        },
+        vignetteEnabled: defaults.vignetteEnabled ?? false,
+        vignetteIntensity: {
+            value: defaults.vignetteIntensity ?? 0.5,
+            min: 0,
+            max: 1,
+            step: 0.01,
+        },
+        chromaticAberration: {
+            value: defaults.chromaticAberration ?? 0,
+            min: 0,
+            max: 0.1,
+            step: 0.001,
+        },
+        noise: { value: defaults.noise ?? 0, min: 0, max: 1, step: 0.01 },
+    }) as PostProcessingDebugValues;
 }
 
 /**
@@ -351,11 +350,8 @@ export function usePostProcessingDebug(
  * }
  * ```
  */
-export function createDebugButton(
-  _label: string,
-  onClick: () => void
-): ReturnType<typeof button> {
-  return button(onClick);
+export function createDebugButton(_label: string, onClick: () => void): ReturnType<typeof button> {
+    return button(onClick);
 }
 
 export { Leva, LevaPanel, useControls, folder, button, useCreateStore };

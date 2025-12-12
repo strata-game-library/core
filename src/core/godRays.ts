@@ -78,9 +78,7 @@ export function calculateRadialBlur(
 ): { intensity: number; direction: THREE.Vector2 } {
     const { samples, decay, density, weight } = options;
 
-    const delta = new THREE.Vector2()
-        .subVectors(uv, center)
-        .multiplyScalar(density / samples);
+    const delta = new THREE.Vector2().subVectors(uv, center).multiplyScalar(density / samples);
 
     let illuminationDecay = 1.0;
     let totalIntensity = 0.0;
@@ -170,10 +168,7 @@ export function getLightScreenPosition(
         return null;
     }
 
-    return new THREE.Vector2(
-        (projected.x + 1) * 0.5,
-        (projected.y + 1) * 0.5
-    );
+    return new THREE.Vector2((projected.x + 1) * 0.5, (projected.y + 1) * 0.5);
 }
 
 export function calculateGodRayIntensityFromAngle(
@@ -196,9 +191,7 @@ export function calculateGodRayIntensityFromAngle(
     }
 }
 
-export function createGodRaysMaterial(
-    options: GodRaysMaterialOptions = {}
-): THREE.ShaderMaterial {
+export function createGodRaysMaterial(options: GodRaysMaterialOptions = {}): THREE.ShaderMaterial {
     const {
         lightPosition = new THREE.Vector3(0.5, 0.5, 0),
         lightColor = new THREE.Color(1.0, 0.9, 0.7),
@@ -267,12 +260,13 @@ export function createVolumetricSpotlightMaterial(
         throw new Error('createVolumetricSpotlightMaterial: distance must be positive');
     }
 
-    const uniforms = createVolumetricSpotlightUniforms(
-        lightPosition,
-        lightDirection,
-        lightColor,
-        { intensity, angle, penumbra, distance, dustDensity }
-    );
+    const uniforms = createVolumetricSpotlightUniforms(lightPosition, lightDirection, lightColor, {
+        intensity,
+        angle,
+        penumbra,
+        distance,
+        dustDensity,
+    });
 
     return new THREE.ShaderMaterial({
         uniforms,
@@ -346,11 +340,7 @@ export function updateGodRaysLightPosition(
     lightPosition: THREE.Vector3,
     camera: THREE.Camera
 ): boolean {
-    const screenPos = getLightScreenPosition(
-        lightPosition,
-        camera,
-        new THREE.Vector2(1, 1)
-    );
+    const screenPos = getLightScreenPosition(lightPosition, camera, new THREE.Vector2(1, 1));
 
     if (!screenPos) {
         return false;

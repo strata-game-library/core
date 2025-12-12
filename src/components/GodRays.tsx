@@ -23,7 +23,7 @@ import {
 
 /**
  * Props for the GodRays component
- * 
+ *
  * @property lightPosition - Position of the light source (sun/moon)
  * @property color - Base color of the rays
  * @property intensity - Overall ray intensity
@@ -64,7 +64,7 @@ export interface GodRaysRef {
 /**
  * Screen-space god rays effect for dramatic light shafts.
  * Automatically handles sun position and atmospheric scattering.
- * 
+ *
  * @example
  * ```tsx
  * // Basic sun rays
@@ -72,7 +72,7 @@ export interface GodRaysRef {
  *   lightPosition={[100, 50, 0]}
  *   intensity={0.8}
  * />
- * 
+ *
  * // Sunset god rays with atmosphere
  * <GodRays
  *   lightPosition={sunPosition}
@@ -81,7 +81,7 @@ export interface GodRaysRef {
  *   intensity={1.2}
  *   density={1.5}
  * />
- * 
+ *
  * // High quality moonlight rays
  * <GodRays
  *   lightPosition={moonPosition}
@@ -91,7 +91,7 @@ export interface GodRaysRef {
  *   decay={0.98}
  * />
  * ```
- * 
+ *
  * @param props - GodRaysProps configuration
  * @returns React element containing the god rays effect
  */
@@ -151,22 +151,36 @@ export const GodRays = forwardRef<GodRaysRef, GodRaysProps>(function GodRays(
             scattering,
             noiseFactor,
         });
-    }, [lightPos, effectiveColor, effectiveIntensity, decay, density, samples, exposure, scattering, noiseFactor]);
+    }, [
+        lightPos,
+        effectiveColor,
+        effectiveIntensity,
+        decay,
+        density,
+        samples,
+        exposure,
+        scattering,
+        noiseFactor,
+    ]);
 
-    useImperativeHandle(ref, () => ({
-        material,
-        setIntensity: (newIntensity: number) => {
-            if (material.uniforms.uIntensity) {
-                material.uniforms.uIntensity.value = newIntensity;
-            }
-        },
-        setLightPosition: (position: THREE.Vector3) => {
-            const screenPos = getLightScreenPosition(position, camera, new THREE.Vector2(1, 1));
-            if (screenPos && material.uniforms.uLightPosition) {
-                material.uniforms.uLightPosition.value.set(screenPos.x, screenPos.y, 0);
-            }
-        },
-    }), [material, camera]);
+    useImperativeHandle(
+        ref,
+        () => ({
+            material,
+            setIntensity: (newIntensity: number) => {
+                if (material.uniforms.uIntensity) {
+                    material.uniforms.uIntensity.value = newIntensity;
+                }
+            },
+            setLightPosition: (position: THREE.Vector3) => {
+                const screenPos = getLightScreenPosition(position, camera, new THREE.Vector2(1, 1));
+                if (screenPos && material.uniforms.uLightPosition) {
+                    material.uniforms.uLightPosition.value.set(screenPos.x, screenPos.y, 0);
+                }
+            },
+        }),
+        [material, camera]
+    );
 
     useFrame((state) => {
         if (!enabled || !material.uniforms) return;
@@ -207,7 +221,7 @@ export const LightShafts = GodRays;
 
 /**
  * Props for the VolumetricSpotlight component
- * 
+ *
  * @property position - Light position in world space
  * @property target - Point the light is aimed at
  * @property color - Light color
@@ -242,7 +256,7 @@ export interface VolumetricSpotlightRef {
 /**
  * Volumetric spotlight with visible light cone in dusty/foggy environments.
  * Great for dramatic stage lighting, flashlights, and searchlights.
- * 
+ *
  * @example
  * ```tsx
  * // Stage spotlight
@@ -254,7 +268,7 @@ export interface VolumetricSpotlightRef {
  *   angle={Math.PI / 8}
  *   dustDensity={0.6}
  * />
- * 
+ *
  * // Colored dramatic lighting
  * <VolumetricSpotlight
  *   position={[5, 8, 5]}
@@ -263,7 +277,7 @@ export interface VolumetricSpotlightRef {
  *   intensity={2}
  *   penumbra={0.3}
  * />
- * 
+ *
  * // Flashlight beam
  * <VolumetricSpotlight
  *   position={playerPosition}
@@ -273,7 +287,7 @@ export interface VolumetricSpotlightRef {
  *   dustDensity={0.3}
  * />
  * ```
- * 
+ *
  * @param props - VolumetricSpotlightProps configuration
  * @returns React element containing the volumetric spotlight
  */
@@ -333,20 +347,27 @@ export const VolumetricSpotlight = forwardRef<VolumetricSpotlightRef, Volumetric
 
         const rotation = useMemo(() => {
             const up = new THREE.Vector3(0, 1, 0);
-            const quaternion = new THREE.Quaternion().setFromUnitVectors(up, lightDir.clone().negate());
+            const quaternion = new THREE.Quaternion().setFromUnitVectors(
+                up,
+                lightDir.clone().negate()
+            );
             const euler = new THREE.Euler().setFromQuaternion(quaternion);
             return euler;
         }, [lightDir]);
 
-        useImperativeHandle(ref, () => ({
-            material,
-            mesh: meshRef.current,
-            setIntensity: (newIntensity: number) => {
-                if (material.uniforms.uIntensity) {
-                    material.uniforms.uIntensity.value = newIntensity;
-                }
-            },
-        }), [material]);
+        useImperativeHandle(
+            ref,
+            () => ({
+                material,
+                mesh: meshRef.current,
+                setIntensity: (newIntensity: number) => {
+                    if (material.uniforms.uIntensity) {
+                        material.uniforms.uIntensity.value = newIntensity;
+                    }
+                },
+            }),
+            [material]
+        );
 
         useFrame((state) => {
             if (!enabled || !material.uniforms) return;
@@ -376,7 +397,7 @@ export const VolumetricSpotlight = forwardRef<VolumetricSpotlightRef, Volumetric
 
 /**
  * Props for the VolumetricPointLight component
- * 
+ *
  * @property position - Light position in world space
  * @property color - Light color
  * @property intensity - Light intensity
@@ -407,7 +428,7 @@ export interface VolumetricPointLightRef {
 /**
  * Volumetric point light with visible glow sphere for atmospheric effects.
  * Perfect for torches, lanterns, and magical light sources.
- * 
+ *
  * @example
  * ```tsx
  * // Torch light
@@ -418,7 +439,7 @@ export interface VolumetricPointLightRef {
  *   radius={5}
  *   flicker={0.3}
  * />
- * 
+ *
  * // Magical orb
  * <VolumetricPointLight
  *   position={orbPosition}
@@ -427,7 +448,7 @@ export interface VolumetricPointLightRef {
  *   radius={3}
  *   dustDensity={0.8}
  * />
- * 
+ *
  * // Campfire glow
  * <VolumetricPointLight
  *   position={[0, 0.5, 0]}
@@ -438,7 +459,7 @@ export interface VolumetricPointLightRef {
  *   dustDensity={0.4}
  * />
  * ```
- * 
+ *
  * @param props - VolumetricPointLightProps configuration
  * @returns React element containing the volumetric point light
  */
@@ -481,15 +502,19 @@ export const VolumetricPointLight = forwardRef<VolumetricPointLightRef, Volumetr
             return createPointLightSphereGeometry(radius);
         }, [radius]);
 
-        useImperativeHandle(ref, () => ({
-            material,
-            mesh: meshRef.current,
-            setIntensity: (newIntensity: number) => {
-                if (material.uniforms.uIntensity) {
-                    material.uniforms.uIntensity.value = newIntensity;
-                }
-            },
-        }), [material]);
+        useImperativeHandle(
+            ref,
+            () => ({
+                material,
+                mesh: meshRef.current,
+                setIntensity: (newIntensity: number) => {
+                    if (material.uniforms.uIntensity) {
+                        material.uniforms.uIntensity.value = newIntensity;
+                    }
+                },
+            }),
+            [material]
+        );
 
         useFrame((state) => {
             if (!enabled || !material.uniforms) return;
@@ -505,13 +530,6 @@ export const VolumetricPointLight = forwardRef<VolumetricPointLightRef, Volumetr
 
         if (!enabled) return null;
 
-        return (
-            <mesh
-                ref={meshRef}
-                position={lightPos}
-                geometry={geometry}
-                material={material}
-            />
-        );
+        return <mesh ref={meshRef} position={lightPos} geometry={geometry} material={material} />;
     }
 );

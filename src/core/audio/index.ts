@@ -14,25 +14,25 @@ export { SoundManager, createSoundManager } from './sound-manager';
 export { SpatialAudio, createSpatialAudio } from './spatial';
 
 export type {
-  AudioConfig,
-  SoundConfig,
-  SpatialConfig,
-  AudioBus,
-  AudioMixer,
-  DistanceModel,
-  AudioFormat,
-  EnvironmentPreset,
-  EnvironmentEffectConfig,
-  AudioListenerState,
+    AudioConfig,
+    SoundConfig,
+    SpatialConfig,
+    AudioBus,
+    AudioMixer,
+    DistanceModel,
+    AudioFormat,
+    EnvironmentPreset,
+    EnvironmentEffectConfig,
+    AudioListenerState,
 } from './types';
 
 export { ENVIRONMENT_PRESETS, DEFAULT_SPATIAL_CONFIG } from './types';
 
 export {
-  isAudioContextUnlocked,
-  unlockAudioContext,
-  setupAutoUnlock,
-  getAudioContext,
-  suspendAudioContext,
-  resumeAudioContext,
+    isAudioContextUnlocked,
+    unlockAudioContext,
+    setupAutoUnlock,
+    getAudioContext,
+    suspendAudioContext,
+    resumeAudioContext,
 } from './adapters/web';

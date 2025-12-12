@@ -120,7 +120,7 @@ const SNOW_FRAGMENT_SHADER = `
 
 /**
  * Props for the Rain component
- * 
+ *
  * @property count - Number of rain drops to simulate
  * @property areaSize - Size of the rain coverage area in world units
  * @property height - Maximum height from which rain falls
@@ -142,12 +142,12 @@ export interface RainProps {
 /**
  * GPU-instanced rain effect component for realistic precipitation.
  * Automatically follows the camera to create infinite rain coverage.
- * 
+ *
  * @example
  * ```tsx
  * // Basic rain effect
  * <Rain intensity={0.8} />
- * 
+ *
  * // Heavy storm with wind
  * <Rain
  *   count={20000}
@@ -156,7 +156,7 @@ export interface RainProps {
  *   dropLength={0.8}
  *   color={0x8888aa}
  * />
- * 
+ *
  * // Light drizzle
  * <Rain
  *   count={3000}
@@ -164,7 +164,7 @@ export interface RainProps {
  *   areaSize={30}
  * />
  * ```
- * 
+ *
  * @param props - RainProps configuration
  * @returns React element containing the rain particle system
  */
@@ -263,7 +263,7 @@ export function Rain({
 
 /**
  * Props for the Snow component
- * 
+ *
  * @property count - Number of snowflakes to simulate
  * @property areaSize - Size of the snow coverage area in world units
  * @property height - Maximum height from which snow falls
@@ -285,12 +285,12 @@ export interface SnowProps {
 /**
  * GPU-instanced snow effect component for realistic snowfall.
  * Features gentle drifting motion and automatic camera following.
- * 
+ *
  * @example
  * ```tsx
  * // Basic snowfall
  * <Snow intensity={0.8} />
- * 
+ *
  * // Heavy blizzard with wind
  * <Snow
  *   count={10000}
@@ -298,7 +298,7 @@ export interface SnowProps {
  *   wind={new THREE.Vector3(1.5, 0, 0.5)}
  *   flakeSize={0.2}
  * />
- * 
+ *
  * // Light flurries
  * <Snow
  *   count={2000}
@@ -306,7 +306,7 @@ export interface SnowProps {
  *   flakeSize={0.1}
  * />
  * ```
- * 
+ *
  * @param props - SnowProps configuration
  * @returns React element containing the snow particle system
  */
@@ -410,7 +410,7 @@ export function Snow({
 
 /**
  * Props for the Lightning component
- * 
+ *
  * @property active - Whether lightning can strike
  * @property frequency - Probability of lightning strike per frame (0-1)
  * @property boltColor - Color of the lightning bolt
@@ -430,12 +430,12 @@ export interface LightningProps {
 /**
  * Dynamic lightning effect component for storm scenes.
  * Creates randomized lightning bolts with accompanying flash effects.
- * 
+ *
  * @example
  * ```tsx
  * // Basic lightning during storm
  * <Lightning active={isStorming} />
- * 
+ *
  * // Frequent dramatic lightning
  * <Lightning
  *   active={true}
@@ -444,7 +444,7 @@ export interface LightningProps {
  *   boltColor={0xaaaaff}
  *   onStrike={() => playThunderSound()}
  * />
- * 
+ *
  * // Subtle distant lightning
  * <Lightning
  *   active={true}
@@ -452,7 +452,7 @@ export interface LightningProps {
  *   flashIntensity={1}
  * />
  * ```
- * 
+ *
  * @param props - LightningProps configuration
  * @returns React element containing the lightning effect
  */
@@ -488,7 +488,11 @@ export function Lightning({
         });
     }, [flashColor]);
 
-    const generateBolt = (start: THREE.Vector3, end: THREE.Vector3, segments: number = 8): THREE.Vector3[] => {
+    const generateBolt = (
+        start: THREE.Vector3,
+        end: THREE.Vector3,
+        segments: number = 8
+    ): THREE.Vector3[] => {
         const points: THREE.Vector3[] = [start.clone()];
         const direction = end.clone().sub(start);
         const segmentLength = direction.length() / segments;
@@ -527,10 +531,14 @@ export function Lightning({
             const startX = (Math.random() - 0.5) * 100;
             const startZ = (Math.random() - 0.5) * 100;
             const startPoint = new THREE.Vector3(startX, 50, startZ);
-            const endPoint = new THREE.Vector3(startX + (Math.random() - 0.5) * 20, 0, startZ + (Math.random() - 0.5) * 20);
+            const endPoint = new THREE.Vector3(
+                startX + (Math.random() - 0.5) * 20,
+                0,
+                startZ + (Math.random() - 0.5) * 20
+            );
 
             const boltPoints = generateBolt(startPoint, endPoint);
-            
+
             if (boltLine && groupRef.current) {
                 groupRef.current.remove(boltLine);
                 boltLine.geometry.dispose();
@@ -539,7 +547,7 @@ export function Lightning({
             const geometry = new THREE.BufferGeometry().setFromPoints(boltPoints);
             const line = new THREE.Line(geometry, boltMaterial);
             setBoltLine(line);
-            
+
             if (groupRef.current) {
                 groupRef.current.add(line);
             }
@@ -550,7 +558,7 @@ export function Lightning({
         }
 
         if (flash > 0) {
-            setFlash(prev => Math.max(0, prev - delta * 8));
+            setFlash((prev) => Math.max(0, prev - delta * 8));
         }
 
         if (boltLine && flash <= 0.1 && groupRef.current) {
@@ -591,7 +599,7 @@ export function Lightning({
 
 /**
  * Props for the WeatherSystem component
- * 
+ *
  * @property weather - Weather state configuration
  * @property rainCount - Number of rain particles
  * @property snowCount - Number of snow particles
@@ -611,7 +619,7 @@ export interface WeatherSystemProps {
 /**
  * Unified weather system component that manages rain, snow, and lightning.
  * Automatically switches between weather types based on configuration.
- * 
+ *
  * @example
  * ```tsx
  * // Rain storm
@@ -623,7 +631,7 @@ export interface WeatherSystemProps {
  *     windDirection: new THREE.Vector3(1, 0, 0)
  *   }}
  * />
- * 
+ *
  * // Heavy thunderstorm
  * <WeatherSystem
  *   weather={{
@@ -633,7 +641,7 @@ export interface WeatherSystemProps {
  *   }}
  *   enableLightning={true}
  * />
- * 
+ *
  * // Snowfall (temperature below 0)
  * <WeatherSystem
  *   weather={{
@@ -643,7 +651,7 @@ export interface WeatherSystemProps {
  *   }}
  * />
  * ```
- * 
+ *
  * @param props - WeatherSystemProps configuration
  * @returns React element containing the complete weather system
  */
@@ -669,7 +677,9 @@ export function WeatherSystem({
 
     const wind = state.windDirection.clone().multiplyScalar(state.windIntensity);
     const showRain = (state.type === 'rain' || state.type === 'storm') && state.temperature > 0;
-    const showSnow = (state.type === 'snow' || ((state.type === 'rain' || state.type === 'storm') && state.temperature <= 0));
+    const showSnow =
+        state.type === 'snow' ||
+        ((state.type === 'rain' || state.type === 'storm') && state.temperature <= 0);
     const showLightning = enableLightning && state.type === 'storm' && state.intensity > 0.5;
 
     return (

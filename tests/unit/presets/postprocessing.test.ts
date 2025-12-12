@@ -227,7 +227,9 @@ describe('Post-Processing Presets', () => {
         expect(dreamyPreset).toBeDefined();
         expect(dreamyPreset.name).toBe('Dreamy');
         expect(dreamyPreset.mood).toBe('dreamy');
-        expect(dreamyPreset.bloom?.intensity).toBeGreaterThan(cinematicPreset.bloom?.intensity ?? 0);
+        expect(dreamyPreset.bloom?.intensity).toBeGreaterThan(
+            cinematicPreset.bloom?.intensity ?? 0
+        );
     });
 
     test('horrorPreset should have desaturated look', () => {

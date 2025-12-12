@@ -1,6 +1,6 @@
 /**
  * UI Presets
- * 
+ *
  * Pre-configured UI styles for common game genres.
  */
 

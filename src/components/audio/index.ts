@@ -5,7 +5,13 @@
  * @module components/audio
  */
 
-export { AudioProvider, useAudioContext, useAudioManager, useSpatialAudio, useAudioListener } from './context';
+export {
+    AudioProvider,
+    useAudioContext,
+    useAudioManager,
+    useSpatialAudio,
+    useAudioListener,
+} from './context';
 export { AudioListener } from './AudioListener';
 export { PositionalAudio } from './PositionalAudio';
 export { AmbientAudio } from './AmbientAudio';
@@ -16,19 +22,19 @@ export { FootstepAudio } from './FootstepAudio';
 export { WeatherAudio } from './WeatherAudio';
 
 export type {
-  AudioContextValue,
-  AudioProviderProps,
-  AudioListenerProps,
-  PositionalAudioProps,
-  PositionalAudioRef,
-  AmbientAudioProps,
-  AmbientAudioRef,
-  AudioZoneProps,
-  AudioZoneRef,
-  AudioEmitterProps,
-  AudioEmitterRef,
-  AudioEnvironmentProps,
-  FootstepAudioProps,
-  FootstepAudioRef,
-  WeatherAudioProps,
+    AudioContextValue,
+    AudioProviderProps,
+    AudioListenerProps,
+    PositionalAudioProps,
+    PositionalAudioRef,
+    AmbientAudioProps,
+    AmbientAudioRef,
+    AudioZoneProps,
+    AudioZoneRef,
+    AudioEmitterProps,
+    AudioEmitterRef,
+    AudioEnvironmentProps,
+    FootstepAudioProps,
+    FootstepAudioRef,
+    WeatherAudioProps,
 } from './types';

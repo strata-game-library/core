@@ -104,10 +104,7 @@ export class StateMachine<T = any> {
         if (this.isPaused || !this.currentState) return;
 
         for (const transition of this.transitions) {
-            if (
-                transition.from === this.currentState.name &&
-                transition.condition(this.context)
-            ) {
+            if (transition.from === this.currentState.name && transition.condition(this.context)) {
                 this.transitionTo(transition.to);
                 break;
             }
@@ -158,9 +155,7 @@ export class StateMachine<T = any> {
     }
 
     removeTransition(from: string, to: string): boolean {
-        const index = this.transitions.findIndex(
-            (t) => t.from === from && t.to === to
-        );
+        const index = this.transitions.findIndex((t) => t.from === from && t.to === to);
         if (index !== -1) {
             this.transitions.splice(index, 1);
             return true;
@@ -174,16 +169,10 @@ export class StateMachine<T = any> {
 
     getAvailableTransitions(): string[] {
         if (!this.currentState) return [];
-        return this.transitions
-            .filter((t) => t.from === this.currentState!.name)
-            .map((t) => t.to);
+        return this.transitions.filter((t) => t.from === this.currentState!.name).map((t) => t.to);
     }
 
-    private addToHistory(
-        stateName: string,
-        timestamp: number,
-        duration: number
-    ): void {
+    private addToHistory(stateName: string, timestamp: number, duration: number): void {
         this.history.push({ stateName, timestamp, duration });
         if (this.history.length > this.maxHistoryLength) {
             this.history.shift();
@@ -240,9 +229,7 @@ export interface AIContext {
     patrolPauseTimer: number;
 }
 
-export function createDefaultAIContext(
-    position: THREE.Vector3 = new THREE.Vector3()
-): AIContext {
+export function createDefaultAIContext(position: THREE.Vector3 = new THREE.Vector3()): AIContext {
     return {
         position: position.clone(),
         rotation: new THREE.Euler(),
@@ -268,17 +255,11 @@ export function createDefaultAIContext(
     };
 }
 
-export function createStateMachine<T>(
-    config: StateMachineConfig<T>,
-    context: T
-): StateMachine<T> {
+export function createStateMachine<T>(config: StateMachineConfig<T>, context: T): StateMachine<T> {
     return new StateMachine(config, context);
 }
 
-export function createState<T>(
-    name: string,
-    callbacks: StateCallbacks<T>
-): State<T> {
+export function createState<T>(name: string, callbacks: StateCallbacks<T>): State<T> {
     return { name, callbacks };
 }
 

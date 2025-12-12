@@ -11,8 +11,8 @@ import * as THREE from 'three';
 import type { FootstepAudioProps, FootstepAudioRef } from './types';
 
 interface SoundPool {
-  howl: Howl;
-  lastPlayed: number;
+    howl: Howl;
+    lastPlayed: number;
 }
 
 /**
@@ -40,53 +40,54 @@ interface SoundPool {
  * ```
  */
 export const FootstepAudio = forwardRef<FootstepAudioRef, FootstepAudioProps>(
-  ({ surfaces, defaultSurface = 'default', volume = 1, poolSize = 4 }, ref) => {
-    const poolsRef = useRef<Map<string, SoundPool>>(new Map());
+    ({ surfaces, defaultSurface = 'default', volume = 1, poolSize = 4 }, ref) => {
+        const poolsRef = useRef<Map<string, SoundPool>>(new Map());
 
-    useEffect(() => {
-      for (const [surface, url] of Object.entries(surfaces)) {
-        const howl = new Howl({
-          src: [url],
-          volume,
-          pool: poolSize,
-          preload: true,
-        });
-        poolsRef.current.set(surface, { howl, lastPlayed: 0 });
-      }
-
-      return () => {
-        for (const pool of poolsRef.current.values()) {
-          pool.howl.unload();
-        }
-        poolsRef.current.clear();
-      };
-    }, [surfaces, volume, poolSize]);
-
-    useEffect(() => {
-      for (const pool of poolsRef.current.values()) {
-        pool.howl.volume(volume);
-      }
-    }, [volume]);
-
-    useImperativeHandle(
-      ref,
-      () => ({
-        playFootstep: (surface = defaultSurface, _position?: THREE.Vector3) => {
-          const pool = poolsRef.current.get(surface) ?? poolsRef.current.get(defaultSurface);
-          if (pool) {
-            const now = Date.now();
-            if (now - pool.lastPlayed > 50) {
-              pool.howl.play();
-              pool.lastPlayed = now;
+        useEffect(() => {
+            for (const [surface, url] of Object.entries(surfaces)) {
+                const howl = new Howl({
+                    src: [url],
+                    volume,
+                    pool: poolSize,
+                    preload: true,
+                });
+                poolsRef.current.set(surface, { howl, lastPlayed: 0 });
             }
-          }
-        },
-      }),
-      [defaultSurface]
-    );
 
-    return null;
-  }
+            return () => {
+                for (const pool of poolsRef.current.values()) {
+                    pool.howl.unload();
+                }
+                poolsRef.current.clear();
+            };
+        }, [surfaces, volume, poolSize]);
+
+        useEffect(() => {
+            for (const pool of poolsRef.current.values()) {
+                pool.howl.volume(volume);
+            }
+        }, [volume]);
+
+        useImperativeHandle(
+            ref,
+            () => ({
+                playFootstep: (surface = defaultSurface, _position?: THREE.Vector3) => {
+                    const pool =
+                        poolsRef.current.get(surface) ?? poolsRef.current.get(defaultSurface);
+                    if (pool) {
+                        const now = Date.now();
+                        if (now - pool.lastPlayed > 50) {
+                            pool.howl.play();
+                            pool.lastPlayed = now;
+                        }
+                    }
+                },
+            }),
+            [defaultSurface]
+        );
+
+        return null;
+    }
 );
 
 FootstepAudio.displayName = 'FootstepAudio';

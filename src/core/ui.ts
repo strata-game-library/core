@@ -1,13 +1,22 @@
 /**
  * Core UI Utilities
- * 
+ *
  * Provides types, configurations, and helper functions for game UI elements.
  * Pure TypeScript implementation with no React dependencies.
  */
 
 import * as THREE from 'three';
 
-export type UIAnchor = 'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight' | 'center' | 'top' | 'bottom' | 'left' | 'right';
+export type UIAnchor =
+    | 'topLeft'
+    | 'topRight'
+    | 'bottomLeft'
+    | 'bottomRight'
+    | 'center'
+    | 'top'
+    | 'bottom'
+    | 'left'
+    | 'right';
 
 export type TextDirection = 'ltr' | 'rtl' | 'auto';
 
@@ -208,7 +217,11 @@ export interface ScreenPosition {
     distance: number;
 }
 
-export function getAnchorOffset(anchor: UIAnchor, width: number, height: number): { x: number; y: number } {
+export function getAnchorOffset(
+    anchor: UIAnchor,
+    width: number,
+    height: number
+): { x: number; y: number } {
     switch (anchor) {
         case 'topLeft':
             return { x: 0, y: 0 };
@@ -241,18 +254,16 @@ export function worldToScreen(
 ): ScreenPosition {
     const vector = position.clone();
     vector.project(camera);
-    
+
     const behindCamera = vector.z > 1;
-    
+
     const x = (vector.x * 0.5 + 0.5) * width;
     const y = (-vector.y * 0.5 + 0.5) * height;
-    
-    const visible = !behindCamera && 
-        x >= 0 && x <= width && 
-        y >= 0 && y <= height;
-    
+
+    const visible = !behindCamera && x >= 0 && x <= width && y >= 0 && y <= height;
+
     const distance = position.distanceTo(camera.position);
-    
+
     return { x, y, visible, distance };
 }
 
@@ -264,25 +275,17 @@ export function screenToWorld(
     height: number,
     targetZ: number = 0
 ): THREE.Vector3 {
-    const vector = new THREE.Vector3(
-        (screenX / width) * 2 - 1,
-        -(screenY / height) * 2 + 1,
-        0.5
-    );
-    
+    const vector = new THREE.Vector3((screenX / width) * 2 - 1, -(screenY / height) * 2 + 1, 0.5);
+
     vector.unproject(camera);
-    
+
     const dir = vector.sub(camera.position).normalize();
     const distance = (targetZ - camera.position.z) / dir.z;
-    
+
     return camera.position.clone().add(dir.multiplyScalar(distance));
 }
 
-export function calculateFade(
-    distance: number,
-    fadeStart: number,
-    fadeEnd: number
-): number {
+export function calculateFade(distance: number, fadeStart: number, fadeEnd: number): number {
     if (distance <= fadeStart) return 1;
     if (distance >= fadeEnd) return 0;
     return 1 - (distance - fadeStart) / (fadeEnd - fadeStart);
@@ -320,11 +323,7 @@ export function easeOutCubic(t: number): number {
 
 export function easeOutElastic(t: number): number {
     const c4 = (2 * Math.PI) / 3;
-    return t === 0
-        ? 0
-        : t === 1
-        ? 1
-        : Math.pow(2, -10 * t) * Math.sin((t * 10 - 0.75) * c4) + 1;
+    return t === 0 ? 0 : t === 1 ? 1 : Math.pow(2, -10 * t) * Math.sin((t * 10 - 0.75) * c4) + 1;
 }
 
 export function getTextDirection(text: string): 'ltr' | 'rtl' {
@@ -354,7 +353,7 @@ export function createDefaultInventory(columns: number = 6, rows: number = 4): I
     for (let i = 0; i < columns * rows; i++) {
         slots.push({ id: `slot-${i}` });
     }
-    
+
     return {
         slots,
         columns,

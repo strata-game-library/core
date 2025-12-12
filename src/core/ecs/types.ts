@@ -15,7 +15,7 @@ import type { World } from 'miniplex';
  * ```
  */
 export interface BaseEntity {
-  id?: string;
+    id?: string;
 }
 
 /**
@@ -27,9 +27,9 @@ export interface BaseEntity {
  * ```
  */
 export interface WorldConfig<T extends BaseEntity> {
-  enableLogging?: boolean;
-  maxEntities?: number;
-  initialEntities?: T[];
+    enableLogging?: boolean;
+    maxEntities?: number;
+    initialEntities?: T[];
 }
 
 /**
@@ -42,14 +42,14 @@ export interface WorldConfig<T extends BaseEntity> {
  * ```
  */
 export interface StrataWorld<T extends BaseEntity> {
-  world: World<T>;
-  spawn: (entity: T) => T;
-  despawn: (entity: T) => void;
-  query: <K extends keyof T>(...components: K[]) => Iterable<T>;
-  queryWithout: <K extends keyof T>(...components: K[]) => Iterable<T>;
-  entities: T[];
-  size: number;
-  clear: () => void;
+    world: World<T>;
+    spawn: (entity: T) => T;
+    despawn: (entity: T) => void;
+    query: <K extends keyof T>(...components: K[]) => Iterable<T>;
+    queryWithout: <K extends keyof T>(...components: K[]) => Iterable<T>;
+    entities: T[];
+    size: number;
+    clear: () => void;
 }
 
 /** Utility type to extract component keys from an entity type. @public */
@@ -57,12 +57,12 @@ export type ComponentKeys<T> = keyof T;
 
 /** Utility type to extract required components from an entity type. @public */
 export type RequiredComponents<T> = {
-  [K in keyof T as undefined extends T[K] ? never : K]: T[K];
+    [K in keyof T as undefined extends T[K] ? never : K]: T[K];
 };
 
 /** Utility type to extract optional components from an entity type. @public */
 export type OptionalComponents<T> = {
-  [K in keyof T as undefined extends T[K] ? K : never]?: T[K];
+    [K in keyof T as undefined extends T[K] ? K : never]?: T[K];
 };
 
 /**
@@ -74,9 +74,9 @@ export type OptionalComponents<T> = {
  * ```
  */
 export interface Archetype<T extends BaseEntity> {
-  name: string;
-  components: (keyof T)[];
-  tags?: string[];
+    name: string;
+    components: (keyof T)[];
+    tags?: string[];
 }
 
 /**
@@ -98,8 +98,8 @@ export type SystemFn<T extends BaseEntity> = (world: StrataWorld<T>, deltaTime: 
  * ```
  */
 export interface SystemConfig<T extends BaseEntity> {
-  name: string;
-  fn: SystemFn<T>;
-  priority?: number;
-  enabled?: boolean;
+    name: string;
+    fn: SystemFn<T>;
+    priority?: number;
+    enabled?: boolean;
 }

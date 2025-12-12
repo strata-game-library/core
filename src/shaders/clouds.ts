@@ -260,97 +260,97 @@ export const volumetricCloudFragmentShader = /* glsl */ `
 `;
 
 export interface CloudLayerUniforms {
-  [uniform: string]: THREE.IUniform;
-  uTime: { value: number };
-  uCoverage: { value: number };
-  uDensity: { value: number };
-  uAltitude: { value: number };
-  uCloudColor: { value: THREE.Color };
-  uShadowColor: { value: THREE.Color };
-  uWindDirection: { value: THREE.Vector2 };
-  uWindSpeed: { value: number };
-  uSunIntensity: { value: number };
-  uSunAngle: { value: number };
-  uSunColor: { value: THREE.Color };
-  uScale: { value: number };
+    [uniform: string]: THREE.IUniform;
+    uTime: { value: number };
+    uCoverage: { value: number };
+    uDensity: { value: number };
+    uAltitude: { value: number };
+    uCloudColor: { value: THREE.Color };
+    uShadowColor: { value: THREE.Color };
+    uWindDirection: { value: THREE.Vector2 };
+    uWindSpeed: { value: number };
+    uSunIntensity: { value: number };
+    uSunAngle: { value: number };
+    uSunColor: { value: THREE.Color };
+    uScale: { value: number };
 }
 
 export interface VolumetricCloudUniforms {
-  [uniform: string]: THREE.IUniform;
-  uTime: { value: number };
-  uCoverage: { value: number };
-  uDensity: { value: number };
-  uCloudBase: { value: number };
-  uCloudHeight: { value: number };
-  uCloudColor: { value: THREE.Color };
-  uShadowColor: { value: THREE.Color };
-  uWindDirection: { value: THREE.Vector2 };
-  uWindSpeed: { value: number };
-  uSunIntensity: { value: number };
-  uSunAngle: { value: number };
-  uSunColor: { value: THREE.Color };
-  uSteps: { value: number };
-  uLightSteps: { value: number };
+    [uniform: string]: THREE.IUniform;
+    uTime: { value: number };
+    uCoverage: { value: number };
+    uDensity: { value: number };
+    uCloudBase: { value: number };
+    uCloudHeight: { value: number };
+    uCloudColor: { value: THREE.Color };
+    uShadowColor: { value: THREE.Color };
+    uWindDirection: { value: THREE.Vector2 };
+    uWindSpeed: { value: number };
+    uSunIntensity: { value: number };
+    uSunAngle: { value: number };
+    uSunColor: { value: THREE.Color };
+    uSteps: { value: number };
+    uLightSteps: { value: number };
 }
 
 export function createCloudLayerUniforms(options: {
-  coverage?: number;
-  density?: number;
-  altitude?: number;
-  cloudColor?: THREE.Color;
-  shadowColor?: THREE.Color;
-  windDirection?: THREE.Vector2;
-  windSpeed?: number;
-  sunIntensity?: number;
-  sunAngle?: number;
-  sunColor?: THREE.Color;
-  scale?: number;
+    coverage?: number;
+    density?: number;
+    altitude?: number;
+    cloudColor?: THREE.Color;
+    shadowColor?: THREE.Color;
+    windDirection?: THREE.Vector2;
+    windSpeed?: number;
+    sunIntensity?: number;
+    sunAngle?: number;
+    sunColor?: THREE.Color;
+    scale?: number;
 }): CloudLayerUniforms {
-  return {
-    uTime: { value: 0 },
-    uCoverage: { value: options.coverage ?? 0.5 },
-    uDensity: { value: options.density ?? 1.0 },
-    uAltitude: { value: options.altitude ?? 100 },
-    uCloudColor: { value: options.cloudColor ?? new THREE.Color(1, 1, 1) },
-    uShadowColor: { value: options.shadowColor ?? new THREE.Color(0.7, 0.75, 0.85) },
-    uWindDirection: { value: options.windDirection ?? new THREE.Vector2(1, 0) },
-    uWindSpeed: { value: options.windSpeed ?? 0.01 },
-    uSunIntensity: { value: options.sunIntensity ?? 1.0 },
-    uSunAngle: { value: options.sunAngle ?? 60 },
-    uSunColor: { value: options.sunColor ?? new THREE.Color(1, 0.95, 0.8) },
-    uScale: { value: options.scale ?? 5.0 },
-  };
+    return {
+        uTime: { value: 0 },
+        uCoverage: { value: options.coverage ?? 0.5 },
+        uDensity: { value: options.density ?? 1.0 },
+        uAltitude: { value: options.altitude ?? 100 },
+        uCloudColor: { value: options.cloudColor ?? new THREE.Color(1, 1, 1) },
+        uShadowColor: { value: options.shadowColor ?? new THREE.Color(0.7, 0.75, 0.85) },
+        uWindDirection: { value: options.windDirection ?? new THREE.Vector2(1, 0) },
+        uWindSpeed: { value: options.windSpeed ?? 0.01 },
+        uSunIntensity: { value: options.sunIntensity ?? 1.0 },
+        uSunAngle: { value: options.sunAngle ?? 60 },
+        uSunColor: { value: options.sunColor ?? new THREE.Color(1, 0.95, 0.8) },
+        uScale: { value: options.scale ?? 5.0 },
+    };
 }
 
 export function createVolumetricCloudUniforms(options: {
-  coverage?: number;
-  density?: number;
-  cloudBase?: number;
-  cloudHeight?: number;
-  cloudColor?: THREE.Color;
-  shadowColor?: THREE.Color;
-  windDirection?: THREE.Vector2;
-  windSpeed?: number;
-  sunIntensity?: number;
-  sunAngle?: number;
-  sunColor?: THREE.Color;
-  steps?: number;
-  lightSteps?: number;
+    coverage?: number;
+    density?: number;
+    cloudBase?: number;
+    cloudHeight?: number;
+    cloudColor?: THREE.Color;
+    shadowColor?: THREE.Color;
+    windDirection?: THREE.Vector2;
+    windSpeed?: number;
+    sunIntensity?: number;
+    sunAngle?: number;
+    sunColor?: THREE.Color;
+    steps?: number;
+    lightSteps?: number;
 }): VolumetricCloudUniforms {
-  return {
-    uTime: { value: 0 },
-    uCoverage: { value: options.coverage ?? 0.5 },
-    uDensity: { value: options.density ?? 1.0 },
-    uCloudBase: { value: options.cloudBase ?? 50 },
-    uCloudHeight: { value: options.cloudHeight ?? 50 },
-    uCloudColor: { value: options.cloudColor ?? new THREE.Color(1, 1, 1) },
-    uShadowColor: { value: options.shadowColor ?? new THREE.Color(0.6, 0.65, 0.75) },
-    uWindDirection: { value: options.windDirection ?? new THREE.Vector2(1, 0) },
-    uWindSpeed: { value: options.windSpeed ?? 0.5 },
-    uSunIntensity: { value: options.sunIntensity ?? 1.0 },
-    uSunAngle: { value: options.sunAngle ?? 60 },
-    uSunColor: { value: options.sunColor ?? new THREE.Color(1, 0.95, 0.8) },
-    uSteps: { value: options.steps ?? 32 },
-    uLightSteps: { value: options.lightSteps ?? 4 },
-  };
+    return {
+        uTime: { value: 0 },
+        uCoverage: { value: options.coverage ?? 0.5 },
+        uDensity: { value: options.density ?? 1.0 },
+        uCloudBase: { value: options.cloudBase ?? 50 },
+        uCloudHeight: { value: options.cloudHeight ?? 50 },
+        uCloudColor: { value: options.cloudColor ?? new THREE.Color(1, 1, 1) },
+        uShadowColor: { value: options.shadowColor ?? new THREE.Color(0.6, 0.65, 0.75) },
+        uWindDirection: { value: options.windDirection ?? new THREE.Vector2(1, 0) },
+        uWindSpeed: { value: options.windSpeed ?? 0.5 },
+        uSunIntensity: { value: options.sunIntensity ?? 1.0 },
+        uSunAngle: { value: options.sunAngle ?? 60 },
+        uSunColor: { value: options.sunColor ?? new THREE.Color(1, 0.95, 0.8) },
+        uSteps: { value: options.steps ?? 32 },
+        uLightSteps: { value: options.lightSteps ?? 4 },
+    };
 }

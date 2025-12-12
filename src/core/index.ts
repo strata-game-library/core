@@ -24,10 +24,7 @@ export type {
 } from './weather';
 
 // Particles (pure TypeScript)
-export {
-    ParticleEmitter,
-    createParticleEmitter,
-} from './particles';
+export { ParticleEmitter, createParticleEmitter } from './particles';
 export type {
     ParticleEmitterConfig,
     EmissionShape,

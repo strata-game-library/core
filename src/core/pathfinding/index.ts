@@ -45,40 +45,40 @@ import { nba, aStar, aGreedy } from 'ngraph.path';
 export { createNGraph, nba, aStar, aGreedy };
 
 export type {
-  Position3D,
-  NodeData,
-  EdgeData,
-  NodeId,
-  PathfinderConfig,
-  PathResult,
-  SmoothingOptions,
-  NavMeshConversionOptions,
-  GraphNode,
-  GraphEdge,
-  StrataGraph,
-  StrataPathfinder,
-  NavMesh,
-  YukaVector3,
+    Position3D,
+    NodeData,
+    EdgeData,
+    NodeId,
+    PathfinderConfig,
+    PathResult,
+    SmoothingOptions,
+    NavMeshConversionOptions,
+    GraphNode,
+    GraphEdge,
+    StrataGraph,
+    StrataPathfinder,
+    NavMesh,
+    YukaVector3,
 } from './types';
 
 export type { StrataGraphInstance, NGraph, NNode, NLink } from './graph';
 
 export {
-  createGraph,
-  addNode,
-  addEdge,
-  calculateDistance,
-  fromNavMesh,
-  createGridGraph,
+    createGraph,
+    addNode,
+    addEdge,
+    calculateDistance,
+    fromNavMesh,
+    createGridGraph,
 } from './graph';
 
 export type { StrataPathfinderInstance, NPathFinder } from './pathfinder';
 
 export {
-  createPathfinder,
-  findPath,
-  findPathDijkstra,
-  smoothPath,
-  simplifyPath,
-  findClosestNode,
+    createPathfinder,
+    findPath,
+    findPathDijkstra,
+    smoothPath,
+    simplifyPath,
+    findClosestNode,
 } from './pathfinder';

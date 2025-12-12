@@ -46,12 +46,15 @@ export interface SimplificationOptions {
 }
 
 export class LODManager {
-    private objects: Map<string, {
-        config: LODConfig;
-        state: LODState;
-        object: THREE.Object3D;
-        levels: THREE.Object3D[];
-    }> = new Map();
+    private objects: Map<
+        string,
+        {
+            config: LODConfig;
+            state: LODState;
+            object: THREE.Object3D;
+            levels: THREE.Object3D[];
+        }
+    > = new Map();
     private nextId: number = 0;
     private cameraPosition: THREE.Vector3 = new THREE.Vector3();
 
@@ -59,10 +62,7 @@ export class LODManager {
         return `lod_${this.nextId++}`;
     }
 
-    register(
-        object: THREE.Object3D,
-        config: LODConfig
-    ): string {
+    register(object: THREE.Object3D, config: LODConfig): string {
         const id = this.generateId();
         const state: LODState = {
             currentLevel: 0,
@@ -118,17 +118,14 @@ export class LODManager {
         });
     }
 
-    private calculateLevel(
-        distance: number,
-        config: LODConfig,
-        state: LODState
-    ): number {
+    private calculateLevel(distance: number, config: LODConfig, state: LODState): number {
         const hysteresis = config.hysteresis ?? 0.1;
         const levels = config.levels;
 
         for (let i = 0; i < levels.length; i++) {
             const threshold = levels[i].distance;
-            const hysteresisOffset = state.currentLevel > i ? -hysteresis * threshold : hysteresis * threshold;
+            const hysteresisOffset =
+                state.currentLevel > i ? -hysteresis * threshold : hysteresis * threshold;
 
             if (distance < threshold + hysteresisOffset) {
                 return i;
@@ -221,18 +218,10 @@ export function simplifyGeometry(
     const uvAttr = geometry.getAttribute('uv');
 
     for (let i = 0; i < originalCount; i += step) {
-        newPositions.push(
-            positionAttr.getX(i),
-            positionAttr.getY(i),
-            positionAttr.getZ(i)
-        );
+        newPositions.push(positionAttr.getX(i), positionAttr.getY(i), positionAttr.getZ(i));
 
         if (preserveNormals && normalAttr) {
-            newNormals.push(
-                normalAttr.getX(i),
-                normalAttr.getY(i),
-                normalAttr.getZ(i)
-            );
+            newNormals.push(normalAttr.getX(i), normalAttr.getY(i), normalAttr.getZ(i));
         }
 
         if (uvAttr) {
@@ -240,23 +229,14 @@ export function simplifyGeometry(
         }
     }
 
-    simplified.setAttribute(
-        'position',
-        new THREE.Float32BufferAttribute(newPositions, 3)
-    );
+    simplified.setAttribute('position', new THREE.Float32BufferAttribute(newPositions, 3));
 
     if (newNormals.length > 0) {
-        simplified.setAttribute(
-            'normal',
-            new THREE.Float32BufferAttribute(newNormals, 3)
-        );
+        simplified.setAttribute('normal', new THREE.Float32BufferAttribute(newNormals, 3));
     }
 
     if (newUvs.length > 0) {
-        simplified.setAttribute(
-            'uv',
-            new THREE.Float32BufferAttribute(newUvs, 2)
-        );
+        simplified.setAttribute('uv', new THREE.Float32BufferAttribute(newUvs, 2));
     }
 
     return simplified;
@@ -271,9 +251,7 @@ export function generateLODGeometries(
 
     for (let i = 1; i < levels; i++) {
         const ratio = 1 - (i / (levels - 1)) * (1 - minRatio);
-        geometries.push(
-            simplifyGeometry(baseGeometry, { targetRatio: ratio })
-        );
+        geometries.push(simplifyGeometry(baseGeometry, { targetRatio: ratio }));
     }
 
     return geometries;
@@ -284,26 +262,18 @@ export function createImpostorTexture(
     object: THREE.Object3D,
     config: ImpostorConfig = {}
 ): THREE.Texture | null {
-    const {
-        resolution = 256,
-        views = 8,
-        billboardMode = 'cylindrical',
-    } = config;
+    const { resolution = 256, views = 8, billboardMode = 'cylindrical' } = config;
 
     if (typeof document === 'undefined') {
         return null;
     }
 
-    const renderTarget = new THREE.WebGLRenderTarget(
-        resolution * views,
-        resolution,
-        {
-            minFilter: THREE.LinearFilter,
-            magFilter: THREE.LinearFilter,
-            format: THREE.RGBAFormat,
-            type: THREE.UnsignedByteType,
-        }
-    );
+    const renderTarget = new THREE.WebGLRenderTarget(resolution * views, resolution, {
+        minFilter: THREE.LinearFilter,
+        magFilter: THREE.LinearFilter,
+        format: THREE.RGBAFormat,
+        type: THREE.UnsignedByteType,
+    });
 
     const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 100);
     const scene = new THREE.Scene();
@@ -335,22 +305,13 @@ export function createImpostorTexture(
                 Math.sin(angle) * distance
             );
         } else {
-            camera.position.set(
-                Math.cos(angle) * distance,
-                0,
-                Math.sin(angle) * distance
-            );
+            camera.position.set(Math.cos(angle) * distance, 0, Math.sin(angle) * distance);
         }
 
         camera.lookAt(0, 0, 0);
         camera.updateProjectionMatrix();
 
-        const viewport = new THREE.Vector4(
-            i * resolution,
-            0,
-            resolution,
-            resolution
-        );
+        const viewport = new THREE.Vector4(i * resolution, 0, resolution, resolution);
         renderer.setViewport(viewport);
         renderer.render(scene, camera);
     }
@@ -406,9 +367,7 @@ export function calculateImpostorAngle(
     objectPosition: THREE.Vector3,
     cameraPosition: THREE.Vector3
 ): number {
-    const direction = new THREE.Vector3()
-        .subVectors(cameraPosition, objectPosition)
-        .normalize();
+    const direction = new THREE.Vector3().subVectors(cameraPosition, objectPosition).normalize();
     return Math.atan2(direction.x, direction.z);
 }
 
@@ -428,12 +387,7 @@ export function interpolateLODMaterials(
 export function createDitherPattern(size: number = 4): THREE.DataTexture {
     const data = new Uint8Array(size * size);
 
-    const bayerMatrix = [
-        0, 8, 2, 10,
-        12, 4, 14, 6,
-        3, 11, 1, 9,
-        15, 7, 13, 5,
-    ];
+    const bayerMatrix = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5];
 
     for (let i = 0; i < data.length; i++) {
         data[i] = Math.floor((bayerMatrix[i % 16] / 16) * 255);
@@ -465,10 +419,7 @@ export function calculateScreenSpaceSize(
     return screenSize;
 }
 
-export function shouldUseLOD(
-    screenSize: number,
-    threshold: number = 50
-): boolean {
+export function shouldUseLOD(screenSize: number, threshold: number = 50): boolean {
     return screenSize < threshold;
 }
 
@@ -481,9 +432,7 @@ export interface VegetationLODConfig {
     transitionWidth?: number;
 }
 
-export function createVegetationLODLevels(
-    config: VegetationLODConfig
-): LODLevel[] {
+export function createVegetationLODLevels(config: VegetationLODConfig): LODLevel[] {
     return [
         { distance: config.highDetailDistance },
         { distance: config.mediumDetailDistance },
@@ -493,10 +442,7 @@ export function createVegetationLODLevels(
     ];
 }
 
-export function calculateVegetationDensity(
-    distance: number,
-    config: VegetationLODConfig
-): number {
+export function calculateVegetationDensity(distance: number, config: VegetationLODConfig): number {
     if (distance < config.highDetailDistance) {
         return 1.0;
     } else if (distance < config.mediumDetailDistance) {

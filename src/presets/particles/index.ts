@@ -16,10 +16,7 @@ import {
     EmitterShapeParams,
 } from '../../core/particles';
 
-export {
-    ParticleEmitter,
-    createParticleEmitter,
-};
+export { ParticleEmitter, createParticleEmitter };
 export type {
     ParticleEmitterConfig,
     EmissionShape,
@@ -542,7 +539,10 @@ export function createMagicEffect(position?: THREE.Vector3): ParticleEmitter {
     return new ParticleEmitter(config);
 }
 
-export function createExplosionEffect(position?: THREE.Vector3, burstCount: number = 200): ParticleEmitter {
+export function createExplosionEffect(
+    position?: THREE.Vector3,
+    burstCount: number = 200
+): ParticleEmitter {
     const config = { ...explosionPreset };
     if (position) config.position = position;
     const emitter = new ParticleEmitter(config);
@@ -559,7 +559,10 @@ export const particlePresets = {
     explosion: explosionPreset,
 };
 
-export function createFromPreset(presetName: keyof typeof particlePresets, overrides?: Partial<ParticleEmitterConfig>): ParticleEmitter {
+export function createFromPreset(
+    presetName: keyof typeof particlePresets,
+    overrides?: Partial<ParticleEmitterConfig>
+): ParticleEmitter {
     const preset = particlePresets[presetName];
     if (!preset) {
         throw new Error(`Unknown particle preset: ${presetName}`);

@@ -35,21 +35,26 @@ export function InputProvider({ children }: { children: ReactNode }) {
   const [snapshot, setSnapshot] = useState<InputSnapshot>(defaultSnapshot);
 
   useEffect(() => {
-    let mounted = true;
+    // Track mounted state to prevent race condition where cleanup runs before
+    // addListener promise resolves, causing memory leaks and React warnings
+    let isMounted = true;
     let removeListener: (() => void) | undefined;
 
     Strata.addListener('inputChange', (newSnapshot: InputSnapshot) => {
-      if (mounted) setSnapshot(newSnapshot);
+      if (isMounted) {
+        setSnapshot(newSnapshot);
+      }
     }).then(handle => {
-      if (mounted) {
+      if (isMounted) {
         removeListener = handle.remove;
       } else {
+        // Already unmounted - clean up immediately to prevent memory leak
         handle.remove();
       }
     });
 
     return () => {
-      mounted = false;
+      isMounted = false;
       removeListener?.();
     };
   }, []);

@@ -515,14 +515,11 @@ export function createBloodSplatterTexture(size: number = 128): THREE.Texture | 
 
         for (let i = 0; i < 8; i++) {
             const angle = (i / 8) * Math.PI * 2 + Math.random() * 0.5;
-            const length = (0.3 + Math.random() * 0.4) * Math.min(w, h) / 2;
+            const length = ((0.3 + Math.random() * 0.4) * Math.min(w, h)) / 2;
 
             ctx.beginPath();
             ctx.moveTo(centerX, centerY);
-            ctx.lineTo(
-                centerX + Math.cos(angle) * length,
-                centerY + Math.sin(angle) * length
-            );
+            ctx.lineTo(centerX + Math.cos(angle) * length, centerY + Math.sin(angle) * length);
             ctx.lineWidth = 3 + Math.random() * 5;
             ctx.strokeStyle = `rgba(139, 0, 0, ${0.6 + Math.random() * 0.4})`;
             ctx.stroke();

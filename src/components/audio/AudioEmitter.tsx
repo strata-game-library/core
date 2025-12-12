@@ -31,95 +31,95 @@ import type { AudioEmitterProps, AudioEmitterRef } from './types';
  * ```
  */
 export const AudioEmitter = forwardRef<AudioEmitterRef, AudioEmitterProps>(
-  (
-    {
-      url,
-      position = [0, 0, 0],
-      follow,
-      loop = false,
-      autoplay = false,
-      volume = 1,
-      refDistance = 1,
-      maxDistance = 10000,
-      rolloffFactor = 1,
-      distanceModel = 'inverse',
-      onLoad,
-    },
-    ref
-  ) => {
-    const spatialAudio = useSpatialAudio();
-    const idRef = useRef(`emitter-${Math.random().toString(36).substr(2, 9)}`);
-    const sourceRef = useRef<THREE.PositionalAudio | null>(null);
-    const positionRef = useRef(new THREE.Vector3(...position));
+    (
+        {
+            url,
+            position = [0, 0, 0],
+            follow,
+            loop = false,
+            autoplay = false,
+            volume = 1,
+            refDistance = 1,
+            maxDistance = 10000,
+            rolloffFactor = 1,
+            distanceModel = 'inverse',
+            onLoad,
+        },
+        ref
+    ) => {
+        const spatialAudio = useSpatialAudio();
+        const idRef = useRef(`emitter-${Math.random().toString(36).substr(2, 9)}`);
+        const sourceRef = useRef<THREE.PositionalAudio | null>(null);
+        const positionRef = useRef(new THREE.Vector3(...position));
 
-    useEffect(() => {
-      if (!spatialAudio) return;
+        useEffect(() => {
+            if (!spatialAudio) return;
 
-      spatialAudio
-        .load(idRef.current, url, {
-          refDistance,
-          maxDistance,
-          rolloffFactor,
-          distanceModel,
-        })
-        .then((source) => {
-          sourceRef.current = source;
-          source.position.copy(positionRef.current);
-          source.setVolume(volume);
-          source.setLoop(loop);
-          onLoad?.();
+            spatialAudio
+                .load(idRef.current, url, {
+                    refDistance,
+                    maxDistance,
+                    rolloffFactor,
+                    distanceModel,
+                })
+                .then((source) => {
+                    sourceRef.current = source;
+                    source.position.copy(positionRef.current);
+                    source.setVolume(volume);
+                    source.setLoop(loop);
+                    onLoad?.();
 
-          if (autoplay) {
-            source.play();
-          }
+                    if (autoplay) {
+                        source.play();
+                    }
+                });
+
+            return () => {
+                spatialAudio.remove(idRef.current);
+                sourceRef.current = null;
+            };
+        }, [url, spatialAudio]);
+
+        useFrame(() => {
+            if (!sourceRef.current) return;
+
+            if (follow?.current) {
+                follow.current.getWorldPosition(positionRef.current);
+                sourceRef.current.position.copy(positionRef.current);
+            }
         });
 
-      return () => {
-        spatialAudio.remove(idRef.current);
-        sourceRef.current = null;
-      };
-    }, [url, spatialAudio]);
+        useEffect(() => {
+            if (!follow && sourceRef.current) {
+                positionRef.current.set(position[0], position[1], position[2]);
+                sourceRef.current.position.copy(positionRef.current);
+            }
+        }, [position[0], position[1], position[2], follow]);
 
-    useFrame(() => {
-      if (!sourceRef.current) return;
+        useEffect(() => {
+            if (sourceRef.current) {
+                sourceRef.current.setVolume(volume);
+            }
+        }, [volume]);
 
-      if (follow?.current) {
-        follow.current.getWorldPosition(positionRef.current);
-        sourceRef.current.position.copy(positionRef.current);
-      }
-    });
+        useImperativeHandle(
+            ref,
+            () => ({
+                play: () => sourceRef.current?.play(),
+                stop: () => sourceRef.current?.stop(),
+                pause: () => sourceRef.current?.pause(),
+                setVolume: (vol: number) => sourceRef.current?.setVolume(vol),
+                setPosition: (x: number, y: number, z: number) => {
+                    positionRef.current.set(x, y, z);
+                    sourceRef.current?.position.copy(positionRef.current);
+                },
+                isPlaying: () => sourceRef.current?.isPlaying ?? false,
+            }),
+            []
+        );
 
-    useEffect(() => {
-      if (!follow && sourceRef.current) {
-        positionRef.current.set(position[0], position[1], position[2]);
-        sourceRef.current.position.copy(positionRef.current);
-      }
-    }, [position[0], position[1], position[2], follow]);
-
-    useEffect(() => {
-      if (sourceRef.current) {
-        sourceRef.current.setVolume(volume);
-      }
-    }, [volume]);
-
-    useImperativeHandle(
-      ref,
-      () => ({
-        play: () => sourceRef.current?.play(),
-        stop: () => sourceRef.current?.stop(),
-        pause: () => sourceRef.current?.pause(),
-        setVolume: (vol: number) => sourceRef.current?.setVolume(vol),
-        setPosition: (x: number, y: number, z: number) => {
-          positionRef.current.set(x, y, z);
-          sourceRef.current?.position.copy(positionRef.current);
-        },
-        isPlaying: () => sourceRef.current?.isPlaying ?? false,
-      }),
-      []
-    );
-
-    return null;
-  }
+        return null;
+    }
 );
 
 AudioEmitter.displayName = 'AudioEmitter';

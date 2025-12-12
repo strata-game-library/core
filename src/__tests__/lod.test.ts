@@ -34,10 +34,7 @@ describe('LODManager', () => {
             const manager = new LODManager();
             const object = new THREE.Mesh();
             const config: LODConfig = {
-                levels: [
-                    { distance: 10 },
-                    { distance: 30 },
-                ],
+                levels: [{ distance: 10 }, { distance: 30 }],
             };
             const id = manager.register(object, config);
             expect(id).toBeDefined();
@@ -74,14 +71,11 @@ describe('LODManager', () => {
             const manager = new LODManager();
             const object = new THREE.Mesh();
             object.position.set(0, 0, 10);
-            
+
             manager.register(object, {
-                levels: [
-                    { distance: 5 },
-                    { distance: 15 },
-                ],
+                levels: [{ distance: 5 }, { distance: 15 }],
             });
-            
+
             expect(() => manager.update(new THREE.Vector3(0, 0, 0), 0.016)).not.toThrow();
         });
     });
@@ -139,11 +133,7 @@ describe('calculateLODLevel', () => {
     it('should return level 0 for close distance', () => {
         const objectPos = new THREE.Vector3(0, 0, 5);
         const cameraPos = new THREE.Vector3(0, 0, 0);
-        const levels: LODLevel[] = [
-            { distance: 10 },
-            { distance: 30 },
-            { distance: 60 },
-        ];
+        const levels: LODLevel[] = [{ distance: 10 }, { distance: 30 }, { distance: 60 }];
         const level = calculateLODLevel(objectPos, cameraPos, levels);
         expect(level).toBe(0);
     });
@@ -151,11 +141,7 @@ describe('calculateLODLevel', () => {
     it('should return level 1 for medium distance', () => {
         const objectPos = new THREE.Vector3(0, 0, 20);
         const cameraPos = new THREE.Vector3(0, 0, 0);
-        const levels: LODLevel[] = [
-            { distance: 10 },
-            { distance: 30 },
-            { distance: 60 },
-        ];
+        const levels: LODLevel[] = [{ distance: 10 }, { distance: 30 }, { distance: 60 }];
         const level = calculateLODLevel(objectPos, cameraPos, levels);
         expect(level).toBe(1);
     });
@@ -163,11 +149,7 @@ describe('calculateLODLevel', () => {
     it('should return last level for far distance', () => {
         const objectPos = new THREE.Vector3(0, 0, 100);
         const cameraPos = new THREE.Vector3(0, 0, 0);
-        const levels: LODLevel[] = [
-            { distance: 10 },
-            { distance: 30 },
-            { distance: 60 },
-        ];
+        const levels: LODLevel[] = [{ distance: 10 }, { distance: 30 }, { distance: 60 }];
         const level = calculateLODLevel(objectPos, cameraPos, levels);
         expect(level).toBe(2);
     });
@@ -181,10 +163,7 @@ describe('createLODLevels', () => {
     });
 
     it('should include geometries if provided', () => {
-        const geometries = [
-            new THREE.BoxGeometry(1, 1, 1),
-            new THREE.BoxGeometry(0.5, 0.5, 0.5),
-        ];
+        const geometries = [new THREE.BoxGeometry(1, 1, 1), new THREE.BoxGeometry(0.5, 0.5, 0.5)];
         const levels = createLODLevels([10, 30], geometries);
         expect(levels[0].geometry).toBeDefined();
     });
@@ -320,22 +299,14 @@ describe('calculateVegetationDensity', () => {
 
 describe('batchLODObjects', () => {
     it('should batch objects by LOD level', () => {
-        const objects = [
-            new THREE.Mesh(),
-            new THREE.Mesh(),
-            new THREE.Mesh(),
-        ];
+        const objects = [new THREE.Mesh(), new THREE.Mesh(), new THREE.Mesh()];
         objects[0].position.set(0, 0, 5);
         objects[1].position.set(0, 0, 25);
         objects[2].position.set(0, 0, 50);
-        
+
         const cameraPos = new THREE.Vector3(0, 0, 0);
-        const levels: LODLevel[] = [
-            { distance: 10 },
-            { distance: 30 },
-            { distance: 60 },
-        ];
-        
+        const levels: LODLevel[] = [{ distance: 10 }, { distance: 30 }, { distance: 60 }];
+
         const batches = batchLODObjects(objects, cameraPos, levels);
         expect(batches.size).toBe(3);
     });

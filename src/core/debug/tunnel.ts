@@ -51,7 +51,7 @@ import type { TunnelConfig, Tunnel, DebugTunnelId } from './types';
  * ```
  */
 export function createTunnel(_config: TunnelConfig = {}): Tunnel {
-  return tunnelRat();
+    return tunnelRat();
 }
 
 const tunnelRegistry = new Map<string, Tunnel>();
@@ -89,10 +89,10 @@ const tunnelRegistry = new Map<string, Tunnel>();
  * ```
  */
 export function getTunnel(id: string): Tunnel {
-  if (!tunnelRegistry.has(id)) {
-    tunnelRegistry.set(id, createTunnel({ id }));
-  }
-  return tunnelRegistry.get(id)!;
+    if (!tunnelRegistry.has(id)) {
+        tunnelRegistry.set(id, createTunnel({ id }));
+    }
+    return tunnelRegistry.get(id)!;
 }
 
 /**
@@ -110,7 +110,7 @@ export function getTunnel(id: string): Tunnel {
  * ```
  */
 export function clearTunnels(): void {
-  tunnelRegistry.clear();
+    tunnelRegistry.clear();
 }
 
 /**
@@ -201,17 +201,17 @@ export const StatsPanelTunnel: Tunnel = createTunnel({ id: 'stats-panel' });
  * ```
  */
 export function getDebugTunnel(id: DebugTunnelId): Tunnel {
-  switch (id) {
-    case 'debug-overlay':
-      return DebugOverlayTunnel;
-    case 'fps-counter':
-      return FPSCounterTunnel;
-    case 'stats-panel':
-      return StatsPanelTunnel;
-    case 'custom':
-    default:
-      return createTunnel({ id });
-  }
+    switch (id) {
+        case 'debug-overlay':
+            return DebugOverlayTunnel;
+        case 'fps-counter':
+            return FPSCounterTunnel;
+        case 'stats-panel':
+            return StatsPanelTunnel;
+        case 'custom':
+        default:
+            return createTunnel({ id });
+    }
 }
 
 export { tunnelRat };

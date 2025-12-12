@@ -9,24 +9,23 @@
 import createNGraph from 'ngraph.graph';
 import type { Graph as NGraph, Node as NNode, Link as NLink } from 'ngraph.graph';
 import type {
-  NodeId,
-  NodeData,
-  EdgeData,
-  Position3D,
-  GraphNode,
-  GraphEdge,
-  StrataGraph,
-  NavMeshConversionOptions,
+    NodeId,
+    NodeData,
+    EdgeData,
+    Position3D,
+    GraphNode,
+    GraphEdge,
+    StrataGraph,
+    NavMeshConversionOptions,
 } from './types';
 import type { NavMesh, Polygon } from 'yuka';
 
 /**
  * Extended graph type with Strata utilities.
  */
-export interface StrataGraphInstance<N = NodeData, E = EdgeData>
-  extends StrataGraph<N, E> {
-  readonly nativeGraph: NGraph<N, E>;
-  clear(): void;
+export interface StrataGraphInstance<N = NodeData, E = EdgeData> extends StrataGraph<N, E> {
+    readonly nativeGraph: NGraph<N, E>;
+    clear(): void;
 }
 
 /**
@@ -47,80 +46,77 @@ export interface StrataGraphInstance<N = NodeData, E = EdgeData>
  * console.log(graph.hasEdge('A', 'B')); // true
  * ```
  */
-export function createGraph<
-  N = NodeData,
-  E = EdgeData,
->(): StrataGraphInstance<N, E> {
-  const nativeGraph = createNGraph<N, E>();
+export function createGraph<N = NodeData, E = EdgeData>(): StrataGraphInstance<N, E> {
+    const nativeGraph = createNGraph<N, E>();
 
-  const wrapper: StrataGraphInstance<N, E> = {
-    get nativeGraph() {
-      return nativeGraph;
-    },
+    const wrapper: StrataGraphInstance<N, E> = {
+        get nativeGraph() {
+            return nativeGraph;
+        },
 
-    getNodeCount(): number {
-      return nativeGraph.getNodeCount();
-    },
+        getNodeCount(): number {
+            return nativeGraph.getNodeCount();
+        },
 
-    getEdgeCount(): number {
-      return nativeGraph.getLinkCount();
-    },
+        getEdgeCount(): number {
+            return nativeGraph.getLinkCount();
+        },
 
-    hasNode(nodeId: NodeId): boolean {
-      return nativeGraph.getNode(nodeId) !== undefined;
-    },
+        hasNode(nodeId: NodeId): boolean {
+            return nativeGraph.getNode(nodeId) !== undefined;
+        },
 
-    hasEdge(fromId: NodeId, toId: NodeId): boolean {
-      return nativeGraph.getLink(fromId, toId) !== undefined;
-    },
+        hasEdge(fromId: NodeId, toId: NodeId): boolean {
+            return nativeGraph.getLink(fromId, toId) !== undefined;
+        },
 
-    addNode(nodeId: NodeId, data?: N): void {
-      nativeGraph.addNode(nodeId, data as N);
-    },
+        addNode(nodeId: NodeId, data?: N): void {
+            nativeGraph.addNode(nodeId, data as N);
+        },
 
-    addEdge(fromId: NodeId, toId: NodeId, data?: E): void {
-      nativeGraph.addLink(fromId, toId, data as E);
-    },
+        addEdge(fromId: NodeId, toId: NodeId, data?: E): void {
+            nativeGraph.addLink(fromId, toId, data as E);
+        },
 
-    removeNode(nodeId: NodeId): void {
-      nativeGraph.removeNode(nodeId);
-    },
+        removeNode(nodeId: NodeId): void {
+            nativeGraph.removeNode(nodeId);
+        },
 
-    removeEdge(fromId: NodeId, toId: NodeId): void {
-      const link = nativeGraph.getLink(fromId, toId);
-      if (link) {
-        nativeGraph.removeLink(link);
-      }
-    },
+        removeEdge(fromId: NodeId, toId: NodeId): void {
+            const link = nativeGraph.getLink(fromId, toId);
+            if (link) {
+                nativeGraph.removeLink(link);
+            }
+        },
 
-    getNode(nodeId: NodeId): GraphNode<N> | undefined {
-      const node = nativeGraph.getNode(nodeId);
-      if (!node) return undefined;
-      return { id: node.id, data: node.data };
-    },
+        getNode(nodeId: NodeId): GraphNode<N> | undefined {
+            const node = nativeGraph.getNode(nodeId);
+            if (!node) return undefined;
+            return { id: node.id, data: node.data };
+        },
 
-    forEachNode(callback: (node: GraphNode<N>) => void | boolean): void {
-      nativeGraph.forEachNode((node: NNode<N>) => {
-        return callback({ id: node.id, data: node.data });
-      });
-    },
+        forEachNode(callback: (node: GraphNode<N>) => void | boolean): void {
+            nativeGraph.forEachNode((node: NNode<N>) => {
+                return callback({ id: node.id, data: node.data });
+            });
+        },
 
-    forEachEdge(callback: (edge: GraphEdge<E>) => void | boolean): void {
-      nativeGraph.forEachLink((link: NLink<E>) => {
-        return callback({
-          fromId: link.fromId,
-          toId: link.toId,
-          data: link.data,
-        });
-      });
-    },
+        forEachEdge(callback: (edge: GraphEdge<E>) => void | boolean): void {
+            nativeGraph.forEachLink((link: NLink<E>) => {
+                return callback({
+                    fromId: link.fromId,
+                    toId: link.toId,
+                    data: link.data,
+                });
+            });
+        },
 
-    clear(): void {
-      nativeGraph.clear();
-    },
-  };
+        clear(): void {
+            nativeGraph.clear();
+        },
+    };
 
-  return wrapper;
+    return wrapper;
 }
 
 /**
@@ -139,16 +135,16 @@ export function createGraph<
  * ```
  */
 export function addNode(
-  graph: StrataGraphInstance<NodeData, EdgeData>,
-  nodeId: NodeId,
-  position: Position3D,
-  options: Omit<NodeData, 'position'> = {}
+    graph: StrataGraphInstance<NodeData, EdgeData>,
+    nodeId: NodeId,
+    position: Position3D,
+    options: Omit<NodeData, 'position'> = {}
 ): void {
-  graph.addNode(nodeId, {
-    position,
-    walkable: options.walkable ?? true,
-    cost: options.cost ?? 1,
-  });
+    graph.addNode(nodeId, {
+        position,
+        walkable: options.walkable ?? true,
+        cost: options.cost ?? 1,
+    });
 }
 
 /**
@@ -176,34 +172,34 @@ export function addNode(
  * ```
  */
 export function addEdge(
-  graph: StrataGraphInstance<NodeData, EdgeData>,
-  fromId: NodeId,
-  toId: NodeId,
-  options: Partial<EdgeData> = {}
+    graph: StrataGraphInstance<NodeData, EdgeData>,
+    fromId: NodeId,
+    toId: NodeId,
+    options: Partial<EdgeData> = {}
 ): void {
-  let weight = options.weight;
+    let weight = options.weight;
 
-  if (weight === undefined) {
-    const fromNode = graph.getNode(fromId);
-    const toNode = graph.getNode(toId);
+    if (weight === undefined) {
+        const fromNode = graph.getNode(fromId);
+        const toNode = graph.getNode(toId);
 
-    if (fromNode?.data?.position && toNode?.data?.position) {
-      weight = calculateDistance(fromNode.data.position, toNode.data.position);
-    } else {
-      weight = 1;
+        if (fromNode?.data?.position && toNode?.data?.position) {
+            weight = calculateDistance(fromNode.data.position, toNode.data.position);
+        } else {
+            weight = 1;
+        }
     }
-  }
 
-  const edgeData: EdgeData = {
-    weight,
-    bidirectional: options.bidirectional ?? false,
-  };
+    const edgeData: EdgeData = {
+        weight,
+        bidirectional: options.bidirectional ?? false,
+    };
 
-  graph.addEdge(fromId, toId, edgeData);
+    graph.addEdge(fromId, toId, edgeData);
 
-  if (options.bidirectional) {
-    graph.addEdge(toId, fromId, edgeData);
-  }
+    if (options.bidirectional) {
+        graph.addEdge(toId, fromId, edgeData);
+    }
 }
 
 /**
@@ -214,10 +210,10 @@ export function addEdge(
  * @returns The distance between positions
  */
 export function calculateDistance(a: Position3D, b: Position3D): number {
-  const dx = b.x - a.x;
-  const dy = b.y - a.y;
-  const dz = b.z - a.z;
-  return Math.sqrt(dx * dx + dy * dy + dz * dz);
+    const dx = b.x - a.x;
+    const dy = b.y - a.y;
+    const dz = b.z - a.z;
+    return Math.sqrt(dx * dx + dy * dy + dz * dz);
 }
 
 /**
@@ -241,77 +237,77 @@ export function calculateDistance(a: Position3D, b: Position3D): number {
  * ```
  */
 export function fromNavMesh(
-  navMesh: NavMesh,
-  options: NavMeshConversionOptions = {}
+    navMesh: NavMesh,
+    options: NavMeshConversionOptions = {}
 ): StrataGraphInstance<NodeData, EdgeData> {
-  const { connectNeighbors = true, edgeWeight } = options;
+    const { connectNeighbors = true, edgeWeight } = options;
 
-  const graph = createGraph<NodeData, EdgeData>();
-  const regions = navMesh.regions;
+    const graph = createGraph<NodeData, EdgeData>();
+    const regions = navMesh.regions;
 
-  for (let i = 0; i < regions.length; i++) {
-    const region = regions[i] as Polygon;
-    const centroid = region.centroid;
-
-    addNode(graph, `region_${i}`, {
-      x: centroid.x,
-      y: centroid.y,
-      z: centroid.z,
-    });
-  }
-
-  if (connectNeighbors) {
     for (let i = 0; i < regions.length; i++) {
-      for (let j = i + 1; j < regions.length; j++) {
-        const regionA = regions[i] as Polygon;
-        const regionB = regions[j] as Polygon;
+        const region = regions[i] as Polygon;
+        const centroid = region.centroid;
 
-        if (arePolygonsAdjacent(regionA, regionB)) {
-          const weight =
-            edgeWeight ??
-            calculateDistance(
-              { x: regionA.centroid.x, y: regionA.centroid.y, z: regionA.centroid.z },
-              { x: regionB.centroid.x, y: regionB.centroid.y, z: regionB.centroid.z }
-            );
-
-          addEdge(graph, `region_${i}`, `region_${j}`, {
-            weight,
-            bidirectional: true,
-          });
-        }
-      }
+        addNode(graph, `region_${i}`, {
+            x: centroid.x,
+            y: centroid.y,
+            z: centroid.z,
+        });
     }
-  }
 
-  return graph;
+    if (connectNeighbors) {
+        for (let i = 0; i < regions.length; i++) {
+            for (let j = i + 1; j < regions.length; j++) {
+                const regionA = regions[i] as Polygon;
+                const regionB = regions[j] as Polygon;
+
+                if (arePolygonsAdjacent(regionA, regionB)) {
+                    const weight =
+                        edgeWeight ??
+                        calculateDistance(
+                            { x: regionA.centroid.x, y: regionA.centroid.y, z: regionA.centroid.z },
+                            { x: regionB.centroid.x, y: regionB.centroid.y, z: regionB.centroid.z }
+                        );
+
+                    addEdge(graph, `region_${i}`, `region_${j}`, {
+                        weight,
+                        bidirectional: true,
+                    });
+                }
+            }
+        }
+    }
+
+    return graph;
 }
 
 /**
  * Checks if two polygons share an edge (are adjacent).
  */
 function arePolygonsAdjacent(polyA: Polygon, polyB: Polygon): boolean {
-  const verticesA = polyA.vertices;
-  const verticesB = polyB.vertices;
+    const verticesA = polyA.vertices;
+    const verticesB = polyB.vertices;
 
-  let sharedCount = 0;
-  const epsilon = 0.001;
+    let sharedCount = 0;
+    const epsilon = 0.001;
 
-  for (const vA of verticesA) {
-    for (const vB of verticesB) {
-      const dx = Math.abs(vA.x - vB.x);
-      const dy = Math.abs(vA.y - vB.y);
-      const dz = Math.abs(vA.z - vB.z);
+    for (const vA of verticesA) {
+        for (const vB of verticesB) {
+            const dx = Math.abs(vA.x - vB.x);
+            const dy = Math.abs(vA.y - vB.y);
+            const dz = Math.abs(vA.z - vB.z);
 
-      if (dx < epsilon && dy < epsilon && dz < epsilon) {
-        sharedCount++;
-        if (sharedCount >= 2) {
-          return true;
+            if (dx < epsilon && dy < epsilon && dz < epsilon) {
+                sharedCount++;
+                if (sharedCount >= 2) {
+                    return true;
+                }
+            }
         }
-      }
     }
-  }
 
-  return false;
+    return false;
 }
 
 /**
@@ -330,44 +326,44 @@ function arePolygonsAdjacent(polyA: Polygon, polyB: Polygon): boolean {
  * ```
  */
 export function createGridGraph(
-  width: number,
-  height: number,
-  cellSize: number = 1,
-  options: { allowDiagonals?: boolean; y?: number } = {}
+    width: number,
+    height: number,
+    cellSize: number = 1,
+    options: { allowDiagonals?: boolean; y?: number } = {}
 ): StrataGraphInstance<NodeData, EdgeData> {
-  const { allowDiagonals = false, y = 0 } = options;
-  const graph = createGraph<NodeData, EdgeData>();
+    const { allowDiagonals = false, y = 0 } = options;
+    const graph = createGraph<NodeData, EdgeData>();
 
-  for (let x = 0; x < width; x++) {
-    for (let z = 0; z < height; z++) {
-      const nodeId = `${x}_${z}`;
-      addNode(graph, nodeId, {
-        x: x * cellSize,
-        y,
-        z: z * cellSize,
-      });
-    }
-  }
-
-  for (let x = 0; x < width; x++) {
-    for (let z = 0; z < height; z++) {
-      const nodeId = `${x}_${z}`;
-
-      if (x < width - 1) addEdge(graph, nodeId, `${x + 1}_${z}`, { bidirectional: true });
-      if (z < height - 1) addEdge(graph, nodeId, `${x}_${z + 1}`, { bidirectional: true });
-
-      if (allowDiagonals) {
-        if (x < width - 1 && z < height - 1) {
-          addEdge(graph, nodeId, `${x + 1}_${z + 1}`, { bidirectional: true });
+    for (let x = 0; x < width; x++) {
+        for (let z = 0; z < height; z++) {
+            const nodeId = `${x}_${z}`;
+            addNode(graph, nodeId, {
+                x: x * cellSize,
+                y,
+                z: z * cellSize,
+            });
         }
-        if (x > 0 && z < height - 1) {
-          addEdge(graph, nodeId, `${x - 1}_${z + 1}`, { bidirectional: true });
-        }
-      }
     }
-  }
 
-  return graph;
+    for (let x = 0; x < width; x++) {
+        for (let z = 0; z < height; z++) {
+            const nodeId = `${x}_${z}`;
+
+            if (x < width - 1) addEdge(graph, nodeId, `${x + 1}_${z}`, { bidirectional: true });
+            if (z < height - 1) addEdge(graph, nodeId, `${x}_${z + 1}`, { bidirectional: true });
+
+            if (allowDiagonals) {
+                if (x < width - 1 && z < height - 1) {
+                    addEdge(graph, nodeId, `${x + 1}_${z + 1}`, { bidirectional: true });
+                }
+                if (x > 0 && z < height - 1) {
+                    addEdge(graph, nodeId, `${x - 1}_${z + 1}`, { bidirectional: true });
+                }
+            }
+        }
+    }
+
+    return graph;
 }
 
 export type { NGraph, NNode, NLink };

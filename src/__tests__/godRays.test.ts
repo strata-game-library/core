@@ -53,7 +53,7 @@ describe('calculateSunOcclusion', () => {
         const sunPos = new THREE.Vector3(0, 100, -100);
         const camera = new THREE.PerspectiveCamera();
         const occluders: THREE.Object3D[] = [];
-        
+
         const result = calculateSunOcclusion(sunPos, camera, occluders);
         expect(result.visibleFraction).toBeDefined();
         expect(result.occluded).toBeDefined();
@@ -64,7 +64,7 @@ describe('calculateSunOcclusion', () => {
         const sunPos = new THREE.Vector3(0, 100, -100);
         const camera = new THREE.PerspectiveCamera();
         const occluders: THREE.Object3D[] = [];
-        
+
         const result = calculateSunOcclusion(sunPos, camera, occluders, 8);
         expect(result.visibleFraction).toBe(1);
         expect(result.occluded).toBe(false);
@@ -100,7 +100,7 @@ describe('getLightScreenPosition', () => {
         const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
         camera.position.set(0, 0, 0);
         camera.updateMatrixWorld();
-        
+
         const result = getLightScreenPosition(lightPos, camera, new THREE.Vector2(800, 600));
         expect(result).not.toBe(null);
         if (result) {
@@ -114,7 +114,7 @@ describe('getLightScreenPosition', () => {
         const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
         camera.position.set(0, 0, 0);
         camera.updateMatrixWorld();
-        
+
         const result = getLightScreenPosition(lightPos, camera, new THREE.Vector2(800, 600));
         expect(result).toBe(null);
     });
@@ -253,7 +253,7 @@ describe('updateGodRaysLightPosition', () => {
         const lightPos = new THREE.Vector3(0, 0, -10);
         const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
         camera.updateMatrixWorld();
-        
+
         const result = updateGodRaysLightPosition(material, lightPos, camera);
         expect(typeof result).toBe('boolean');
     });
@@ -263,7 +263,7 @@ describe('updateGodRaysLightPosition', () => {
         const lightPos = new THREE.Vector3(0, 0, 10);
         const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
         camera.updateMatrixWorld();
-        
+
         const result = updateGodRaysLightPosition(material, lightPos, camera);
         expect(result).toBe(false);
     });

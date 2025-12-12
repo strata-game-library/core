@@ -215,7 +215,9 @@ export function interpolateLODPresets(
         ),
         shadowLODLevel: Math.round(lerp(preset1.shadowLODLevel, preset2.shadowLODLevel)),
         impostorViews: Math.round(lerp(preset1.impostorViews, preset2.impostorViews)),
-        impostorResolution: Math.round(lerp(preset1.impostorResolution, preset2.impostorResolution)),
+        impostorResolution: Math.round(
+            lerp(preset1.impostorResolution, preset2.impostorResolution)
+        ),
     };
 }
 

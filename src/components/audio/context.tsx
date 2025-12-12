@@ -9,11 +9,11 @@ import { useRef, useEffect, useMemo, useState, createContext, useContext } from 
 import * as THREE from 'three';
 import { useThree } from '@react-three/fiber';
 import {
-  SoundManager,
-  SpatialAudio,
-  createSoundManager,
-  createSpatialAudio,
-  setupAutoUnlock,
+    SoundManager,
+    SpatialAudio,
+    createSoundManager,
+    createSpatialAudio,
+    setupAutoUnlock,
 } from '../../core/audio';
 import type { AudioContextValue, AudioProviderProps } from './types';
 
@@ -33,11 +33,11 @@ const AudioContext = createContext<AudioContextValue | null>(null);
  * @throws Error if used outside AudioProvider
  */
 export function useAudioContext(): AudioContextValue {
-  const context = useContext(AudioContext);
-  if (!context) {
-    throw new Error('useAudioContext must be used within an AudioProvider');
-  }
-  return context;
+    const context = useContext(AudioContext);
+    if (!context) {
+        throw new Error('useAudioContext must be used within an AudioProvider');
+    }
+    return context;
 }
 
 /**
@@ -46,8 +46,8 @@ export function useAudioContext(): AudioContextValue {
  * @returns SoundManager or null if not in context
  */
 export function useAudioManager(): SoundManager | null {
-  const context = useContext(AudioContext);
-  return context?.soundManager ?? null;
+    const context = useContext(AudioContext);
+    return context?.soundManager ?? null;
 }
 
 /**
@@ -56,8 +56,8 @@ export function useAudioManager(): SoundManager | null {
  * @returns SpatialAudio or null if not in context
  */
 export function useSpatialAudio(): SpatialAudio | null {
-  const context = useContext(AudioContext);
-  return context?.spatialAudio ?? null;
+    const context = useContext(AudioContext);
+    return context?.spatialAudio ?? null;
 }
 
 /**
@@ -66,8 +66,8 @@ export function useSpatialAudio(): SpatialAudio | null {
  * @returns AudioListener or null if not in context
  */
 export function useAudioListener(): THREE.AudioListener | null {
-  const context = useContext(AudioContext);
-  return context?.listener ?? null;
+    const context = useContext(AudioContext);
+    return context?.listener ?? null;
 }
 
 /**
@@ -85,43 +85,43 @@ export function useAudioListener(): THREE.AudioListener | null {
  * ```
  */
 export function AudioProvider({ children, masterVolume = 1 }: AudioProviderProps) {
-  const [isReady, setIsReady] = useState(false);
-  const { camera } = useThree();
-  const soundManagerRef = useRef<SoundManager | null>(null);
-  const spatialAudioRef = useRef<SpatialAudio | null>(null);
-  const listenerRef = useRef<THREE.AudioListener | null>(null);
+    const [isReady, setIsReady] = useState(false);
+    const { camera } = useThree();
+    const soundManagerRef = useRef<SoundManager | null>(null);
+    const spatialAudioRef = useRef<SpatialAudio | null>(null);
+    const listenerRef = useRef<THREE.AudioListener | null>(null);
 
-  useEffect(() => {
-    soundManagerRef.current = createSoundManager({ masterVolume });
+    useEffect(() => {
+        soundManagerRef.current = createSoundManager({ masterVolume });
 
-    const listener = new THREE.AudioListener();
-    camera.add(listener);
-    listenerRef.current = listener;
+        const listener = new THREE.AudioListener();
+        camera.add(listener);
+        listenerRef.current = listener;
 
-    spatialAudioRef.current = createSpatialAudio(listener);
+        spatialAudioRef.current = createSpatialAudio(listener);
 
-    setupAutoUnlock();
+        setupAutoUnlock();
 
-    setIsReady(true);
+        setIsReady(true);
 
-    return () => {
-      soundManagerRef.current?.dispose();
-      spatialAudioRef.current?.dispose();
-      camera.remove(listener);
-    };
-  }, [camera, masterVolume]);
+        return () => {
+            soundManagerRef.current?.dispose();
+            spatialAudioRef.current?.dispose();
+            camera.remove(listener);
+        };
+    }, [camera, masterVolume]);
 
-  const value = useMemo(
-    () => ({
-      soundManager: soundManagerRef.current!,
-      spatialAudio: spatialAudioRef.current,
-      listener: listenerRef.current,
-      isReady,
-    }),
-    [isReady]
-  );
+    const value = useMemo(
+        () => ({
+            soundManager: soundManagerRef.current!,
+            spatialAudio: spatialAudioRef.current,
+            listener: listenerRef.current,
+            isReady,
+        }),
+        [isReady]
+    );
 
-  if (!isReady) return null;
+    if (!isReady) return null;
 
-  return <AudioContext.Provider value={value}>{children}</AudioContext.Provider>;
+    return <AudioContext.Provider value={value}>{children}</AudioContext.Provider>;
 }

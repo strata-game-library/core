@@ -426,10 +426,13 @@ export function createFollowerPreset(config: FollowerPresetConfig = {}): AIPrese
 
     const offsetVector = new YUKA.Vector3(offset[0], offset[1], offset[2]);
 
-    const update = (delta: number, context?: { leaderPosition?: YUKA.Vector3; leaderRotation?: YUKA.Quaternion }) => {
+    const update = (
+        delta: number,
+        context?: { leaderPosition?: YUKA.Vector3; leaderRotation?: YUKA.Quaternion }
+    ) => {
         if (context?.leaderPosition) {
             const targetPosition = context.leaderPosition.clone();
-            
+
             if (context.leaderRotation) {
                 const rotatedOffset = offsetVector.clone();
                 rotatedOffset.applyRotation(context.leaderRotation);
@@ -459,11 +462,7 @@ export interface FlockConfig extends FlockMemberPresetConfig {
 }
 
 export function createFlock(config: FlockConfig): AIPresetResult[] {
-    const {
-        count,
-        spawnArea = { min: [-10, 0, -10], max: [10, 0, 10] },
-        ...memberConfig
-    } = config;
+    const { count, spawnArea = { min: [-10, 0, -10], max: [10, 0, 10] }, ...memberConfig } = config;
 
     const members: AIPresetResult[] = [];
 

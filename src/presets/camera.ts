@@ -3,7 +3,12 @@
  */
 
 import * as THREE from 'three';
-import type { FollowCameraProps, OrbitCameraProps, FPSCameraProps, CinematicCameraProps } from '../components/Camera';
+import type {
+    FollowCameraProps,
+    OrbitCameraProps,
+    FPSCameraProps,
+    CinematicCameraProps,
+} from '../components/Camera';
 
 export interface ThirdPersonPreset extends Omit<FollowCameraProps, 'target'> {
     type: 'third-person';
@@ -193,11 +198,13 @@ export function createCircularPath(
     const points: THREE.Vector3[] = [];
     for (let i = 0; i < segments; i++) {
         const angle = (i / segments) * Math.PI * 2;
-        points.push(new THREE.Vector3(
-            center.x + Math.cos(angle) * radius,
-            center.y + height,
-            center.z + Math.sin(angle) * radius
-        ));
+        points.push(
+            new THREE.Vector3(
+                center.x + Math.cos(angle) * radius,
+                center.y + height,
+                center.z + Math.sin(angle) * radius
+            )
+        );
     }
     return points;
 }
@@ -227,11 +234,13 @@ export function createCranePath(
     const points: THREE.Vector3[] = [];
     for (let i = 0; i <= segments; i++) {
         const t = i / segments;
-        points.push(new THREE.Vector3(
-            base.x + Math.sin(t * Math.PI * 0.5) * swingDistance,
-            base.y + t * endHeight,
-            base.z
-        ));
+        points.push(
+            new THREE.Vector3(
+                base.x + Math.sin(t * Math.PI * 0.5) * swingDistance,
+                base.y + t * endHeight,
+                base.z
+            )
+        );
     }
     return points;
 }

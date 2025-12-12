@@ -19,14 +19,14 @@ import type { BaseEntity, SystemFn, SystemConfig, StrataWorld } from './types';
  * ```
  */
 export interface SystemScheduler<T extends BaseEntity> {
-  register: (config: SystemConfig<T>) => void;
-  unregister: (name: string) => boolean;
-  run: (world: StrataWorld<T>, deltaTime: number) => void;
-  enable: (name: string) => void;
-  disable: (name: string) => void;
-  getSystemNames: () => string[];
-  isEnabled: (name: string) => boolean;
-  clear: () => void;
+    register: (config: SystemConfig<T>) => void;
+    unregister: (name: string) => boolean;
+    run: (world: StrataWorld<T>, deltaTime: number) => void;
+    enable: (name: string) => void;
+    disable: (name: string) => void;
+    getSystemNames: () => string[];
+    isEnabled: (name: string) => boolean;
+    clear: () => void;
 }
 
 /**
@@ -40,26 +40,37 @@ export interface SystemScheduler<T extends BaseEntity> {
  * ```
  */
 export function createSystemScheduler<T extends BaseEntity>(): SystemScheduler<T> {
-  const systems = new Map<string, SystemConfig<T>>();
+    const systems = new Map<string, SystemConfig<T>>();
 
-  return {
-    register(config: SystemConfig<T>): void {
-      if (systems.has(config.name)) throw new Error(`System '${config.name}' is already registered`);
-      systems.set(config.name, { ...config, priority: config.priority ?? 0, enabled: config.enabled ?? true });
-    },
-    unregister: (name: string) => systems.delete(name),
-    run(world: StrataWorld<T>, deltaTime: number): void {
-      [...systems.values()]
-        .filter((s) => s.enabled)
-        .sort((a, b) => (a.priority ?? 0) - (b.priority ?? 0))
-        .forEach((system) => system.fn(world, deltaTime));
-    },
-    enable(name: string): void { const s = systems.get(name); if (s) s.enabled = true; },
-    disable(name: string): void { const s = systems.get(name); if (s) s.enabled = false; },
-    getSystemNames: () => [...systems.keys()],
-    isEnabled: (name: string) => systems.get(name)?.enabled ?? false,
-    clear: () => systems.clear(),
-  };
+    return {
+        register(config: SystemConfig<T>): void {
+            if (systems.has(config.name))
+                throw new Error(`System '${config.name}' is already registered`);
+            systems.set(config.name, {
+                ...config,
+                priority: config.priority ?? 0,
+                enabled: config.enabled ?? true,
+            });
+        },
+        unregister: (name: string) => systems.delete(name),
+        run(world: StrataWorld<T>, deltaTime: number): void {
+            [...systems.values()]
+                .filter((s) => s.enabled)
+                .sort((a, b) => (a.priority ?? 0) - (b.priority ?? 0))
+                .forEach((system) => system.fn(world, deltaTime));
+        },
+        enable(name: string): void {
+            const s = systems.get(name);
+            if (s) s.enabled = true;
+        },
+        disable(name: string): void {
+            const s = systems.get(name);
+            if (s) s.enabled = false;
+        },
+        getSystemNames: () => [...systems.keys()],
+        isEnabled: (name: string) => systems.get(name)?.enabled ?? false,
+        clear: () => systems.clear(),
+    };
 }
 
 /**
@@ -75,12 +86,12 @@ export function createSystemScheduler<T extends BaseEntity>(): SystemScheduler<T
  * ```
  */
 export function createSystem<T extends BaseEntity>(
-  components: (keyof T)[],
-  update: (entity: T, deltaTime: number) => void
+    components: (keyof T)[],
+    update: (entity: T, deltaTime: number) => void
 ): SystemFn<T> {
-  return (world: StrataWorld<T>, deltaTime: number) => {
-    for (const entity of world.query(...components)) update(entity, deltaTime);
-  };
+    return (world: StrataWorld<T>, deltaTime: number) => {
+        for (const entity of world.query(...components)) update(entity, deltaTime);
+    };
 }
 
 /**
@@ -94,11 +105,11 @@ export function createSystem<T extends BaseEntity>(
  * ```
  */
 export function withTiming<T extends BaseEntity>(name: string, system: SystemFn<T>): SystemFn<T> {
-  return (world: StrataWorld<T>, deltaTime: number) => {
-    const start = performance.now();
-    system(world, deltaTime);
-    console.debug(`[System: ${name}] executed in ${(performance.now() - start).toFixed(2)}ms`);
-  };
+    return (world: StrataWorld<T>, deltaTime: number) => {
+        const start = performance.now();
+        system(world, deltaTime);
+        console.debug(`[System: ${name}] executed in ${(performance.now() - start).toFixed(2)}ms`);
+    };
 }
 
 /**
@@ -111,9 +122,9 @@ export function withTiming<T extends BaseEntity>(name: string, system: SystemFn<
  * ```
  */
 export function combineSystems<T extends BaseEntity>(systems: SystemFn<T>[]): SystemFn<T> {
-  return (world: StrataWorld<T>, deltaTime: number) => {
-    for (const system of systems) system(world, deltaTime);
-  };
+    return (world: StrataWorld<T>, deltaTime: number) => {
+        for (const system of systems) system(world, deltaTime);
+    };
 }
 
 /**
@@ -127,12 +138,12 @@ export function combineSystems<T extends BaseEntity>(systems: SystemFn<T>[]): Sy
  * ```
  */
 export function conditionalSystem<T extends BaseEntity>(
-  predicate: () => boolean,
-  system: SystemFn<T>
+    predicate: () => boolean,
+    system: SystemFn<T>
 ): SystemFn<T> {
-  return (world: StrataWorld<T>, deltaTime: number) => {
-    if (predicate()) system(world, deltaTime);
-  };
+    return (world: StrataWorld<T>, deltaTime: number) => {
+        if (predicate()) system(world, deltaTime);
+    };
 }
 
 /**
@@ -140,8 +151,8 @@ export function conditionalSystem<T extends BaseEntity>(
  * @public
  */
 export interface UseSystemOptions {
-  enabled?: boolean;
-  priority?: number;
+    enabled?: boolean;
+    priority?: number;
 }
 
 /**
@@ -172,26 +183,26 @@ export interface UseSystemOptions {
  * ```
  */
 export function useSystem<T extends BaseEntity>(
-  world: StrataWorld<T>,
-  system: SystemFn<T>,
-  options: UseSystemOptions = {}
+    world: StrataWorld<T>,
+    system: SystemFn<T>,
+    options: UseSystemOptions = {}
 ): { setEnabled: (enabled: boolean) => void; isEnabled: () => boolean } {
-  const { enabled = true, priority = 0 } = options;
-  const enabledRef = useRef(enabled);
+    const { enabled = true, priority = 0 } = options;
+    const enabledRef = useRef(enabled);
 
-  const setEnabled = useCallback((value: boolean) => {
-    enabledRef.current = value;
-  }, []);
+    const setEnabled = useCallback((value: boolean) => {
+        enabledRef.current = value;
+    }, []);
 
-  const isEnabled = useCallback(() => enabledRef.current, []);
+    const isEnabled = useCallback(() => enabledRef.current, []);
 
-  useFrame((_, delta) => {
-    if (enabledRef.current) {
-      system(world, delta);
-    }
-  }, priority);
+    useFrame((_, delta) => {
+        if (enabledRef.current) {
+            system(world, delta);
+        }
+    }, priority);
 
-  return { setEnabled, isEnabled };
+    return { setEnabled, isEnabled };
 }
 
 /**
@@ -221,11 +232,11 @@ export function useSystem<T extends BaseEntity>(
  * ```
  */
 export function useScheduler<T extends BaseEntity>(
-  scheduler: SystemScheduler<T>,
-  world: StrataWorld<T>,
-  priority: number = 0
+    scheduler: SystemScheduler<T>,
+    world: StrataWorld<T>,
+    priority: number = 0
 ): void {
-  useFrame((_, delta) => {
-    scheduler.run(world, delta);
-  }, priority);
+    useFrame((_, delta) => {
+        scheduler.run(world, delta);
+    }, priority);
 }

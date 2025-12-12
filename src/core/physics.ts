@@ -8,6 +8,9 @@
 
 import * as THREE from 'three';
 
+// Module-level constant for performance (avoids allocation per call)
+const UP_VECTOR = new THREE.Vector3(0, 1, 0);
+
 /**
  * Core physics configuration options
  */
@@ -65,7 +68,11 @@ export const collisionFilters: Record<string, CollisionFilter> = {
     },
     vehicle: {
         memberships: CollisionLayer.Vehicle,
-        filter: CollisionLayer.Static | CollisionLayer.Dynamic | CollisionLayer.Character,
+        filter:
+            CollisionLayer.Static |
+            CollisionLayer.Dynamic |
+            CollisionLayer.Character |
+            CollisionLayer.Vehicle,
     },
     projectile: {
         memberships: CollisionLayer.Projectile,
@@ -178,16 +185,50 @@ export interface RagdollJointConfig {
 }
 
 /**
- * Ragdoll body part configuration
+ * Base properties shared by all ragdoll body parts
  */
-export interface RagdollBodyPart {
+interface RagdollBodyPartBase {
+    /** Unique identifier for this body part */
     name: string;
-    type: 'capsule' | 'box' | 'sphere';
-    size: [number, number, number] | [number, number] | [number];
+    /** Position in local space [x, y, z] */
     position: [number, number, number];
+    /** Optional rotation in radians [x, y, z] */
     rotation?: [number, number, number];
+    /** Mass in kilograms */
     mass: number;
 }
+
+/**
+ * Sphere-shaped ragdoll body part
+ */
+interface RagdollSphereBodyPart extends RagdollBodyPartBase {
+    type: 'sphere';
+    /** Size as [radius] */
+    size: [number];
+}
+
+/**
+ * Capsule-shaped ragdoll body part
+ */
+interface RagdollCapsuleBodyPart extends RagdollBodyPartBase {
+    type: 'capsule';
+    /** Size as [radius, halfHeight] */
+    size: [number, number];
+}
+
+/**
+ * Box-shaped ragdoll body part
+ */
+interface RagdollBoxBodyPart extends RagdollBodyPartBase {
+    type: 'box';
+    /** Size as [halfWidth, halfHeight, halfDepth] */
+    size: [number, number, number];
+}
+
+/**
+ * Ragdoll body part configuration (discriminated union for type safety)
+ */
+export type RagdollBodyPart = RagdollSphereBodyPart | RagdollCapsuleBodyPart | RagdollBoxBodyPart;
 
 /**
  * Complete ragdoll configuration
@@ -260,9 +301,10 @@ export function calculateImpulse(
  * Calculate continuous force to achieve target velocity
  * @param currentVelocity - Current velocity
  * @param targetVelocity - Target velocity
- * @param mass - Object mass
- * @param deltaTime - Time step
+ * @param mass - Object mass in kilograms
+ * @param deltaTime - Time step in seconds (must be positive)
  * @returns Force vector to apply
+ * @throws Error if deltaTime is zero or negative
  */
 export function calculateForce(
     currentVelocity: THREE.Vector3,
@@ -270,43 +312,48 @@ export function calculateForce(
     mass: number,
     deltaTime: number
 ): THREE.Vector3 {
+    if (deltaTime <= 0) {
+        throw new Error('deltaTime must be positive');
+    }
     const impulse = calculateImpulse(currentVelocity, targetVelocity, mass);
     return impulse.divideScalar(deltaTime);
 }
 
 /**
  * Calculate jump impulse for character controllers
- * @param jumpHeight - Desired jump height
- * @param gravity - Gravity magnitude
- * @param mass - Character mass
+ * @param jumpHeight - Desired jump height in meters (must be non-negative)
+ * @param gravity - Gravity magnitude in m/s² (sign is ignored)
+ * @param mass - Character mass in kilograms
  * @returns Upward impulse magnitude
  */
 export function calculateJumpImpulse(jumpHeight: number, gravity: number, mass: number): number {
-    return Math.sqrt(2 * Math.abs(gravity) * jumpHeight) * mass;
+    return Math.sqrt(2 * Math.abs(gravity) * Math.abs(jumpHeight)) * mass;
 }
 
 /**
  * Calculate landing velocity from fall height
- * @param fallHeight - Height of the fall
- * @param gravity - Gravity magnitude
- * @returns Landing velocity magnitude
+ * @param fallHeight - Height of the fall in meters (must be non-negative)
+ * @param gravity - Gravity magnitude in m/s² (sign is ignored)
+ * @returns Landing velocity magnitude in m/s
  */
 export function calculateLandingVelocity(fallHeight: number, gravity: number): number {
-    return Math.sqrt(2 * Math.abs(gravity) * fallHeight);
+    return Math.sqrt(2 * Math.abs(gravity) * Math.abs(fallHeight));
 }
 
 /**
  * Apply drag force to velocity
- * @param velocity - Current velocity
- * @param dragCoefficient - Drag coefficient
- * @param deltaTime - Time step
- * @returns New velocity after drag
+ * @param velocity - Current velocity vector
+ * @param dragCoefficient - Drag coefficient (must be non-negative)
+ * @param deltaTime - Time step in seconds (must be non-negative)
+ * @returns New velocity vector after drag applied
  */
 export function applyDrag(
     velocity: THREE.Vector3,
     dragCoefficient: number,
     deltaTime: number
 ): THREE.Vector3 {
+    // Handle invalid inputs gracefully
+    if (deltaTime <= 0) return velocity.clone();
     const dragFactor = 1 - dragCoefficient * deltaTime;
     return velocity.clone().multiplyScalar(Math.max(0, dragFactor));
 }
@@ -329,12 +376,11 @@ export function calculateBuoyancyForce(
 
 /**
  * Calculate slope angle from surface normal
- * @param normal - Surface normal vector
- * @returns Slope angle in radians
+ * @param normal - Surface normal vector (should be normalized)
+ * @returns Slope angle in radians (0 = flat, PI/2 = vertical)
  */
 export function calculateSlopeAngle(normal: THREE.Vector3): number {
-    const up = new THREE.Vector3(0, 1, 0);
-    return Math.acos(Math.min(1, Math.max(-1, normal.dot(up))));
+    return Math.acos(Math.min(1, Math.max(-1, normal.dot(UP_VECTOR))));
 }
 
 /**
@@ -349,16 +395,16 @@ export function isWalkableSlope(normal: THREE.Vector3, maxSlopeAngle: number): b
 
 /**
  * Project velocity onto ground plane
- * @param velocity - Input velocity
- * @param groundNormal - Ground surface normal
- * @returns Velocity projected onto ground plane
+ * @param velocity - Input velocity vector
+ * @param groundNormal - Ground surface normal (should be normalized)
+ * @returns New velocity vector projected onto ground plane
  */
 export function projectVelocityOntoGround(
     velocity: THREE.Vector3,
     groundNormal: THREE.Vector3
 ): THREE.Vector3 {
-    const dot = velocity.dot(groundNormal);
-    return velocity.clone().sub(groundNormal.clone().multiplyScalar(dot));
+    // Using addScaledVector avoids an extra clone() call on groundNormal
+    return velocity.clone().addScaledVector(groundNormal, -velocity.dot(groundNormal));
 }
 
 /**
@@ -399,17 +445,18 @@ export function calculateSuspensionForce(
 
 /**
  * Calculate explosion impulse falloff
- * @param distance - Distance from explosion center
- * @param explosionRadius - Explosion radius
+ * @param distance - Distance from explosion center in meters (must be non-negative)
+ * @param explosionRadius - Explosion radius in meters (must be positive)
  * @param maxForce - Maximum force at center
- * @returns Force at given distance
+ * @returns Force at given distance (quadratic falloff)
  */
 export function calculateExplosionForce(
     distance: number,
     explosionRadius: number,
     maxForce: number
 ): number {
-    if (distance >= explosionRadius) return 0;
+    // Handle invalid inputs gracefully
+    if (explosionRadius <= 0 || distance >= explosionRadius) return 0;
     const falloff = 1 - distance / explosionRadius;
     return maxForce * falloff * falloff;
 }
@@ -428,9 +475,24 @@ export function generateDebrisVelocity(
     baseForce: number,
     randomness: number = 0.3
 ): THREE.Vector3 {
-    const direction = debrisPosition.clone().sub(explosionCenter).normalize();
+    const direction = debrisPosition.clone().sub(explosionCenter);
+
+    // Handle edge case where debris is at explosion center
+    if (direction.lengthSq() === 0) {
+        // Generate random upward direction
+        return new THREE.Vector3(
+            (Math.random() - 0.5) * randomness,
+            1,
+            (Math.random() - 0.5) * randomness
+        )
+            .normalize()
+            .multiplyScalar(baseForce);
+    }
+
+    direction.normalize();
     const force = baseForce * (1 + (Math.random() - 0.5) * randomness);
 
+    // Add randomness to direction
     direction.x += (Math.random() - 0.5) * randomness;
     direction.y += Math.random() * randomness * 0.5;
     direction.z += (Math.random() - 0.5) * randomness;

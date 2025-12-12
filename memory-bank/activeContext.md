@@ -107,9 +107,28 @@ pnpm run docs:build   # TypeDoc
 ---
 
 *Last updated: 2025-12-11*
-## Session: 2025-12-12
+## Session: 2025-12-12 (Continued)
 
-### Completed
+### Completed - Review Feedback Sweep
+Addressed all AI reviewer feedback on sub-PRs:
+
+**PR #53 (Haptics API)** - Pushed c474187:
+- Made `HapticsOptions.intensity` optional (defaults to 'medium')
+- Restored `vibrate()` backward compatibility (no gamepad haptics)
+- Fixed TouchEvent race condition (extract IDs before setTimeout)
+- Added nullish coalescing for gamepad button state
+
+**PR #54 (CI/Docs)** - Pushed e4edd5f:
+- Removed duplicate NODE_AUTH_TOKEN in ci.yml
+- Removed duplicate packages/docs/ in .gitignore
+- Deleted misplaced HAPTICS_CONSOLIDATION.md
+
+**PR #55 (Platform Fixes)** - Already Fixed:
+- Android SparseBooleanArray for gamepad buttons ✓
+- Android MotionEvent.recycle() for memory leak ✓
+- iOS negative controllerIndex check ✓
+
+### Previous Session
 - Address critical PR #36 feedback
 - Remove generated docs from repo and add to .gitignore
 - Fix CI security issue with NPM_TOKEN

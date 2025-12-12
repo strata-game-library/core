@@ -119,6 +119,8 @@
     },
     "dependencies": {
         "immer": "^11.0.1",
+        "leva": "^0.10.1",
+        "tunnel-rat": "^0.1.2",
         "zundo": "^2.3.0",
         "zustand": "^5.0.9"
     },
@@ -150,18 +152,7 @@
         "three": "^0.160.0",
         "typedoc": "^0.26.0",
         "typescript": "^5.3.0",
-<<<<<<< HEAD
         "vitest": "^2.1.0",
         "yuka": "^0.7.8"
-=======
-        "vitest": "^2.1.0"
-    },
-    "dependencies": {
-        "immer": "^11.0.1",
-        "leva": "^0.10.1",
-        "tunnel-rat": "^0.1.2",
-        "zundo": "^2.3.0",
-        "zustand": "^5.0.9"
->>>>>>> 389b2f1 (Refactor: Update dependencies and improve debug panel functionality)
     }
 }

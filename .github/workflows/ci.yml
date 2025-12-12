@@ -35,7 +35,7 @@ jobs:
               shell: bash
               run: |
                   STORE_PATH=$(pnpm store path --silent 2>/dev/null)
-                  STORE_PATH="${STORE_PATH:-$HOME/.local/share/pnpm/store}"
+                  STORE_PATH="${STORE_PATH:-${XDG_DATA_HOME:-$HOME/.local/share}/pnpm/store}"
                   echo "store=$STORE_PATH" >> $GITHUB_OUTPUT
 
             - uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0

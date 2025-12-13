@@ -41,8 +41,8 @@ pnpm run lint
 # Format code
 pnpm run format
 
-# Type check
-pnpm run typecheck
+# Check code (lint + format)
+pnpm run check
 ```
 
 ## Testing Architecture

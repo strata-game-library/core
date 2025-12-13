@@ -232,7 +232,7 @@ permissions:
 
 # All secrets passed at step level only - no global exposure
 env:
-  OLLAMA_MODEL: ${{ vars.OLLAMA_MODEL || 'glm-4.6:cloud' }}
+  OLLAMA_MODEL: ${{ vars.OLLAMA_MODEL || 'qwen2.5-coder:7b' }}
 
 jobs:
   # ============================================

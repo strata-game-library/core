@@ -1,5 +1,5 @@
 import { Canvas, useFrame } from '@react-three/fiber';
-import { OrbitControls, Sky, Stats, Environment, Sky as DreiSky } from '@react-three/drei';
+import { OrbitControls, Sky, Stats } from '@react-three/drei';
 import { useControls, button, folder } from 'leva';
 import { useMemo, useRef, useState, useEffect } from 'react';
 import * as THREE from 'three';
@@ -271,7 +271,7 @@ function Scene() {
             <Sky sunPosition={[100, 20, 100]} />
 
             {/* Terrain */}
-            <Terrain />
+            <ProceduralTerrain />
 
             {/* Vegetation instances */}
             <VegetationInstances />
@@ -285,8 +285,8 @@ function Scene() {
                 maxDistance={150}
             />
 
-            {/* Stats */}
-            <Stats />
+            {/* Stats - for development/demo only */}
+            {process.env.NODE_ENV === 'development' && <Stats />}
         </>
     );
 }

@@ -144,8 +144,8 @@ function Scene() {
                 maxDistance={100}
             />
 
-            {/* Stats */}
-            <Stats />
+            {/* Stats - for development/demo only */}
+            {process.env.NODE_ENV === 'development' && <Stats />}
         </>
     );
 }

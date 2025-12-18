@@ -81,13 +81,22 @@ describe('generateInstanceData', () => {
 
     it('generates deterministic results with same seed', () => {
         const seed = 42;
-        const instances1 = generateInstanceData(10, 100, () => 0, undefined, undefined, seed);
-        const instances2 = generateInstanceData(10, 100, () => 0, undefined, undefined, seed);
+        const areaSize = 100;
+        const instances1 = generateInstanceData(10, areaSize, () => 0, undefined, undefined, seed);
+        const instances2 = generateInstanceData(10, areaSize, () => 0, undefined, undefined, seed);
 
         expect(instances1.length).toBe(instances2.length);
         instances1.forEach((instance, i) => {
+            // Verify positions match between runs with same seed
             expect(instance.position.x).toBeCloseTo(instances2[i].position.x, 10);
             expect(instance.position.z).toBeCloseTo(instances2[i].position.z, 10);
+
+            // Verify positions are within bounds (areaSize / 2 in each direction)
+            const halfSize = areaSize / 2;
+            expect(instance.position.x).toBeGreaterThanOrEqual(-halfSize);
+            expect(instance.position.x).toBeLessThanOrEqual(halfSize);
+            expect(instance.position.z).toBeGreaterThanOrEqual(-halfSize);
+            expect(instance.position.z).toBeLessThanOrEqual(halfSize);
         });
     });
 

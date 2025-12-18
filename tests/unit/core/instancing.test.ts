@@ -78,4 +78,40 @@ describe('generateInstanceData', () => {
             expect(instance.scale.x).toBeGreaterThan(0);
         });
     });
+
+    it('generates deterministic results with same seed', () => {
+        const seed = 42;
+        const instances1 = generateInstanceData(10, 100, () => 0, undefined, undefined, seed);
+        const instances2 = generateInstanceData(10, 100, () => 0, undefined, undefined, seed);
+
+        expect(instances1.length).toBe(instances2.length);
+        instances1.forEach((instance, i) => {
+            expect(instance.position.x).toBeCloseTo(instances2[i].position.x, 10);
+            expect(instance.position.z).toBeCloseTo(instances2[i].position.z, 10);
+        });
+    });
+
+    it('generates different results with different seeds', () => {
+        const instances1 = generateInstanceData(10, 100, () => 0, undefined, undefined, 42);
+        const instances2 = generateInstanceData(10, 100, () => 0, undefined, undefined, 123);
+
+        // At least one position should differ
+        const hasDifference = instances1.some(
+            (instance, i) =>
+                i < instances2.length &&
+                (Math.abs(instance.position.x - instances2[i].position.x) > 0.001 ||
+                    Math.abs(instance.position.z - instances2[i].position.z) > 0.001)
+        );
+        expect(hasDifference).toBe(true);
+    });
+
+    it('throws on invalid count', () => {
+        expect(() => generateInstanceData(-1, 100, () => 0)).toThrow('count must be positive');
+        expect(() => generateInstanceData(0, 100, () => 0)).toThrow('count must be positive');
+    });
+
+    it('throws on invalid areaSize', () => {
+        expect(() => generateInstanceData(10, -1, () => 0)).toThrow('areaSize must be positive');
+        expect(() => generateInstanceData(10, 0, () => 0)).toThrow('areaSize must be positive');
+    });
 });

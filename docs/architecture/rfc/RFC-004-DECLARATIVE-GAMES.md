@@ -248,11 +248,47 @@ interface ModeInstance {
 }
 
 interface ModeContext {
-  game: Game;
-  world: World;
+  game: Game;                   // Full game instance
+  world: World;                 // ECS world (shorthand for game.world)
   modeManager: ModeManager;
   sceneManager: SceneManager;
   instance: ModeInstance;       // Full instance with props (always available)
+}
+```
+
+### Game Interface
+
+```typescript
+interface Game {
+  // Configuration
+  definition: GameDefinition;
+  
+  // Content registries
+  registries: {
+    materials: Registry<MaterialDefinition>;
+    creatures: Registry<CreatureDefinition>;
+    props: Registry<PropDefinition>;
+    items: Registry<ItemDefinition>;
+  };
+  
+  // World
+  worldGraph: WorldGraph;
+  world: World;  // ECS world for entity management (required)
+  
+  // State
+  store: GameStore;
+  
+  // Managers
+  sceneManager: SceneManager;
+  modeManager: ModeManager;
+  inputManager: InputManager;
+  audioManager: AudioManager;
+  
+  // Lifecycle methods
+  start: () => Promise<void>;
+  pause: () => void;
+  resume: () => void;
+  stop: () => void;
 }
 ```
 
@@ -305,11 +341,12 @@ function createGame(definition: GameDefinition): Game {
   }
   
   // 9. Create game instance
-  return {
+  // Store in variable first so lifecycle methods can reference it
+  const game: Game = {
     definition,
     registries,
     worldGraph,
-    world,
+    world,  // ECS world for entity management
     store,
     sceneManager,
     modeManager,
@@ -326,7 +363,7 @@ function createGame(definition: GameDefinition): Game {
       // Access config via instance, pass props to lifecycle hook
       const current = modeManager.current;
       current?.config.onPause?.({ 
-        game: this, world, modeManager, sceneManager, instance: current 
+        game, world, modeManager, sceneManager, instance: current 
       });
     },
     resume: () => {
@@ -334,13 +371,15 @@ function createGame(definition: GameDefinition): Game {
       // Props are preserved in instance, available on resume
       const current = modeManager.current;
       current?.config.onResume?.({ 
-        game: this, world, modeManager, sceneManager, instance: current 
+        game, world, modeManager, sceneManager, instance: current 
       });
     },
     stop: () => {
       world.clear();
     },
   };
+  
+  return game;
 }
 ```
 

@@ -112,10 +112,10 @@ src/
 ### Key RFCs
 | RFC | Status | Focus |
 |-----|--------|-------|
-| [#51](https://github.com/jbcom/nodejs-strata/issues/51) | Proposed | Game Orchestration |
-| [#52](https://github.com/jbcom/nodejs-strata/issues/52) | Proposed | Compositional Objects |
-| [#53](https://github.com/jbcom/nodejs-strata/issues/53) | Proposed | World Topology |
-| [#54](https://github.com/jbcom/nodejs-strata/issues/54) | Proposed | Declarative Games |
+| [RFC-001](./docs/architecture/rfc/RFC-001-GAME-ORCHESTRATION.md) | Proposed | Game Orchestration |
+| [RFC-002](./docs/architecture/rfc/RFC-002-COMPOSITIONAL-OBJECTS.md) | Proposed | Compositional Objects |
+| [RFC-003](./docs/architecture/rfc/RFC-003-WORLD-TOPOLOGY.md) | Proposed | World Topology |
+| [RFC-004](./docs/architecture/rfc/RFC-004-DECLARATIVE-GAMES.md) | Proposed | Declarative Games |
 
 ## Testing
 

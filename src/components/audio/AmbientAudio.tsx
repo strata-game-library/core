@@ -143,20 +143,8 @@ export const AmbientAudio = forwardRef<AmbientAudioRef, AmbientAudioProps>(
                 },
                 fadeOut: (duration: number) => {
                     if (soundManager && soundIdRef.current !== undefined) {
-                        // We need to know current volume to fade from?
-                        // SoundManager doesn't easily expose current instance volume via getVolume(id) which returns global volume for sound.
-                        // But we can just use targetVolumeRef.current or assume it's at volume.
-                        // Or we can assume 1 if we don't know?
-                        // Let's use targetVolumeRef.current as a best guess for 'from'.
-
-                        // Actually Howl.volume(id) returns volume.
-                        // soundManager.getVolume(id) returns howl.volume().
-                        // But howl.volume(id) gets specific volume? Howler docs say .volume([vol], [id]).
-                        // SoundManager.getVolume only calls .volume().
-
-                        // We'll trust targetVolumeRef for now or just fade from current level if Howler handles 'from' smartly?
-                        // No, Howler fade needs explicit from/to.
-
+                        // Howler.fade requires explicit start and end volumes; use targetVolumeRef.current
+                        // as the starting volume to match the most recently requested target volume.
                         soundManager.fade(
                             soundResourceId,
                             targetVolumeRef.current,

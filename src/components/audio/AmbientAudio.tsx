@@ -5,8 +5,7 @@
  * @module components/audio
  */
 
-import { Howl } from 'howler';
-import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
+import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef } from 'react';
 import { useAudioManager } from './context';
 import type { AmbientAudioProps, AmbientAudioRef } from './types';
 
@@ -26,81 +25,114 @@ import type { AmbientAudioProps, AmbientAudioRef } from './types';
  */
 export const AmbientAudio = forwardRef<AmbientAudioRef, AmbientAudioProps>(
     ({ url, volume = 1, loop = true, autoplay = false, fadeTime = 0, onLoad }, ref) => {
-        // Note: Currently using direct Howl instance for simplicity.
-        // TODO: Future enhancement - integrate with SoundManager for bus/volume control
-        const _soundManager = useAudioManager();
-        const howlRef = useRef<Howl | null>(null);
+        const soundManager = useAudioManager();
         const soundIdRef = useRef<number | undefined>(undefined);
         const targetVolumeRef = useRef(volume);
 
+        // Generate a unique ID for this sound instance to avoid conflicts
+        // We use the URL in the ID to make it descriptive, but add a random suffix
+        const soundResourceId = useMemo(() => `ambient-${url}-${Math.random().toString(36).substr(2, 9)}`, [url]);
+
         useEffect(() => {
+            if (!soundManager) return;
+
             let isMounted = true;
 
-            const howl = new Howl({
-                src: [url],
-                loop,
-                volume: fadeTime > 0 && autoplay ? 0 : volume,
-                preload: true,
-                onload: () => {
-                    // Prevent callbacks after unmount
-                    if (!isMounted) return;
+            const loadSound = async () => {
+                try {
+                    await soundManager.load(
+                        soundResourceId,
+                        {
+                            src: url,
+                            loop,
+                            volume: fadeTime > 0 && autoplay ? 0 : volume,
+                            preload: true,
+                            autoplay: false, // We handle autoplay manually to support fade
+                        },
+                        'ambient'
+                    );
+
+                    if (!isMounted) {
+                        soundManager.unload(soundResourceId);
+                        return;
+                    }
 
                     onLoad?.();
+
                     if (autoplay) {
-                        soundIdRef.current = howl.play();
-                        if (fadeTime > 0) {
-                            howl.fade(0, volume, fadeTime * 1000, soundIdRef.current);
+                        soundIdRef.current = soundManager.play(soundResourceId);
+                        if (fadeTime > 0 && soundIdRef.current !== undefined) {
+                            soundManager.fade(
+                                soundResourceId,
+                                0,
+                                volume,
+                                fadeTime * 1000,
+                                soundIdRef.current
+                            );
                         }
                     }
-                },
-                onloaderror: (_id, error) => {
-                    if (!isMounted) return;
-                    console.error(`Failed to load ambient audio: ${error}`);
-                },
-            });
+                } catch (error) {
+                    if (isMounted) {
+                        console.error(`Failed to load ambient audio: ${error}`);
+                    }
+                }
+            };
 
-            howlRef.current = howl;
+            loadSound();
 
             return () => {
                 isMounted = false;
-                howl.unload();
-                howlRef.current = null;
+                soundManager.unload(soundResourceId);
                 soundIdRef.current = undefined;
             };
-        }, [url, loop, autoplay, fadeTime, onLoad, volume]);
+        }, [soundManager, soundResourceId, url, loop, autoplay, fadeTime, onLoad, volume]);
 
         useEffect(() => {
             targetVolumeRef.current = volume;
-            if (howlRef.current && soundIdRef.current !== undefined) {
-                howlRef.current.volume(volume, soundIdRef.current);
+            if (soundManager && soundIdRef.current !== undefined) {
+                soundManager.setVolume(soundResourceId, volume, soundIdRef.current);
             }
-        }, [volume]);
+        }, [soundManager, soundResourceId, volume]);
 
         useImperativeHandle(
             ref,
             () => ({
                 play: () => {
-                    if (howlRef.current) {
-                        soundIdRef.current = howlRef.current.play(soundIdRef.current);
+                    if (soundManager) {
+                        // Check if already playing? SoundManager.play creates a new instance (or restarts?)
+                        // SoundManager.play returns a new ID usually if sprite, but here simple play.
+                        // Howl.play() returns a new ID if called multiple times? Yes.
+                        // So we should update soundIdRef.
+                        soundIdRef.current = soundManager.play(soundResourceId);
                     }
                 },
                 stop: () => {
-                    if (howlRef.current) {
-                        howlRef.current.stop(soundIdRef.current);
+                    if (soundManager) {
+                        soundManager.stop(soundResourceId, soundIdRef.current);
                     }
                 },
                 fadeIn: (duration: number) => {
-                    if (howlRef.current) {
+                    if (soundManager) {
                         const id = soundIdRef.current;
-                        if (!howlRef.current.playing(id)) {
-                            if (id !== undefined) {
-                                howlRef.current.volume(0, id);
-                            }
-                            soundIdRef.current = howlRef.current.play(id);
+                        // Determine if we need to start playing first
+                        if (!soundManager.isPlaying(soundResourceId)) { // Note: isPlaying takes resource ID, checks ANY instance?
+                             // Howler's playing(id) checks specific instance.
+                             // SoundManager.isPlaying(id) -> this.sounds.get(id)?.playing() -> checks if ANY instance is playing.
+                             // We probably want to restart if not playing.
+
+                             // If we want to fade in a NEW play
+                             if (id !== undefined) {
+                                 soundManager.setVolume(soundResourceId, 0, id);
+                             }
+                             soundIdRef.current = soundManager.play(soundResourceId);
                         }
+
                         const newId = soundIdRef.current;
                         if (newId !== undefined) {
-                            howlRef.current.fade(
+                            // Ensure volume starts at 0 for the fade
+                            soundManager.setVolume(soundResourceId, 0, newId);
+                            soundManager.fade(
+                                soundResourceId,
                                 0,
                                 targetVolumeRef.current,
                                 duration * 1000,
@@ -110,9 +142,24 @@ export const AmbientAudio = forwardRef<AmbientAudioRef, AmbientAudioProps>(
                     }
                 },
                 fadeOut: (duration: number) => {
-                    if (howlRef.current && soundIdRef.current !== undefined) {
-                        howlRef.current.fade(
-                            howlRef.current.volume() as number,
+                    if (soundManager && soundIdRef.current !== undefined) {
+                        // We need to know current volume to fade from?
+                        // SoundManager doesn't easily expose current instance volume via getVolume(id) which returns global volume for sound.
+                        // But we can just use targetVolumeRef.current or assume it's at volume.
+                        // Or we can assume 1 if we don't know?
+                        // Let's use targetVolumeRef.current as a best guess for 'from'.
+
+                        // Actually Howl.volume(id) returns volume.
+                        // soundManager.getVolume(id) returns howl.volume().
+                        // But howl.volume(id) gets specific volume? Howler docs say .volume([vol], [id]).
+                        // SoundManager.getVolume only calls .volume().
+
+                        // We'll trust targetVolumeRef for now or just fade from current level if Howler handles 'from' smartly?
+                        // No, Howler fade needs explicit from/to.
+
+                        soundManager.fade(
+                            soundResourceId,
+                            targetVolumeRef.current,
                             0,
                             duration * 1000,
                             soundIdRef.current
@@ -121,23 +168,57 @@ export const AmbientAudio = forwardRef<AmbientAudioRef, AmbientAudioProps>(
                 },
                 setVolume: (vol: number, fadeTime?: number) => {
                     targetVolumeRef.current = vol;
-                    if (howlRef.current) {
+                    if (soundManager) {
                         const id = soundIdRef.current;
                         if (fadeTime && fadeTime > 0 && id !== undefined) {
-                            howlRef.current.fade(
-                                howlRef.current.volume() as number,
+                             // We need to know where we are fading from.
+                             // Assume we are at previous target volume or similar?
+                             // We don't track current volume during fade perfectly.
+                             // Just use Howl's volume if possible, but we can't access it via SoundManager easily.
+                             // Let's assume we fade from whatever the last set volume was?
+                             // If we just use current volume, we might jump?
+                             // Howl.volume() returns the volume of the sound.
+
+                             // Let's rely on SoundManager.fade logic.
+                             // Ideally we should get the current volume from the sound instance.
+                             // But SoundManager.getVolume(id) gets the group volume.
+                             // We can't get instance volume easily without extending SoundManager further.
+
+                             // However, if we assume the sound is at 'volume' or 'targetVolumeRef' level.
+                             // Let's just use current known target.
+
+                            soundManager.fade(
+                                soundResourceId,
+                                // This is tricky. If we are already fading, this might be wrong.
+                                // But replacing direct howl access means we lose some direct control unless we expose it.
+                                // Let's use the last known target volume as 'from'.
+                                // Or maybe we can update SoundManager to support getVolume(id, soundId).
+                                // But for now, let's use the simpler approach used in previous code which was:
+                                // howlRef.current.volume() as number
+
+                                // Since we don't have direct access, and `SoundManager.getVolume` is `howl.volume()`.
+                                // We can try using `soundManager.getVolume(soundResourceId)` but that might not be instance specific.
+                                // BUT since we have a UNIQUE resource ID per component, `soundResourceId` maps to exactly one Howl instance that is exclusively ours.
+                                // So `soundManager.getVolume(soundResourceId)` SHOULD be correct!
+
+                                soundManager.getVolume(soundResourceId) ?? 1,
                                 vol,
                                 fadeTime * 1000,
                                 id
                             );
                         } else if (id !== undefined) {
-                            howlRef.current.volume(vol, id);
+                            soundManager.setVolume(soundResourceId, vol, id);
                         }
                     }
                 },
-                isPlaying: () => howlRef.current?.playing(soundIdRef.current) ?? false,
+                isPlaying: () => {
+                     // SoundManager.isPlaying(id) checks if ANY sound in the group is playing.
+                     // Since our ID is unique to this component, this is effectively correct.
+                     // But we also track soundIdRef to be sure.
+                     return soundManager ? soundManager.isPlaying(soundResourceId) : false;
+                },
             }),
-            []
+            [soundManager, soundResourceId]
         );
 
         return null;

@@ -173,10 +173,8 @@ export const AmbientAudio = forwardRef<AmbientAudioRef, AmbientAudioProps>(
                     }
                 },
                 isPlaying: () => {
-                     // SoundManager.isPlaying(id) checks if ANY sound in the group is playing.
-                     // Since our ID is unique to this component, this is effectively correct.
-                     // But we also track soundIdRef to be sure.
-                     return soundManager ? soundManager.isPlaying(soundResourceId) : false;
+                    // Check if this component's sound is currently playing
+                    return soundManager ? soundManager.isPlaying(soundResourceId) : false;
                 },
             }),
             [soundManager, soundResourceId]

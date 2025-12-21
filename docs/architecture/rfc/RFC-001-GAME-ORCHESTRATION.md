@@ -302,14 +302,15 @@ modeManager.on('modeChange', (mode) => {
 ### With Input
 ```typescript
 // Each mode has its own input map
+// keyboard: string[] of key identifiers; gamepad: logical control name
 const explorationInputs: InputMapping = {
-  'move': { keyboard: ['WASD'], gamepad: 'leftStick' },
-  'interact': { keyboard: 'E', gamepad: 'A' },
+  'move': { keyboard: ['W', 'A', 'S', 'D'], gamepad: 'leftStick' },
+  'interact': { keyboard: ['E'], gamepad: 'A' },
 };
 
 const racingInputs: InputMapping = {
-  'steer': { keyboard: ['AD'], gamepad: 'leftStick', tilt: true },
-  'boost': { keyboard: 'Space', gamepad: 'B' },
+  'steer': { keyboard: ['A', 'D'], gamepad: 'leftStick', tilt: true },
+  'boost': { keyboard: ['Space'], gamepad: 'B' },
 };
 ```
 

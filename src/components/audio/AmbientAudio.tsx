@@ -29,9 +29,11 @@ export const AmbientAudio = forwardRef<AmbientAudioRef, AmbientAudioProps>(
         const soundIdRef = useRef<number | undefined>(undefined);
         const targetVolumeRef = useRef(volume);
 
-        // Generate a unique ID for this sound instance to avoid conflicts
-        // We use the URL in the ID to make it descriptive, but add a random suffix
-        const soundResourceId = useMemo(() => `ambient-${url}-${Math.random().toString(36).substr(2, 9)}`, [url]);
+        /** Unique ID for this sound instance (URL + random suffix for descriptiveness) */
+        const soundResourceId = useMemo(
+            () => `ambient-${url}-${Math.random().toString(36).substr(2, 9)}`,
+            [url]
+        );
 
         useEffect(() => {
             if (!soundManager) return;
@@ -47,7 +49,7 @@ export const AmbientAudio = forwardRef<AmbientAudioRef, AmbientAudioProps>(
                             loop,
                             volume: fadeTime > 0 && autoplay ? 0 : volume,
                             preload: true,
-                            autoplay: false, // We handle autoplay manually to support fade
+                            autoplay: false, // Autoplay handled manually to support fade-in
                         },
                         'ambient'
                     );
@@ -99,10 +101,6 @@ export const AmbientAudio = forwardRef<AmbientAudioRef, AmbientAudioProps>(
             () => ({
                 play: () => {
                     if (soundManager) {
-                        // Check if already playing? SoundManager.play creates a new instance (or restarts?)
-                        // SoundManager.play returns a new ID usually if sprite, but here simple play.
-                        // Howl.play() returns a new ID if called multiple times? Yes.
-                        // So we should update soundIdRef.
                         soundIdRef.current = soundManager.play(soundResourceId);
                     }
                 },
@@ -114,22 +112,17 @@ export const AmbientAudio = forwardRef<AmbientAudioRef, AmbientAudioProps>(
                 fadeIn: (duration: number) => {
                     if (soundManager) {
                         const id = soundIdRef.current;
-                        // Determine if we need to start playing first
-                        if (!soundManager.isPlaying(soundResourceId)) { // Note: isPlaying takes resource ID, checks ANY instance?
-                             // Howler's playing(id) checks specific instance.
-                             // SoundManager.isPlaying(id) -> this.sounds.get(id)?.playing() -> checks if ANY instance is playing.
-                             // We probably want to restart if not playing.
 
-                             // If we want to fade in a NEW play
-                             if (id !== undefined) {
-                                 soundManager.setVolume(soundResourceId, 0, id);
-                             }
-                             soundIdRef.current = soundManager.play(soundResourceId);
+                        // Start playback if not already playing
+                        if (!soundManager.isPlaying(soundResourceId)) {
+                            if (id !== undefined) {
+                                soundManager.setVolume(soundResourceId, 0, id);
+                            }
+                            soundIdRef.current = soundManager.play(soundResourceId);
                         }
 
                         const newId = soundIdRef.current;
                         if (newId !== undefined) {
-                            // Ensure volume starts at 0 for the fade
                             soundManager.setVolume(soundResourceId, 0, newId);
                             soundManager.fade(
                                 soundResourceId,
@@ -143,8 +136,7 @@ export const AmbientAudio = forwardRef<AmbientAudioRef, AmbientAudioProps>(
                 },
                 fadeOut: (duration: number) => {
                     if (soundManager && soundIdRef.current !== undefined) {
-                        // Howler.fade requires explicit start and end volumes; use targetVolumeRef.current
-                        // as the starting volume to match the most recently requested target volume.
+                        // Fade from target volume to 0
                         soundManager.fade(
                             soundResourceId,
                             targetVolumeRef.current,
@@ -161,7 +153,6 @@ export const AmbientAudio = forwardRef<AmbientAudioRef, AmbientAudioProps>(
                         if (fadeTime && fadeTime > 0 && id !== undefined) {
                             soundManager.fade(
                                 soundResourceId,
-                                // Use current volume from SoundManager as fade starting point
                                 soundManager.getVolume(soundResourceId) ?? 1,
                                 vol,
                                 fadeTime * 1000,
@@ -173,7 +164,6 @@ export const AmbientAudio = forwardRef<AmbientAudioRef, AmbientAudioProps>(
                     }
                 },
                 isPlaying: () => {
-                    // Check if this component's sound is currently playing
                     return soundManager ? soundManager.isPlaying(soundResourceId) : false;
                 },
             }),

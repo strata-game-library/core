@@ -215,24 +215,48 @@ function createQuadrupedSkeleton(options: {
   return {
     id: 'quadruped',
     type: 'quadruped',
-    bones: [
-      { id: 'root', shape: 'sphere', size: [0.01, 0.01, 0.01], position: new Vector3(0, 0, 0) },
-      { id: 'spine_base', parent: 'root', shape: 'capsule', size: [options.bodyLength * 0.3, 0.1, 0.1], position: new Vector3(0, 0, 0) },
-      { id: 'spine_mid', parent: 'spine_base', shape: 'capsule', size: [options.bodyLength * 0.4, 0.12, 0.12], position: new Vector3(options.bodyLength * 0.3, 0, 0) },
-      { id: 'spine_upper', parent: 'spine_mid', shape: 'capsule', size: [options.bodyLength * 0.3, 0.1, 0.1], position: new Vector3(options.bodyLength * 0.4, 0, 0) },
-      // Neck and head
-      { id: 'neck', parent: 'spine_upper', shape: 'capsule', size: [options.neckLength ?? 0.1, 0.06, 0.06], position: new Vector3(options.bodyLength * 0.3, 0, 0) },
-      { id: 'head', parent: 'neck', shape: 'sphere', size: [options.headSize, options.headSize * 0.8, options.headSize], position: new Vector3(options.neckLength ?? 0.1, 0, 0) },
-      // Legs (simplified)
-      { id: 'leg_front_l', parent: 'spine_upper', shape: 'capsule', size: [0.02, options.bodyLength * options.legRatio, 0.02], position: new Vector3(0.1, -0.05, 0.05) },
-      { id: 'leg_front_r', parent: 'spine_upper', shape: 'capsule', size: [0.02, options.bodyLength * options.legRatio, 0.02], position: new Vector3(0.1, -0.05, -0.05) },
-      { id: 'leg_back_l', parent: 'spine_base', shape: 'capsule', size: [0.02, options.bodyLength * options.legRatio * 0.9, 0.02], position: new Vector3(0, -0.05, 0.05) },
-      { id: 'leg_back_r', parent: 'spine_base', shape: 'capsule', size: [0.02, options.bodyLength * options.legRatio * 0.9, 0.02], position: new Vector3(0, -0.05, -0.05) },
-      // Tail
-      { id: 'tail_base', parent: 'spine_base', shape: 'capsule', size: [options.tailLength * 0.3, 0.03, 0.03], position: new Vector3(-0.05, 0, 0), rotation: eulerToQuat(0, 0, -30) },
-      { id: 'tail_mid', parent: 'tail_base', shape: 'capsule', size: [options.tailLength * 0.4, 0.025, 0.025], position: new Vector3(-options.tailLength * 0.3, 0, 0) },
-      { id: 'tail_tip', parent: 'tail_mid', shape: 'capsule', size: [options.tailLength * 0.3, 0.02, 0.02], position: new Vector3(-options.tailLength * 0.4, 0, 0) },
-    ],
+    bones: (() => {
+      // Utility: convert Euler angles in degrees (x, y, z) to a quaternion { x, y, z, w }
+      const eulerToQuat = (x: number, y: number, z: number) => {
+        const toRad = (angle: number) => (angle * Math.PI) / 180;
+        const rx = toRad(x);
+        const ry = toRad(y);
+        const rz = toRad(z);
+
+        const cx = Math.cos(rx / 2);
+        const sx = Math.sin(rx / 2);
+        const cy = Math.cos(ry / 2);
+        const sy = Math.sin(ry / 2);
+        const cz = Math.cos(rz / 2);
+        const sz = Math.sin(rz / 2);
+
+        return {
+          x: sx * cy * cz - cx * sy * sz,
+          y: cx * sy * cz + sx * cy * sz,
+          z: cx * cy * sz - sx * sy * cz,
+          w: cx * cy * cz + sx * sy * sz,
+        };
+      };
+
+      return [
+        { id: 'root', shape: 'sphere', size: [0.01, 0.01, 0.01], position: [0, 0, 0] },
+        { id: 'spine_base', parent: 'root', shape: 'capsule', size: [options.bodyLength * 0.3, 0.1, 0.1], position: [0, 0, 0] },
+        { id: 'spine_mid', parent: 'spine_base', shape: 'capsule', size: [options.bodyLength * 0.4, 0.12, 0.12], position: [options.bodyLength * 0.3, 0, 0] },
+        { id: 'spine_upper', parent: 'spine_mid', shape: 'capsule', size: [options.bodyLength * 0.3, 0.1, 0.1], position: [options.bodyLength * 0.4, 0, 0] },
+        // Neck and head
+        { id: 'neck', parent: 'spine_upper', shape: 'capsule', size: [options.neckLength ?? 0.1, 0.06, 0.06], position: [options.bodyLength * 0.3, 0, 0] },
+        { id: 'head', parent: 'neck', shape: 'sphere', size: [options.headSize, options.headSize * 0.8, options.headSize], position: [options.neckLength ?? 0.1, 0, 0] },
+        // Legs (simplified)
+        { id: 'leg_front_l', parent: 'spine_upper', shape: 'capsule', size: [0.02, options.bodyLength * options.legRatio, 0.02], position: [0.1, -0.05, 0.05] },
+        { id: 'leg_front_r', parent: 'spine_upper', shape: 'capsule', size: [0.02, options.bodyLength * options.legRatio, 0.02], position: [0.1, -0.05, -0.05] },
+        { id: 'leg_back_l', parent: 'spine_base', shape: 'capsule', size: [0.02, options.bodyLength * options.legRatio * 0.9, 0.02], position: [0, -0.05, 0.05] },
+        { id: 'leg_back_r', parent: 'spine_base', shape: 'capsule', size: [0.02, options.bodyLength * options.legRatio * 0.9, 0.02], position: [0, -0.05, -0.05] },
+        // Tail
+        { id: 'tail_base', parent: 'spine_base', shape: 'capsule', size: [options.tailLength * 0.3, 0.03, 0.03], position: [-0.05, 0, 0], rotation: eulerToQuat(0, 0, -30) },
+        { id: 'tail_mid', parent: 'tail_base', shape: 'capsule', size: [options.tailLength * 0.4, 0.025, 0.025], position: [-options.tailLength * 0.3, 0, 0] },
+        { id: 'tail_tip', parent: 'tail_mid', shape: 'capsule', size: [options.tailLength * 0.3, 0.02, 0.02], position: [-options.tailLength * 0.4, 0, 0] },
+      ];
+    })(),
     ikChains: [
       { id: 'leg_front_l_ik', bones: ['leg_front_l'], target: 'front_left_foot' },
       { id: 'leg_front_r_ik', bones: ['leg_front_r'], target: 'front_right_foot' },

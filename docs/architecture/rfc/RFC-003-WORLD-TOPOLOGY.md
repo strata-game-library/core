@@ -309,7 +309,11 @@ function createConnectionSystem(worldGraph: WorldGraph, modeManager: ModeManager
     const player = world.query('isPlayer', 'transform').first;
     if (!player) return;
     
-    const currentRegion = worldGraph.getRegion(player.currentRegion);
+    // Get current region from global store (set by createRegionSystem)
+    const currentRegionId = useGameStore.getState().currentRegion;
+    if (!currentRegionId) return;
+    
+    const currentRegion = worldGraph.getRegion(currentRegionId);
     if (!currentRegion) return;
     
     for (const connection of worldGraph.getConnections(currentRegion.id)) {

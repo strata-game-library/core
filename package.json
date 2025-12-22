@@ -11,21 +11,33 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     },
-    "./components": {
+    "./core": {
+      "types": "./dist/core/index.d.ts",
+      "import": "./dist/core/index.js"
+    },
+    "./react": {
       "types": "./dist/components/index.d.ts",
       "import": "./dist/components/index.js"
     },
-    "./shaders": {
-      "types": "./dist/shaders/index.d.ts",
-      "import": "./dist/shaders/index.js"
+    "./ai": {
+      "types": "./dist/components/ai/index.d.ts",
+      "import": "./dist/components/ai/index.js"
     },
-    "./utils": {
-      "types": "./dist/utils/index.d.ts",
-      "import": "./dist/utils/index.js"
+    "./state": {
+      "types": "./dist/components/state/index.d.ts",
+      "import": "./dist/components/state/index.js"
+    },
+    "./physics": {
+      "types": "./dist/components/physics/index.d.ts",
+      "import": "./dist/components/physics/index.js"
     },
     "./presets": {
       "types": "./dist/presets/index.d.ts",
       "import": "./dist/presets/index.js"
+    },
+    "./shaders": {
+      "types": "./dist/shaders/index.d.ts",
+      "import": "./dist/shaders/index.js"
     }
   },
   "files": [

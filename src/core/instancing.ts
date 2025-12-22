@@ -27,13 +27,7 @@ export interface InstanceData {
  * Biome data for instancing.
  * Compatible with SDF BiomeData but used for instance placement.
  */
-import type { BiomeData as SDFBiomeData } from './sdf';
-
-/**
- * Re-export of BiomeData type.
- * @category Rendering Pipeline
- */
-export type BiomeData = SDFBiomeData;
+import type { BiomeData } from './sdf';
 
 /**
  * Options for creating an instanced mesh.

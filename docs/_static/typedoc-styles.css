@@ -1,0 +1,83 @@
+/* Custom CSS for TypeDoc to align with jbcom design system */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+
+:root {
+    --jb-deep-slate: #020617;
+    --jb-cyan: #0ea5e9;
+    --jb-teal: #14b8a6;
+    --jb-glass-bg: rgba(15, 23, 42, 0.8);
+    --jb-glass-border: rgba(255, 255, 255, 0.1);
+    
+    /* TypeDoc Overrides */
+    --p-color-background: var(--jb-deep-slate);
+    --p-color-text: #cbd5e1;
+    --p-color-text-aside: #94a3b8;
+    --p-color-link: var(--jb-cyan);
+    --p-color-accent: var(--jb-cyan);
+    --p-font-family: 'Inter', sans-serif;
+    --p-font-family-mono: 'JetBrains Mono', monospace;
+}
+
+body {
+    background-color: var(--jb-deep-slate);
+    color: #cbd5e1;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Space Grotesk', sans-serif !important;
+    color: #f8fafc !important;
+}
+
+.tsd-page-title h1 {
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+.tsd-navigation.primary, .tsd-navigation.secondary {
+    background: #0f172a;
+    border-right: 1px solid var(--jb-glass-border);
+}
+
+.tsd-panel {
+    background: var(--jb-glass-bg) !important;
+    backdrop-filter: blur(8px);
+    border: 1px solid var(--jb-glass-border) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1) !important;
+}
+
+code, .tsd-signature {
+    font-family: 'JetBrains Mono', monospace !important;
+    background: #0f172a !important;
+    border: 1px solid var(--jb-glass-border) !important;
+    border-radius: 6px !important;
+}
+
+.tsd-kind-icon {
+    color: var(--jb-cyan) !important;
+}
+
+.tsd-index-section h3 {
+    border-bottom: 2px solid var(--jb-cyan);
+    display: inline-block;
+    padding-bottom: 4px;
+    margin-bottom: 20px;
+}
+
+/* Header/Toolbar */
+header {
+    background: #0f172a !important;
+    border-bottom: 1px solid var(--jb-glass-border) !important;
+}
+
+.tsd-widget.search:before {
+    filter: invert(1);
+}
+
+/* Footer */
+footer {
+    border-top: 1px solid var(--jb-glass-border) !important;
+    background: var(--jb-deep-slate) !important;
+    color: #64748b !important;
+}

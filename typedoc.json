@@ -31,6 +31,7 @@
         "GitHub": "https://github.com/jbcom/nodejs-strata",
         "Examples": "/examples/"
     },
+    "customCss": "docs/_static/typedoc-styles.css",
     "validation": {
         "notExported": true,
         "invalidLink": true,

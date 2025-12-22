@@ -18,7 +18,6 @@ import React, {
     useState,
     type RefObject,
 } from 'react';
-import * as THREE from 'three';
 import {
     CollisionLayer,
     createHumanoidRagdoll,

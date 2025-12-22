@@ -1,3 +1,22 @@
+/**
+ * Procedural Animation System for Strata.
+ *
+ * Provides React Three Fiber components for procedural animation including
+ * Inverse Kinematics (IK), spring dynamics, look-at controllers, and complex locomotion.
+ *
+ * @packageDocumentation
+ * @module components/animation/IKChain
+ * @category Entities & Simulation
+ *
+ * ## Interactive Demos
+ * - 🎮 [Live Animation Demo](http://jonbogaty.com/nodejs-strata/demos/animation.html)
+ * - 📦 [Procedural Character Example](https://github.com/jbcom/nodejs-strata/tree/main/examples/characters)
+ *
+ * ## API Documentation
+ * - [Full API Reference](http://jonbogaty.com/nodejs-strata/api)
+ * - [Examples → API Mapping](https://github.com/jbcom/nodejs-strata/blob/main/EXAMPLES_API_MAP.md#animation-system)
+ */
+
 import { useFrame } from '@react-three/fiber';
 import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useRef } from 'react';
 import * as THREE from 'three';

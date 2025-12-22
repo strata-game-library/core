@@ -1,5 +1,5 @@
 /**
- * Procedural Animation Components.
+ * Procedural Animation and Kinematics Components.
  * @packageDocumentation
  * @module components/animation
  */

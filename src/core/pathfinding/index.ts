@@ -8,6 +8,13 @@
  * @module core/pathfinding
  * @category Entities & Simulation
  *
+ * ## Interactive Demos
+ * - 🎮 [Live AI Demo](http://jonbogaty.com/nodejs-strata/demos/ai.html)
+ * - 📦 [AI Navigation Example](https://github.com/jbcom/nodejs-strata/tree/main/examples/ai-navigation)
+ *
+ * ## API Documentation
+ * - [Full API Reference](http://jonbogaty.com/nodejs-strata/api)
+ *
  * @example
  * ```typescript
  * const graph = createGraph();

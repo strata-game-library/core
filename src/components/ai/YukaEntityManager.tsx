@@ -1,3 +1,22 @@
+/**
+ * Advanced Game AI System for Strata.
+ *
+ * Integrates the Yuka game AI library with React Three Fiber to provide
+ * steering behaviors, pathfinding, finite state machines, and perception.
+ *
+ * @packageDocumentation
+ * @module components/ai/YukaEntityManager
+ * @category Entities & Simulation
+ *
+ * ## Interactive Demos
+ * - 🎮 [Live AI Demo](http://jonbogaty.com/nodejs-strata/demos/ai.html)
+ * - 📦 [AI Navigation Example](https://github.com/jbcom/nodejs-strata/tree/main/examples/ai-navigation)
+ *
+ * ## API Documentation
+ * - [Full API Reference](http://jonbogaty.com/nodejs-strata/api)
+ * - [Examples → API Mapping](https://github.com/jbcom/nodejs-strata/blob/main/EXAMPLES_API_MAP.md#ai-and-navigation)
+ */
+
 import { useFrame } from '@react-three/fiber';
 import React, { createContext, useContext, useMemo, useRef } from 'react';
 import * as YUKA from 'yuka';

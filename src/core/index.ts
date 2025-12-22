@@ -22,7 +22,32 @@ export * from './pathfinding';
 export * from './physics';
 export * from './postProcessing';
 export * from './raymarching';
-export * from './sdf';
+// Export sdf but exclude BiomeData (exported via instancing)
+export {
+    blendSDF,
+    displaceSDF,
+    getBiomeAt,
+    getTerrainHeight,
+    onionSDF,
+    repeatSDF,
+    revolutionSDF,
+    rotateSDF,
+    scaleSDF,
+    sdBox,
+    sdCapsule,
+    sdCone,
+    sdCylinder,
+    sdEllipsoid,
+    sdPlane,
+    sdPyramid,
+    sdRoundBox,
+    sdSphere,
+    sdTerrain,
+    sdTorus,
+    subtractSDF,
+    symmetrySDF,
+    unionSDF,
+} from './sdf';
 export * from './shaders';
 export * from './shared';
 export * from './sky';

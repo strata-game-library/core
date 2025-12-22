@@ -109,8 +109,6 @@ export interface CameraPath {
 function lerp(a: number, b: number, t: number): number {
     return a + (b - a) * Math.max(0, Math.min(1, t));
 }
-    return a + (b - a) * Math.max(0, Math.min(1, t));
-}
 
 /**
  * Linear interpolation between two Vector3 positions.
@@ -160,6 +158,7 @@ export function slerp(
     return result.copy(qa).slerp(qb, Math.max(0, Math.min(1, t)));
 }
 
+<<<<<<< HEAD
 /**
  * Unity-style smooth damping for scalar values.
  *
@@ -182,6 +181,9 @@ export function slerp(
  * ```
  */
 export function smoothDamp(
+=======
+function smoothDamp(
+>>>>>>> a3472d2 (Resolve remaining duplicate exports (smoothDamp, WindConfig, lerp))
     current: number,
     target: number,
     velocity: { value: number },
@@ -454,8 +456,6 @@ export function easeInOutCubic(t: number): number {
 function easeOutCubic(t: number): number {
     return 1 - (1 - t) ** 3;
 }
-    return 1 - (1 - t) ** 3;
-}
 
 /**
  * Cubic ease-in interpolation.
@@ -480,9 +480,6 @@ export function easeInCubic(t: number): number {
  * @category Player Experience
  */
 function easeOutElastic(t: number): number {
-    const c4 = (2 * Math.PI) / 3;
-    return t === 0 ? 0 : t === 1 ? 1 : 2 ** (-10 * t) * Math.sin((t * 10 - 0.75) * c4) + 1;
-}
     const c4 = (2 * Math.PI) / 3;
     return t === 0 ? 0 : t === 1 ? 1 : 2 ** (-10 * t) * Math.sin((t * 10 - 0.75) * c4) + 1;
 }

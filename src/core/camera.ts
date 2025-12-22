@@ -106,7 +106,9 @@ export interface CameraPath {
  * @returns Interpolated value
  * @category Player Experience
  */
-export function lerp(a: number, b: number, t: number): number {
+function lerp(a: number, b: number, t: number): number {
+    return a + (b - a) * Math.max(0, Math.min(1, t));
+}
     return a + (b - a) * Math.max(0, Math.min(1, t));
 }
 
@@ -449,7 +451,9 @@ export function easeInOutCubic(t: number): number {
  * @returns Eased value (0-1)
  * @category Player Experience
  */
-export function easeOutCubic(t: number): number {
+function easeOutCubic(t: number): number {
+    return 1 - (1 - t) ** 3;
+}
     return 1 - (1 - t) ** 3;
 }
 
@@ -475,7 +479,10 @@ export function easeInCubic(t: number): number {
  * @returns Eased value (0-1)
  * @category Player Experience
  */
-export function easeOutElastic(t: number): number {
+function easeOutElastic(t: number): number {
+    const c4 = (2 * Math.PI) / 3;
+    return t === 0 ? 0 : t === 1 ? 1 : 2 ** (-10 * t) * Math.sin((t * 10 - 0.75) * c4) + 1;
+}
     const c4 = (2 * Math.PI) / 3;
     return t === 0 ? 0 : t === 1 ? 1 : 2 ** (-10 * t) * Math.sin((t * 10 - 0.75) * c4) + 1;
 }

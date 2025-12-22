@@ -38,26 +38,7 @@ export {
 // Background Layer
 export * from '../core/sky';
 export * from '../core/volumetrics';
-export type {
-    AIPresetConfig,
-    AIPresetName,
-    AIPresetResult,
-    FlockConfig,
-    FlockMemberPresetConfig,
-    FollowerPresetConfig,
-    GuardPresetConfig,
-    PredatorPresetConfig,
-    PreyPresetConfig,
-} from './ai';
-// AI presets
-export {
-    createFlock,
-    createFlockMemberPreset,
-    createFollowerPreset,
-    createGuardPreset,
-    createPredatorPreset,
-    createPreyPreset,
-} from './ai';
+export * from './ai';
 export type {
     GaitPreset,
     GaitPresetName,

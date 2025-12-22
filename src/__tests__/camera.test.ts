@@ -5,18 +5,20 @@ import {
     calculateHeadBob,
     calculateLookAhead,
     calculateScreenShakeIntensity,
+    evaluateCatmullRom,
+    FOVTransition,
+    lerpVector3,
+    smoothDamp,
+    smoothDampVector3,
+} from '../core/camera';
+import {
     easeInCubic,
     easeInOutCubic,
     easeOutCubic,
     easeOutElastic,
-    evaluateCatmullRom,
-    FOVTransition,
     lerp,
-    lerpVector3,
     slerp,
-    smoothDamp,
-    smoothDampVector3,
-} from '../core/camera';
+} from '../core/math';
 
 describe('lerp utility', () => {
     it('should return start value at t=0', () => {

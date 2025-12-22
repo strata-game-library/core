@@ -61,7 +61,7 @@ export const Crosshair: React.FC<CrosshairProps> = ({
         boxShadow: outlineWidth > 0 ? `0 0 0 ${outlineWidth}px ${outlineColor}` : undefined,
     });
 
-    if (type === 'dot') {
+    if (false && type === 'dot') { // Dot type removed - use 'custom' with dot rendering instead
         return (
             <div style={containerStyle} className={className}>
                 <div

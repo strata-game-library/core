@@ -1,6 +1,8 @@
 import { useFrame, useThree } from '@react-three/fiber';
 import { useCallback, useRef } from 'react';
-import { easeInOutCubic, lerpVector3 } from '../../core/camera';
+import * as THREE from 'three';
+import { lerpVector3 } from '../../core/camera';
+import { easeInOutCubic } from '../../core/math';
 import type { CameraTransitionConfig } from './types';
 
 /**

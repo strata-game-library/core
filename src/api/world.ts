@@ -57,10 +57,9 @@ export type {
     CloudMaterialOptions,
     CloudSkyConfig,
     InstanceData,
-    InstancingBiomeData,
+    BiomeData,
     MarchingCubesOptions,
     MarchingCubesResult,
-    SDFBiomeData,
     TerrainChunk,
     VolumetricCloudOptions,
 } from '../core';

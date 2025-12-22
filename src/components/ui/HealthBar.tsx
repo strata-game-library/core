@@ -8,7 +8,8 @@ import React, {
     useState,
 } from 'react';
 import type * as THREE from 'three';
-import { calculateFade, clampProgress, easeOutCubic, lerp } from '../../core/ui';
+import { easeOutCubic, lerp } from '../../core/math';
+import { calculateFade, clampProgress } from '../../core/ui';
 import type { HealthBarProps, HealthBarRef } from './types';
 
 /**

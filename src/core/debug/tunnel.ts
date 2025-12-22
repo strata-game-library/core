@@ -1,5 +1,10 @@
 /**
  * React Portal Utilities for Debug UI.
+ *
+ * Provides a tunnel system powered by `tunnel-rat` for rendering debug information,
+ * performance stats, and control panels in specific DOM locations outside the
+ * React Three Fiber canvas.
+ *
  * @packageDocumentation
  * @module core/debug/tunnel
  * @category Game Systems

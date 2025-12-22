@@ -1,7 +1,7 @@
 /**
- * Weather Presets
- *
- * Pre-configured weather states for common conditions.
+ * Weather and Environmental Presets.
+ * @packageDocumentation
+ * @module presets/weather
  */
 
 import * as THREE from 'three';

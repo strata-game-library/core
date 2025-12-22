@@ -6,6 +6,7 @@
  *
  * @packageDocumentation
  * @module core/shared/platform
+ * @category World Building
  */
 
 // Type definitions for better type safety

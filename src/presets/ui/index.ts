@@ -1,7 +1,7 @@
 /**
- * UI Presets
- *
- * Pre-configured UI styles for common game genres.
+ * Specialized In-Game UI Style Presets.
+ * @packageDocumentation
+ * @module presets/ui
  */
 
 import type {
@@ -11,7 +11,7 @@ import type {
     MinimapConfig,
     NotificationConfig,
     ProgressBarConfig,
-} from '../core/ui';
+} from '../../core/ui';
 
 export type HealthBarPresetName = 'rpg' | 'fps' | 'mmo' | 'minimalist' | 'retro';
 export type InventoryPresetName = 'grid' | 'list' | 'wheel' | 'hotbar';

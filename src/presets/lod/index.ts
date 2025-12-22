@@ -1,11 +1,10 @@
 /**
- * LOD Presets
- *
- * Provides pre-configured LOD profiles for different performance targets
- * and device capabilities.
+ * Level of Detail (LOD) Profiles and Presets.
+ * @packageDocumentation
+ * @module presets/lod
  */
 
-import type { LODConfig, VegetationLODConfig } from '../core/lod';
+import type { LODConfig, VegetationLODConfig } from '../../core/lod';
 
 export type LODPresetName = 'performance' | 'quality' | 'mobile' | 'desktop' | 'ultra';
 

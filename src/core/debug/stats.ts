@@ -1,5 +1,8 @@
 /**
  * Performance Statistics Monitoring.
+ *
+ * Provides utilities for monitoring FPS, memory usage, and WebGL statistics.
+ *
  * @packageDocumentation
  * @module core/debug/stats
  * @category Game Systems

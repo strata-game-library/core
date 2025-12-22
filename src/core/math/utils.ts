@@ -1,7 +1,13 @@
 /**
  * Core Mathematical Utilities and Game Helpers.
+ *
+ * Provides specialized math functions for game development, including interpolation,
+ * range mapping, smoothing, and geometric calculations. Re-exports high-performance
+ * utilities from the `maath` library.
+ *
  * @packageDocumentation
  * @module core/math/utils
+ * @category World Building
  */
 
 import * as maathMisc from 'maath/misc';

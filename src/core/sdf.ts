@@ -1,27 +1,7 @@
 /**
  * Core Signed Distance Field (SDF) Primitives and Operations.
- *
- * SDFs represent geometry as a mathematical function, enabling organic terrain,
- * smooth boolean operations, and high-performance ray marching.
- *
  * @packageDocumentation
  * @module core/sdf
- * @category World Building
- *
- * ## Interactive Demos
- * - 🎮 [Live SDF Demo](http://jonbogaty.com/nodejs-strata/demos/terrain.html)
- *
- * @example
- * ```typescript
- * // Combine a sphere and a box with smooth union
- * const sdf = (p: THREE.Vector3) => {
- *   return opSmoothUnion(
- *     sdSphere(p, 1.0),
- *     sdBox(p, new THREE.Vector3(1, 1, 1)),
- *     0.5
- *   );
- * };
- * ```
  */
 
 import * as THREE from 'three';

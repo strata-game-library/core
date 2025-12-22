@@ -1,5 +1,9 @@
 /**
  * Debug Panel Integration.
+ *
+ * Provides a managed interface for `leva` debug panels with presets for common
+ * game development scenarios including camera, physics, and lighting.
+ *
  * @packageDocumentation
  * @module core/debug/panel
  * @category Game Systems

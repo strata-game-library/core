@@ -1,7 +1,7 @@
 /**
- * Strata Presets - Organized game development primitives
- *
- * This module exports all preset systems organized by category.
+ * Strata Presets - Organized game development primitives.
+ * @packageDocumentation
+ * @module presets
  */
 
 export * from './ai';

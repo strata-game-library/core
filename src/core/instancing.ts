@@ -1,11 +1,18 @@
 /**
  * GPU-Driven Instancing - Core TypeScript (no React)
  *
- * Pure TypeScript functions for instancing that work with any framework
+ * Pure TypeScript functions for instancing that work with any framework.
+ *
+ * @category Rendering Pipeline
+ * @module core/instancing
  */
 
 import * as THREE from 'three';
 
+/**
+ * Data for a single instance.
+ * @category Rendering Pipeline
+ */
 export interface InstanceData {
     position: THREE.Vector3;
     rotation: THREE.Euler;
@@ -18,18 +25,36 @@ export interface InstanceData {
  */
 import type { BiomeData as SDFBiomeData } from './sdf';
 
+/**
+ * Re-export of BiomeData type.
+ * @category Rendering Pipeline
+ */
 export type BiomeData = SDFBiomeData;
 
+/**
+ * Options for creating an instanced mesh.
+ * @category Rendering Pipeline
+ */
 export interface InstancingOptions {
+    /** The base geometry to instance. */
     geometry: THREE.BufferGeometry;
+    /** The material to use for all instances. */
     material: THREE.Material;
+    /** Maximum number of instances to render. */
     count: number;
+    /** Array of instance transform data. */
     instances: InstanceData[];
+    /** Enable GPU wind animation (requires compatible shader). Default: true */
     enableWind?: boolean;
+    /** Strength of wind animation. Default: 0.5 */
     windStrength?: number;
+    /** Distance at which LOD transitions occur. */
     lodDistance?: number;
+    /** Enable frustum culling. Default: true */
     frustumCulled?: boolean;
+    /** Enable shadow casting. Default: true */
     castShadow?: boolean;
+    /** Enable shadow receiving. Default: true */
     receiveShadow?: boolean;
 }
 
@@ -51,9 +76,10 @@ class SeededRandom {
 }
 
 /**
- * Generate instance data for vegetation/objects
- * Pure TypeScript - no React dependencies
+ * Generate instance data for vegetation/objects.
+ * Pure TypeScript - no React dependencies.
  *
+ * @category Rendering Pipeline
  * @param count - Number of instances to generate
  * @param areaSize - Size of the area to place instances in
  * @param heightFunc - Function to get terrain height at (x, z)
@@ -63,6 +89,7 @@ class SeededRandom {
  * @param getBiomeAt - Optional biome lookup function
  * @param noise3D - Optional 3D noise function
  * @param fbm - Optional FBM function
+ * @returns Array of InstanceData
  */
 export function generateInstanceData(
     count: number,
@@ -174,8 +201,12 @@ export function generateInstanceData(
 }
 
 /**
- * Create instanced mesh with instance matrices (pure TypeScript)
- * Returns THREE.InstancedMesh ready for use with any framework
+ * Create instanced mesh with instance matrices (pure TypeScript).
+ * Returns THREE.InstancedMesh ready for use with any framework.
+ *
+ * @category Rendering Pipeline
+ * @param options - Configuration options
+ * @returns THREE.InstancedMesh
  */
 export function createInstancedMesh(options: InstancingOptions): THREE.InstancedMesh {
     const {

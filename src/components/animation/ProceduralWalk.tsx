@@ -1,5 +1,5 @@
 import { useFrame } from '@react-three/fiber';
-import React, { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
+import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
 import * as THREE from 'three';
 import { ProceduralGait, type GaitState } from '../../core/animation';
 import type { ProceduralWalkProps, ProceduralWalkRef } from './types';

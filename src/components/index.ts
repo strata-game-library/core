@@ -2,63 +2,8 @@
  * React component exports
  */
 
-export type {
-    StateConfig,
-    YukaEntityManagerContextValue,
-    YukaEntityManagerProps,
-    YukaNavMeshProps,
-    YukaNavMeshRef,
-    YukaPathProps,
-    YukaPathRef,
-    YukaStateMachineProps,
-    YukaStateMachineRef,
-    YukaVehicleProps,
-    YukaVehicleRef,
-} from './AI';
-// AI (YukaJS integration)
-export {
-    syncYukaToThree,
-    threeVector3ToYuka,
-    useYukaContext,
-    YukaEntityManager,
-    YukaNavMesh,
-    YukaPath,
-    YukaStateMachine,
-    YukaVehicle,
-    yukaVector3ToThree,
-} from './AI';
-export type {
-    BlinkControllerProps,
-    BlinkControllerRef,
-    BreathingAnimationProps,
-    BreathingAnimationRef,
-    HeadTrackerProps,
-    HeadTrackerRef,
-    IKChainProps,
-    IKChainRef,
-    IKLimbProps,
-    IKLimbRef,
-    LookAtProps,
-    LookAtRef,
-    ProceduralWalkProps,
-    ProceduralWalkRef,
-    SpringBoneProps,
-    SpringBoneRef,
-    TailPhysicsProps,
-    TailPhysicsRef,
-} from './Animation';
-// Animation
-export {
-    BlinkController,
-    BreathingAnimation,
-    HeadTracker,
-    IKChain,
-    IKLimb,
-    LookAt,
-    ProceduralWalk,
-    SpringBone,
-    TailPhysics,
-} from './Animation';
+export * from './ai';
+export * from './animation';
 export type {
     AmbientAudioProps,
     AmbientAudioRef,
@@ -92,43 +37,11 @@ export {
     useSpatialAudio,
     WeatherAudio,
 } from './audio';
-export type {
-    CameraShakeProps,
-    CameraShakeRef,
-    CameraTransitionProps,
-    CinematicCameraProps,
-    CinematicCameraRef,
-    FollowCameraProps,
-    FollowCameraRef,
-    FPSCameraProps,
-    FPSCameraRef,
-    OrbitCameraProps,
-    OrbitCameraRef,
-} from './Camera';
-// Camera
-export {
-    CameraShake,
-    CinematicCamera,
-    FollowCamera,
-    FPSCamera,
-    OrbitCamera,
-    useCameraTransition,
-} from './Camera';
+export * from './camera';
 export type { CloudLayerProps, CloudSkyProps, VolumetricCloudsProps } from './Clouds';
 // Clouds
 export { CloudLayer, CloudSky, VolumetricClouds } from './Clouds';
-export type {
-    AnimatedBillboardProps,
-    AnimatedBillboardRef,
-    BillboardProps,
-    BillboardRef,
-    DecalPoolProps,
-    DecalPoolRef,
-    DecalProps,
-    DecalRef,
-} from './Decals';
-// Decals and Billboards
-export { AnimatedBillboard, Billboard, Decal, DecalPool } from './Decals';
+export * from './decals';
 export type {
     GodRaysProps,
     GodRaysRef,
@@ -139,40 +52,9 @@ export type {
 } from './GodRays';
 // God Rays and Volumetric Lighting
 export { GodRays, LightShafts, VolumetricPointLight, VolumetricSpotlight } from './GodRays';
-export type {
-    GroundSwitchProps,
-    GroundSwitchRef,
-    InputControlEvents,
-    InputControlRef,
-    Joystick3DProps,
-    Joystick3DRef,
-    PressurePlateProps,
-    PressurePlateRef,
-    TriggerBehavior,
-    TriggerBehaviorConfig,
-    TriggerComposerProps,
-    TriggerComposerRef,
-    TriggerConfig,
-    TriggerMaterialConfig,
-    TriggerShape,
-    WallButtonProps,
-    WallButtonRef,
-} from './Input';
-// Input Controls
-export { GroundSwitch, Joystick3D, PressurePlate, TriggerComposer, WallButton } from './Input';
+export * from './input';
 export * from './instancing';
-export type {
-    ImpostorProps,
-    ImpostorRef,
-    LODGroupProps,
-    LODGroupRef,
-    LODMeshProps,
-    LODMeshRef,
-    LODVegetationProps,
-    LODVegetationRef,
-} from './LOD';
-// LOD (Level of Detail)
-export { Impostor, LODGroup, LODMesh, LODVegetation } from './LOD';
+export * from './lod';
 export type { ParticleBurstProps, ParticleEmitterProps, ParticleEmitterRef } from './Particles';
 // Particles
 export { ParticleBurst, ParticleEmitter } from './Particles';

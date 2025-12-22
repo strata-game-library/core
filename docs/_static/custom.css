@@ -1,29 +1,144 @@
 /* Custom CSS for Sphinx documentation */
-/* Synced from jbcom-control-center */
+/* Aligned with jbcom design system */
 
-/* Improve code block readability */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+
+:root {
+    --jb-deep-slate: #020617;
+    --jb-cyan: #0ea5e9;
+    --jb-teal: #14b8a6;
+    --jb-glass-bg: rgba(15, 23, 42, 0.8);
+    --jb-glass-border: rgba(255, 255, 255, 0.1);
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    color: #cbd5e1;
+    background-color: var(--jb-deep-slate);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Space Grotesk', sans-serif;
+    color: #f8fafc;
+    font-weight: 600;
+}
+
+.wy-nav-side {
+    background: #0f172a;
+    border-right: 1px solid var(--jb-glass-border);
+}
+
+.wy-side-nav-search {
+    background: #1e293b;
+}
+
+.wy-side-nav-search input[type="text"] {
+    border-radius: 20px;
+    background: #0f172a;
+    border: 1px solid var(--jb-glass-border);
+}
+
+.wy-nav-content-wrap {
+    background: var(--jb-deep-slate);
+}
+
+.wy-nav-content {
+    background: var(--jb-deep-slate);
+    max-width: 1000px;
+}
+
+code, kbd, pre, samp {
+    font-family: 'JetBrains Mono', monospace;
+}
+
+/* Glassmorphism for admonitions */
+.admonition {
+    background: var(--jb-glass-bg) !important;
+    backdrop-filter: blur(8px);
+    border: 1px solid var(--jb-glass-border) !important;
+    border-left: 4px solid var(--jb-cyan) !important;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
+
+.admonition-title {
+    background: transparent !important;
+    color: var(--jb-cyan) !important;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+}
+
+/* Code blocks */
 .highlight {
-    background: #f8f8f8;
-    border-radius: 4px;
+    background: #0f172a;
+    border: 1px solid var(--jb-glass-border);
+    border-radius: 8px;
+}
+
+.highlight pre {
+    color: #e2e8f0;
+}
+
+/* Links */
+a {
+    color: var(--jb-cyan);
+}
+
+a:hover {
+    color: #38bdf8;
+}
+
+/* Sidebar links */
+.wy-menu-vertical a {
+    color: #94a3b8;
+}
+
+.wy-menu-vertical a:hover {
+    background: #1e293b;
+    color: var(--jb-cyan);
+}
+
+.wy-menu-vertical li.current > a {
+    background: #1e293b;
+    color: #f8fafc;
+    border-right: 3px solid var(--jb-cyan);
 }
 
 /* Better table styling */
 table.docutils {
-    border-collapse: collapse;
+    border-collapse: separate;
+    border-spacing: 0;
     width: 100%;
+    background: var(--jb-glass-bg);
+    border: 1px solid var(--jb-glass-border);
+    border-radius: 8px;
+    overflow: hidden;
 }
 
-table.docutils td, table.docutils th {
-    padding: 8px 12px;
-    border: 1px solid #e1e4e5;
+table.docutils th {
+    background: #1e293b;
+    color: #f8fafc;
+    font-family: 'Space Grotesk', sans-serif;
+    text-align: left;
+    padding: 12px 16px;
 }
 
-/* Improve sidebar navigation */
-.wy-nav-content {
-    max-width: 900px;
+table.docutils td {
+    padding: 12px 16px;
+    border-top: 1px solid var(--jb-glass-border);
+    color: #cbd5e1;
 }
 
-/* Better admonition styling */
-.admonition {
-    border-radius: 4px;
+/* Breadcrumbs */
+.wy-breadcrumbs {
+    color: #64748b;
+}
+
+.wy-breadcrumbs li a {
+    color: #94a3b8;
+}
+
+/* Footer */
+footer {
+    color: #64748b;
 }

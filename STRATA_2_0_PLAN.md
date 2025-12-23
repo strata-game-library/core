@@ -537,7 +537,75 @@ Work is organized by **functional domains** with explicit issue dependencies. Mi
 
 ---
 
-## Part 7: Success Criteria
+## Part 7: Issue Triage & Project Organization
+
+### Organization Projects
+
+Issues are tracked in jbcom organization projects:
+
+| Project | URL | Purpose |
+|---------|-----|---------|
+| **Roadmap** | [jbcom/projects/2](https://github.com/orgs/jbcom/projects/2) | EPICs and major milestones |
+| **Ecosystem** | [jbcom/projects/1](https://github.com/orgs/jbcom/projects/1) | Cross-repo integration tasks |
+
+### Main Repository: nodejs-strata
+
+| Issue | Title | Milestone | Project |
+|-------|-------|-----------|---------|
+| [#50](https://github.com/jbcom/nodejs-strata/issues/50) | EPIC: Strata Game Framework | M5-M8 | Roadmap ✅ |
+| [#84](https://github.com/jbcom/nodejs-strata/issues/84) | EPIC: Strata 2.0 Export Reorganization | M1-M2 | Roadmap ✅ |
+| [#85](https://github.com/jbcom/nodejs-strata/issues/85) | Remove type re-exports from presets | M1 | Ecosystem ✅ |
+| [#86](https://github.com/jbcom/nodejs-strata/issues/86) | Rename conflicting core exports | M1 | Ecosystem ✅ |
+| [#87](https://github.com/jbcom/nodejs-strata/issues/87) | Create Strata 2.0 Migration Guide | M1 | Ecosystem ✅ |
+| [#88](https://github.com/jbcom/nodejs-strata/issues/88) | Clean up internal/triage | M2 | Ecosystem ✅ |
+| [#89](https://github.com/jbcom/nodejs-strata/issues/89) | Extract presets and shaders to packages | M2 | Ecosystem ✅ |
+
+### Sub-Package: nodejs-strata-shaders
+
+| Issue | Title | Milestone | Project |
+|-------|-------|-----------|---------|
+| [#1](https://github.com/jbcom/nodejs-strata-shaders/issues/1) | Initial setup: Extract shaders from nodejs-strata | M2 | Ecosystem ✅ |
+
+### Sub-Package: nodejs-strata-presets
+
+| Issue | Title | Milestone | Project |
+|-------|-------|-----------|---------|
+| [#1](https://github.com/jbcom/nodejs-strata-presets/issues/1) | Initial setup: Extract presets from nodejs-strata | M2 | Ecosystem ✅ |
+
+### Sub-Package: nodejs-strata-examples
+
+| Issue | Title | Milestone | Project |
+|-------|-------|-----------|---------|
+| [#2](https://github.com/jbcom/nodejs-strata-examples/issues/2) | CI/CD to verify examples build with latest strata | M4 | Ecosystem ✅ |
+| [#3](https://github.com/jbcom/nodejs-strata-examples/issues/3) | Deploy examples to GitHub Pages | M4 | Ecosystem ✅ |
+| [#4](https://github.com/jbcom/nodejs-strata-examples/issues/4) | Migrate examples from main strata repo | M2 | Ecosystem ✅ |
+
+### Content Migration Plan
+
+| Source | Target Repo | Issue | Status |
+|--------|-------------|-------|--------|
+| `src/shaders/` | nodejs-strata-shaders | strata-shaders#1 | 🔲 Pending |
+| `src/presets/` | nodejs-strata-presets | strata-presets#1 | 🔲 Pending |
+| `examples/` | nodejs-strata-examples | strata-examples#4 | 🔲 Pending |
+| `internal/triage/` | (delete, use nodejs-agentic-triage) | strata#88 | 🔲 Pending |
+
+### Issue Transfer Plan
+
+No issues currently require transfer between repositories. Future sub-issues for:
+- Shader-specific bugs → nodejs-strata-shaders
+- Preset-specific bugs → nodejs-strata-presets
+- Example-specific bugs → nodejs-strata-examples
+
+### Labels Applied
+
+All v2.0 issues should have:
+- `v2.0` - Strata 2.0 release work
+- `milestone:M[X]` - Which milestone (to be created)
+- `architecture` / `documentation` / `breaking-change` as appropriate
+
+---
+
+## Part 8: Success Criteria
 
 ### Technical Metrics
 
@@ -569,7 +637,7 @@ Work is organized by **functional domains** with explicit issue dependencies. Mi
 
 ---
 
-## Part 8: Open Questions & Decisions Needed
+## Part 9: Open Questions & Decisions Needed
 
 ### Domain Registration
 
@@ -597,7 +665,7 @@ Work is organized by **functional domains** with explicit issue dependencies. Mi
 
 ---
 
-## Part 9: Immediate Actions by Actor
+## Part 10: Immediate Actions by Actor
 
 ### Maintainer Tasks (M3: Infrastructure)
 

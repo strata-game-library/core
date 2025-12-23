@@ -170,13 +170,9 @@ describe('createPointLightSphereGeometry', () => {
 describe('updateGodRaysLightPosition', () => {
     it('should update position vector', () => {
         const target = new THREE.Vector3();
-        const result = updateGodRaysLightPosition(45, 100, target);
-        expect(result).toBeDefined();
-        if (!result) {
-            throw new Error('updateGodRaysLightPosition returned undefined');
-        }
-        expect(result.x).toBeGreaterThan(0);
-        expect(result.y).toBeGreaterThan(0);
+        updateGodRaysLightPosition(45, 100, target);
+        expect(target.x).toBeGreaterThan(0);
+        expect(target.y).toBeGreaterThan(0);
     });
 });
 

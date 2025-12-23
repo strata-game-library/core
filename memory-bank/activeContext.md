@@ -148,19 +148,27 @@ pnpm run format:check  # Biome format check
    - RFC-002: Compositional Objects (Proposed)
    - RFC-003: World Topology (Proposed)
    - RFC-004: Declarative Games (Proposed)
-   - Phase 1 (Architecture) complete
-   - Phase 2-6 planned (8 weeks total)
 
-8. **Validation Targets**:
+8. **Milestones Defined** (issue-scoped, dependency-ordered):
+   - M1: Export Cleanup (#85, #86, #87) - starting point
+   - M2: Package Extraction (#88, #89) - blocked by M1
+   - M3: Infrastructure (domain/DNS) - parallel with M1
+   - M4: Documentation Site - blocked by M2, M3
+   - M5: Game Orchestration (RFC-001) - blocked by M1
+   - M6: Compositional Objects (RFC-002) - blocked by M1
+   - M7: World Topology (RFC-003) - blocked by M5, M6
+   - M8: Declarative API (RFC-004) - blocked by M7
+   - M9: Validation (Rivermarsh port) - blocked by M8
+
+9. **Validation Targets**:
    - nodejs-rivermarsh (Primary)
    - nodejs-otter-river-rush (Racing mode)
    - nodejs-otterfall (AI/terrain)
 
-**Next Steps**:
-- Maintainer review of STRATA_2_0_PLAN.md
-- Domain registration (strata.game)
-- Begin Phase 1 implementation (export cleanup)
-- Create GitHub issues from plan
+**Immediate Actions**:
+- Maintainer: Review STRATA_2_0_PLAN.md, configure strata.game domain (M3)
+- AI Agents: Begin M1 - Issue #85 (remove type re-exports)
+- Parallel: Draft M4 landing page content
 
 ---
 

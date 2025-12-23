@@ -320,69 +320,220 @@ src/
 
 ---
 
-## Part 6: Implementation Timeline
+## Part 6: Implementation Milestones
 
-### Phase 0: Preparation (Week 1)
+Work is organized by **functional domains** with explicit issue dependencies. Milestones are sequenced by blocking relationships, not arbitrary time estimates.
 
-| Task | Owner | Deliverable |
-|------|-------|-------------|
-| Finalize this plan | AI Agent | ✅ STRATA_2_0_PLAN.md |
-| Create GitHub issues for all tasks | TBD | Issue templates |
-| Set up domain strata.game | Maintainer | DNS configuration |
-| Configure GitHub Pages for apex | TBD | Landing page |
+### Milestone Dependency Graph
 
-### Phase 1: Export Cleanup (Week 2)
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                                                                             │
+│  M1: EXPORT CLEANUP ──────────────────┬──────────────────────────────────┐  │
+│  [#85, #86, #87]                      │                                  │  │
+│         │                             │                                  │  │
+│         ▼                             ▼                                  │  │
+│  M2: PACKAGE EXTRACTION        M3: INFRASTRUCTURE                        │  │
+│  [#88, #89, strata-*#1]        [Domain, GitHub Pages]                    │  │
+│         │                             │                                  │  │
+│         └──────────────┬──────────────┘                                  │  │
+│                        │                                                 │  │
+│                        ▼                                                 │  │
+│              M4: DOCUMENTATION SITE                                       │  │
+│              [strata.game deployment]                                    │  │
+│                        │                                                 │  │
+│         ┌──────────────┴──────────────┐                                  │  │
+│         ▼                             ▼                                  │  │
+│  M5: GAME ORCHESTRATION        M6: COMPOSITIONAL                         │  │
+│  [RFC-001, Epic #50]           [RFC-002, Epic #50]                       │  │
+│         │                             │                                  │  │
+│         └──────────────┬──────────────┘                                  │  │
+│                        │                                                 │  │
+│                        ▼                                                 │  │
+│              M7: WORLD TOPOLOGY                                          │  │
+│              [RFC-003, Epic #50]                                         │  │
+│                        │                                                 │  │
+│                        ▼                                                 │  │
+│              M8: DECLARATIVE API                                         │  │
+│              [RFC-004, Epic #50]                                         │  │
+│                        │                                                 │  │
+│                        ▼                                                 │  │
+│              M9: VALIDATION                                              │  │
+│              [Rivermarsh port]                                           │  │
+│                                                                          │  │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
 
-| Task | Issue | Deliverable |
-|------|-------|-------------|
-| Remove type re-exports from presets | #85 | Clean preset modules |
-| Rename conflicting core exports | #86 | `*Core` suffix pattern |
-| Update internal imports | - | All tests passing |
-| Create migration guide | #87 | MIGRATION.md |
+---
 
-### Phase 2: Content Extraction (Weeks 3-4)
+### M1: Export Cleanup
 
-| Task | Issue | Deliverable |
-|------|-------|-------------|
-| Extract shaders to nodejs-strata-shaders | #89 | @jbcom/strata-shaders |
-| Extract presets to nodejs-strata-presets | #89 | @jbcom/strata-presets |
-| Migrate examples to nodejs-strata-examples | strata-examples#4 | @jbcom/strata-examples |
-| Remove internal/triage | #88 | Clean workspace |
+**Epic**: #84 (Strata 2.0 Export Reorganization)
+**Blocks**: M2, M4
+**Blocked by**: None (starting point)
 
-### Phase 3: Documentation Site (Week 5)
+| Issue | Scope | Deliverable | Acceptance |
+|-------|-------|-------------|------------|
+| #85 | Remove type re-exports from presets | Clean preset modules | No duplicate exports, build passes |
+| #86 | Rename conflicting core exports | `*Core` suffix pattern | All conflicts resolved, tests pass |
+| #87 | Create migration guide | `MIGRATION.md` | Document all breaking changes |
 
-| Task | Deliverable |
-|------|-------------|
-| Build landing page for strata.game | Home page with showcase |
-| Configure TypeDoc with Strata branding | API reference |
-| Deploy sub-package docs | Subdomains active |
-| Create interactive demos | Embedded examples |
+**Done when**: All three issues closed, `pnpm run build && pnpm run test` passes.
 
-### Phase 4: Game Framework Core (Weeks 6-8)
+---
 
-| Task | RFC | Deliverable |
-|------|-----|-------------|
-| Implement SceneManager | RFC-001 | `@jbcom/strata/game` |
-| Implement ModeManager | RFC-001 | Mode switching |
-| Implement TriggerSystem | RFC-001 | Spatial triggers |
-| Implement TransitionSystem | RFC-001 | Visual transitions |
+### M2: Package Extraction
 
-### Phase 5: Advanced Framework (Weeks 9-12)
+**Epic**: #84
+**Blocks**: M4
+**Blocked by**: M1
 
-| Task | RFC | Deliverable |
-|------|-----|-------------|
-| Implement WorldGraph | RFC-003 | `@jbcom/strata/world` |
-| Implement Material System | RFC-002 | `@jbcom/strata/compose` |
-| Implement Skeleton/Creature System | RFC-002 | Creatures |
-| Implement createGame() | RFC-004 | Declarative API |
+| Issue | Scope | Target Repo | Acceptance |
+|-------|-------|-------------|------------|
+| #89 | Extract shaders | nodejs-strata-shaders | Published to npm, zero strata deps |
+| #89 | Extract presets | nodejs-strata-presets | Published to npm, depends on strata |
+| #88 | Remove internal/triage | N/A | Directory removed, workspace clean |
+| strata-examples#4 | Migrate examples | nodejs-strata-examples | All examples build with latest strata |
 
-### Phase 6: Validation (Weeks 13-14)
+**Done when**: Main repo contains no shaders/, presets/, examples/, internal/triage.
 
-| Task | Target | Metric |
-|------|--------|--------|
-| Port Rivermarsh to Strata 2.0 | nodejs-rivermarsh | <1000 lines game code |
-| Port Otter River Rush | nodejs-otter-river-rush | Racing mode works |
-| Performance testing | All | 60fps on mobile |
+---
+
+### M3: Infrastructure
+
+**Blocks**: M4
+**Blocked by**: None (parallel with M1)
+
+| Task | Owner | Deliverable | Acceptance |
+|------|-------|-------------|------------|
+| Register strata.game | Maintainer | Domain active | DNS resolves |
+| Configure apex DNS | Maintainer | A/AAAA records | GitHub Pages serves apex |
+| Configure subdomain DNS | Maintainer | CNAME records | All subdomains resolve |
+| SSL certificates | Automatic | Let's Encrypt | HTTPS works on all domains |
+
+**Done when**: `https://strata.game` and all subdomains serve content.
+
+---
+
+### M4: Documentation Site
+
+**Blocks**: M5, M6 (soft block - framework work can proceed but docs should be ready)
+**Blocked by**: M2, M3
+
+| Task | Scope | Deliverable | Acceptance |
+|------|-------|-------------|------------|
+| Apex landing page | strata.game | Hero + feature overview | Deployed, responsive |
+| TypeDoc branding | API reference | Strata-branded docs | Brand colors applied |
+| Sub-package docs | All strata-* repos | Individual doc sites | Each subdomain live |
+| Interactive demos | examples.strata.game | Runnable examples | 5+ demos working |
+
+**Done when**: All 7 documentation sites deployed and accessible.
+
+---
+
+### M5: Game Orchestration Layer
+
+**Epic**: #50 (Strata Game Framework)
+**RFC**: RFC-001
+**Blocks**: M7, M8
+**Blocked by**: M1 (clean exports required)
+
+| Component | Scope | Export Path | Acceptance |
+|-----------|-------|-------------|------------|
+| SceneManager | Scene lifecycle, loading, stacking | `@jbcom/strata/game` | Unit tests, demo |
+| ModeManager | Mode stack, push/pop/replace | `@jbcom/strata/game` | Unit tests, demo |
+| TriggerSystem | Spatial triggers as ECS components | `@jbcom/strata/game` | Unit tests, demo |
+| TransitionSystem | Fade, crossfade, wipe effects | `@jbcom/strata/game` | Unit tests, demo |
+
+**Done when**: `@jbcom/strata/game` export works, integration test with multi-scene game.
+
+---
+
+### M6: Compositional Object System
+
+**Epic**: #50
+**RFC**: RFC-002
+**Blocks**: M7, M8
+**Blocked by**: M1
+
+| Component | Scope | Export Path | Acceptance |
+|-----------|-------|-------------|------------|
+| Material System | Solid, shell, volumetric, organic | `@jbcom/strata/compose` | 10+ material presets |
+| Skeleton System | Biped, quadruped, avian, serpentine | `@jbcom/strata/compose` | 5+ skeleton presets |
+| Covering System | Region-based material application | `@jbcom/strata/compose` | Otter covering demo |
+| Prop System | Compositional props | `@jbcom/strata/compose` | 20+ prop presets |
+| Creature System | Skeleton + covering + AI + stats | `@jbcom/strata/compose` | 5+ creature presets |
+
+**Done when**: `@jbcom/strata/compose` export works, creature rendering demo.
+
+---
+
+### M7: World Topology System
+
+**Epic**: #50
+**RFC**: RFC-003
+**Blocks**: M8
+**Blocked by**: M5, M6
+
+| Component | Scope | Export Path | Acceptance |
+|-----------|-------|-------------|------------|
+| WorldGraph | Region/connection graph structure | `@jbcom/strata/world` | Graph operations work |
+| RegionSystem | Position → region detection | `@jbcom/strata/world` | Region change events |
+| ConnectionSystem | Traversal logic, unlock state | `@jbcom/strata/world` | Mode triggers on connection |
+| SpawnSystem | Region-based entity spawning | `@jbcom/strata/world` | Creatures spawn in regions |
+
+**Done when**: Multi-region world with river connections demo works.
+
+---
+
+### M8: Declarative Game API
+
+**Epic**: #50
+**RFC**: RFC-004
+**Blocks**: M9
+**Blocked by**: M5, M6, M7
+
+| Component | Scope | Export Path | Acceptance |
+|-----------|-------|-------------|------------|
+| GameDefinition | Type-safe game configuration | `@jbcom/strata/framework` | Full TypeScript coverage |
+| createGame() | Factory function | `@jbcom/strata/framework` | Creates Game instance |
+| StrataGame | React component wrapper | `@jbcom/strata/framework` | Renders complete game |
+| State Presets | RPG, action, puzzle, sandbox | `@jbcom/strata/framework` | 4 presets available |
+
+**Done when**: Simple game defined in <100 lines of config.
+
+---
+
+### M9: Validation
+
+**Blocks**: 2.0 Release
+**Blocked by**: M8
+
+| Target | Scope | Metric | Acceptance |
+|--------|-------|--------|------------|
+| Rivermarsh port | Full game migration | <1000 lines game code | Feature parity with 1.x |
+| Otter River Rush | Racing mode validation | Racing works | Leaderboards, obstacles |
+| Mobile performance | All validation targets | 60fps | Tested on 3+ devices |
+
+**Done when**: Rivermarsh runs on Strata 2.0 with documented code reduction.
+
+---
+
+### Milestone Status Tracking
+
+| Milestone | Status | Issues | Blocking |
+|-----------|--------|--------|----------|
+| M1: Export Cleanup | 🔲 Not Started | #85, #86, #87 | M2, M4 |
+| M2: Package Extraction | 🔲 Not Started | #88, #89, strata-*#1 | M4 |
+| M3: Infrastructure | 🔲 Not Started | (maintainer tasks) | M4 |
+| M4: Documentation Site | 🔲 Not Started | (new issues TBD) | M5, M6 (soft) |
+| M5: Game Orchestration | 🔲 Not Started | Epic #50 | M7, M8 |
+| M6: Compositional Objects | 🔲 Not Started | Epic #50 | M7, M8 |
+| M7: World Topology | 🔲 Not Started | Epic #50 | M8 |
+| M8: Declarative API | 🔲 Not Started | Epic #50 | M9 |
+| M9: Validation | 🔲 Not Started | (new issues TBD) | 2.0 Release |
+
+**Legend**: 🔲 Not Started | 🔄 In Progress | ✅ Complete | ⏸️ Blocked
 
 ---
 
@@ -446,27 +597,34 @@ src/
 
 ---
 
-## Part 9: Next Immediate Actions
+## Part 9: Immediate Actions by Actor
 
-### For Maintainer (Jon)
+### Maintainer Tasks (M3: Infrastructure)
 
-1. **Review this plan** and provide feedback
-2. **Register strata.game domain** (if not already registered)
-3. **Create DNS entries** for subdomains
-4. **Approve color palette extensions** for Strata brand
+| Priority | Action | Deliverable |
+|----------|--------|-------------|
+| 1 | Review this plan | Feedback/approval |
+| 2 | Register strata.game domain | Domain ownership |
+| 3 | Configure DNS (apex + subdomains) | All domains resolve |
+| 4 | Approve Strata brand extensions | Color palette sign-off |
 
-### For AI Agents
+### AI Agent Tasks (M1: Export Cleanup)
 
-1. **Create GitHub issues** from Phase 1-2 tasks
-2. **Begin Issue #85** - Remove type re-exports
-3. **Begin Issue #86** - Rename conflicting exports
-4. **Draft MIGRATION.md** for users
+| Priority | Issue | Action |
+|----------|-------|--------|
+| 1 | #85 | Remove type re-exports from presets |
+| 2 | #86 | Rename conflicting core exports with `*Core` suffix |
+| 3 | #87 | Draft MIGRATION.md documenting all breaking changes |
+| 4 | - | Verify build + tests pass after M1 completion |
 
-### For Community
+### Parallel Work (No Blockers)
 
-1. **Review RFCs** and provide feedback
-2. **Test current 1.x** to identify any missed issues
-3. **Propose examples** for the examples package
+| Actor | Milestone | Action |
+|-------|-----------|--------|
+| AI Agent | M2 | Prepare extraction scripts for shaders/presets |
+| AI Agent | M4 | Draft landing page content for strata.game |
+| Community | - | Review RFCs (#51-#54) and provide feedback |
+| Community | - | Test current 1.x for undocumented issues |
 
 ---
 
@@ -510,30 +668,34 @@ jbcom/
 
 ## Appendix B: Issue Creation Template
 
-For each Phase 1-2 task, create issues with:
+For new milestone tasks, create issues with:
 
 ```markdown
 ## Summary
 [Brief description of what needs to be done]
 
-## Context
-- Part of Strata 2.0 restructuring
-- Related to STRATA_2_0_PLAN.md
-- Blocks/Blocked by: [issues]
+## Milestone Context
+- **Milestone**: M[X] - [Name]
+- **Epic**: #[number] (if applicable)
+- **RFC**: RFC-00[X] (if applicable)
+- **Blocks**: [milestone(s) this enables]
+- **Blocked by**: [issue(s) that must complete first]
 
 ## Acceptance Criteria
 - [ ] Specific deliverable 1
 - [ ] Specific deliverable 2
-- [ ] All tests pass
-- [ ] Documentation updated
+- [ ] All tests pass (`pnpm run test`)
+- [ ] Build passes (`pnpm run build`)
+- [ ] Documentation updated (if public API)
 
 ## Technical Notes
 [Implementation hints if any]
 
 ## Labels
 - `v2.0`
+- `milestone:M[X]`
 - `breaking-change` (if applicable)
-- `architecture`
+- `architecture` / `documentation` / `infrastructure`
 ```
 
 ---

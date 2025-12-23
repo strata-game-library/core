@@ -172,4 +172,69 @@ pnpm run format:check  # Biome format check
 
 ---
 
+### Strata Game Studio Vision (2025-12-23)
+
+**Session**: cursor/strata-2-0-project-restructuring-9c1a (continued)
+
+**Major Discovery - Four Game Development Paradigms**:
+
+Identified fragmented game development tooling across organization:
+
+| Repo | Language | Focus |
+|------|----------|-------|
+| nodejs-strata | TypeScript | 3D rendering engine |
+| nodejs-strata-typescript-tutor | TypeScript | Professor Pixel education + wizards |
+| python-agentic-game-development | Python | AI-powered game academy |
+| rust-agentic-game-development | Rust | Core AI libraries |
+| rust-agentic-game-generator | Rust | RPG generation |
+
+**Unified Vision Created**: Strata Game Studio
+
+```
+STRATA GAME STUDIO
+├── Strata Engine (strata.game)        - Core framework
+├── Strata Workshop (workshop.strata.game) - AI game wizards
+├── Strata Learn (learn.strata.game)   - Education platform
+├── Strata Arcade (arcade.strata.game) - Game showcase
+└── Strata AI                          - Cross-cutting AI layer
+```
+
+**Agentic Architecture Clarified**:
+- agentic-triage = Primitives layer
+- agentic-control = Orchestration (builds on triage)
+- Workshop flows → agentic-control configurations
+- internal/triage stays (is @strata/triage, not same as agentic-triage)
+
+**Professor Pixel Evolution**:
+From "tutor mascot" → Strata's official brand mascot across ALL properties
+
+**Key Documents Created**:
+- docs/architecture/STRATA_GAME_STUDIO_VISION.md
+- Updated STRATA_2_0_PLAN.md with Part 10: Game Studio Vision
+
+**New Issues Created**:
+- #100: Migrate internal/triage to nodejs-agentic-triage
+- #101: EPIC: Strata Game Studio (added to Roadmap project)
+- typescript-tutor#25: Convert lessons to TypeScript/Strata curriculum
+- typescript-tutor#26: Full Strata sub-package alignment
+
+**Cloned & Reviewed**:
+- nodejs-strata-typescript-tutor → /tmp/
+- PR #24 analysis: Package renamed but lessons still Python (incomplete!)
+- Wizard flows discovered: platformer, racing, rpg, dungeon, space, puzzle, adventure
+
+**Validation Games Identified**:
+- nodejs-rivermarsh (mobile exploration)
+- nodejs-otter-river-rush (racing)
+- nodejs-otterfall (3D adventure)
+- nodejs-rivers-of-reckoning (roguelike)
+
+**Open Decisions for Maintainer**:
+1. Monorepo vs multi-repo for Studio?
+2. npm scope: @jbcom/ or @strata/?
+3. AI Core distribution (WASM + bindings?)
+4. Professor Pixel assets (commission art?)
+
+---
+
 Last updated: 2025-12-23

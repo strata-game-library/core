@@ -665,7 +665,133 @@ All v2.0 issues should have:
 
 ---
 
-## Part 10: Immediate Actions by Actor
+## Part 10: Strata Game Studio Vision
+
+> **New Epic: [#101](https://github.com/jbcom/nodejs-strata/issues/101) - Strata Game Studio**
+
+### Unified Platform Architecture
+
+The Strata brand unifies **four game development paradigms** into a cohesive platform:
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                         🎮 STRATA GAME STUDIO 🎮                           │
+│    "From first line of code to finished game — AI-powered, human-guided"  │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐        │
+│  │   STRATA    │  │   STRATA    │  │   STRATA    │  │   STRATA    │        │
+│  │   ENGINE    │  │   WORKSHOP  │  │    LEARN    │  │   ARCADE    │        │
+│  │   (core)    │  │  (wizards)  │  │ (education) │  │ (showcase)  │        │
+│  └──────┬──────┘  └──────┬──────┘  └──────┬──────┘  └──────┬──────┘        │
+│         └────────────────┴─────────┬──────┴─────────┬──────┘               │
+│                                    │                │                       │
+│                          ┌─────────┴────────┐       │                       │
+│                          │    STRATA AI     │◄──────┘                       │
+│                          │  (orchestration) │                               │
+│                          └─────────┬────────┘                               │
+│                                    │                                        │
+│                          ┌─────────┴────────┐                               │
+│                          │  agentic-control │                               │
+│                          └─────────┬────────┘                               │
+│                                    │                                        │
+│                          ┌─────────┴────────┐                               │
+│                          │  agentic-triage  │                               │
+│                          │   (primitives)   │                               │
+│                          └──────────────────┘                               │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+### The Four Pillars
+
+| Pillar | Domain | Purpose | Source |
+|--------|--------|---------|--------|
+| **Strata Engine** | `strata.game` | Core rendering & game framework | nodejs-strata |
+| **Strata Workshop** | `workshop.strata.game` | AI-powered game creation wizard | typescript-tutor flows |
+| **Strata Learn** | `learn.strata.game` | Interactive TypeScript education | typescript-tutor lessons |
+| **Strata Arcade** | `arcade.strata.game` | Game showcase gallery | rivermarsh, otterfall, etc. |
+
+### AI Layer Consolidation
+
+| Current Repo | Language | Target |
+|--------------|----------|--------|
+| rust-agentic-game-development | Rust | Strata AI Core (crate) |
+| rust-agentic-game-generator | Rust | Merge into AI Core |
+| python-agentic-game-development | Python | PyO3 bindings to AI Core |
+| typescript-tutor flows | TypeScript | agentic-control configs |
+
+### Professor Pixel: Brand Mascot
+
+Professor Pixel evolves from "tutor mascot" to **Strata's official mascot** across ALL properties:
+
+| Context | Personality |
+|---------|-------------|
+| **Learn** | Patient teacher, celebrates small wins |
+| **Workshop** | Creative collaborator, enthusiastic |
+| **Arcade** | Excited host, showcases achievements |
+| **Docs** | Helpful guide, provides tips |
+
+### Agentic Control Integration
+
+Workshop flows become agentic-control configurations:
+
+```yaml
+# nodejs-strata-studio/.agentic-control/config.yaml
+flows:
+  - id: platformer-wizard
+    entry: flows/platformer.yaml
+  - id: racing-wizard  
+    entry: flows/racing.yaml
+  - id: rpg-wizard
+    entry: flows/rpg.yaml
+
+ai:
+  personas:
+    professor-pixel:
+      system: "You are Professor Pixel, Strata's friendly mascot..."
+```
+
+### Studio Monorepo Structure (Future)
+
+```
+nodejs-strata-studio/          # Monorepo (from typescript-tutor)
+├── packages/
+│   ├── workshop/              # Game wizard flows
+│   ├── learn/                 # Education platform
+│   ├── arcade/                # Showcase gallery
+│   └── ai/                    # AI client (WASM)
+├── apps/
+│   ├── workshop.strata.game/  
+│   ├── learn.strata.game/     
+│   └── arcade.strata.game/    
+└── .agentic-control/
+    └── flows/                 # Workshop flow configs
+```
+
+### Related Issues
+
+| Repo | Issue | Title |
+|------|-------|-------|
+| nodejs-strata | [#101](https://github.com/jbcom/nodejs-strata/issues/101) | EPIC: Strata Game Studio |
+| typescript-tutor | [#1](https://github.com/jbcom/nodejs-strata-typescript-tutor/issues/1) | Consolidation as Professor Pixel frontend |
+| typescript-tutor | [#25](https://github.com/jbcom/nodejs-strata-typescript-tutor/issues/25) | Convert lessons to TypeScript/Strata |
+| typescript-tutor | [#26](https://github.com/jbcom/nodejs-strata-typescript-tutor/issues/26) | Full Strata sub-package alignment |
+| python-agentic-game-dev | [#1](https://github.com/jbcom/python-agentic-game-development/issues/1) | Merge into unified platform |
+| rust-agentic-game-generator | [#21](https://github.com/jbcom/rust-agentic-game-generator/issues/21) | Split and align with ecosystem |
+
+**Full Vision Document**: [docs/architecture/STRATA_GAME_STUDIO_VISION.md](docs/architecture/STRATA_GAME_STUDIO_VISION.md)
+
+---
+
+## Part 11: Immediate Actions by Actor
+
+### Maintainer Decisions (Blocking)
+
+| Question | Options | Impact |
+|----------|---------|--------|
+| **Monorepo vs Multi-repo?** | Studio as monorepo OR keep separate repos | Determines typescript-tutor transformation |
+| **npm scope** | Stay `@jbcom/` OR create `@strata/` | Package naming for all sub-packages |
+| **AI Core distribution** | WASM + native bindings OR server-only | Workshop capabilities |
+| **Professor Pixel assets** | Commission professional art OR use existing | Brand consistency |
 
 ### Maintainer Tasks (M3: Infrastructure)
 
@@ -696,40 +822,68 @@ All v2.0 issues should have:
 
 ---
 
-## Appendix A: Complete Repository Map
+## Appendix A: Complete Strata Ecosystem Map
 
 ```
 jbcom/
-├── nodejs-strata                    # Core framework package
-│   ├── src/
-│   │   ├── core/                    # Pure TypeScript
-│   │   ├── react/                   # React components (renamed from components/)
-│   │   ├── game/                    # NEW: Game orchestration
-│   │   ├── world/                   # NEW: World topology
-│   │   ├── compose/                 # NEW: Compositional objects
-│   │   └── framework/               # NEW: Declarative games
-│   └── docs/                        # → Deploys to strata.game
 │
-├── nodejs-strata-shaders            # GLSL shaders package
-│   └── docs/                        # → Deploys to shaders.strata.game
+├─────────────── CORE ────────────────
 │
-├── nodejs-strata-presets            # Preset configurations
-│   └── docs/                        # → Deploys to presets.strata.game
+├── nodejs-strata                      # Core framework package
+│   ├── src/core/                      # Pure TypeScript
+│   ├── src/react/                     # React components
+│   ├── src/game/                      # NEW: Game orchestration
+│   ├── src/world/                     # NEW: World topology
+│   ├── src/compose/                   # NEW: Compositional objects
+│   ├── src/framework/                 # NEW: Declarative games
+│   └── docs/                          # → strata.game
 │
-├── nodejs-strata-examples           # Interactive examples
-│   └── docs/                        # → Deploys to examples.strata.game
+├─────────────── SUB-PACKAGES ─────────
 │
-├── nodejs-strata-typescript-tutor   # Professor Pixel platform
-│   └── docs/                        # → Deploys to tutor.strata.game
+├── nodejs-strata-shaders              # GLSL shaders
+│   └── docs/                          # → shaders.strata.game
 │
-├── nodejs-strata-react-native-plugin # React Native support
-│   └── docs/                        # → Deploys to react-native.strata.game
+├── nodejs-strata-presets              # Preset configurations
+│   └── docs/                          # → presets.strata.game
 │
-├── nodejs-strata-capacitor-plugin   # Capacitor support
-│   └── docs/                        # → Deploys to capacitor.strata.game
+├── nodejs-strata-examples             # Interactive examples
+│   └── docs/                          # → examples.strata.game
 │
-└── nodejs-rivermarsh                # Primary validation game
-    └── Built with @jbcom/strata 2.0
+├── nodejs-strata-react-native-plugin  # React Native support
+│   └── docs/                          # → react-native.strata.game
+│
+├── nodejs-strata-capacitor-plugin     # Capacitor support
+│   └── docs/                          # → capacitor.strata.game
+│
+├─────────────── STUDIO ──────────────
+│
+├── nodejs-strata-typescript-tutor     # → nodejs-strata-studio
+│   ├── packages/workshop/             # Game wizard flows
+│   ├── packages/learn/                # Education platform
+│   ├── packages/arcade/               # Showcase gallery
+│   ├── .agentic-control/              # Flow orchestration
+│   └── apps/                          # Deployed frontends
+│       ├── workshop.strata.game/
+│       ├── learn.strata.game/
+│       └── arcade.strata.game/
+│
+├─────────────── AI LAYER ────────────
+│
+├── rust-agentic-game-development      # Core AI libraries (Rust)
+├── rust-agentic-game-generator        # RPG generation → merge into above
+├── python-agentic-game-development    # Python bindings (PyO3)
+│
+├── nodejs-agentic-control             # Orchestration layer
+│   └── depends on: agentic-triage
+│
+├── nodejs-agentic-triage              # Primitives layer
+│
+├─────────────── VALIDATION GAMES ────
+│
+├── nodejs-rivermarsh                  # Primary validation (mobile exploration)
+├── nodejs-otter-river-rush            # Racing mode validation
+├── nodejs-otterfall                   # 3D adventure validation
+└── nodejs-rivers-of-reckoning         # Roguelike validation
 ```
 
 ---

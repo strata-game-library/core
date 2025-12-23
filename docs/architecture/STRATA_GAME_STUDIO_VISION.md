@@ -1,0 +1,372 @@
+# Strata Game Studio: Unified Vision
+
+> **Unifying four game development paradigms under one powerful brand**
+
+## The Four Pillars (Current State)
+
+Today, game development tooling is fragmented across multiple repositories with different languages, approaches, and branding:
+
+| Repo | Language | Focus | Current Brand |
+|------|----------|-------|---------------|
+| `nodejs-strata` | TypeScript | 3D rendering engine for R3F | Strata |
+| `nodejs-strata-typescript-tutor` | TypeScript | Interactive education + wizard flows | Professor Pixel |
+| `python-agentic-game-development` | Python | AI-assisted game dev academy | Professor Pixel's Arcade Academy |
+| `rust-agentic-game-generator` | Rust | AI-powered RPG generation | (none) |
+| `rust-agentic-game-development` | Rust | Core AI client libraries | (none) |
+
+**Plus validation games:**
+- `nodejs-rivermarsh` - Mobile exploration
+- `nodejs-otter-river-rush` - Racing
+- `nodejs-otterfall` - 3D adventure
+- `nodejs-rivers-of-reckoning` - Narrative roguelike
+
+## The Vision: Strata Game Studio
+
+**One brand. Four capabilities. Infinite games.**
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                                                                             │
+│                         🎮 STRATA GAME STUDIO 🎮                           │
+│                                                                             │
+│    "From first line of code to finished game — AI-powered, human-guided"  │
+│                                                                             │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐        │
+│  │   STRATA    │  │   STRATA    │  │   STRATA    │  │   STRATA    │        │
+│  │   ENGINE    │  │   WORKSHOP  │  │    LEARN    │  │   ARCADE    │        │
+│  │             │  │             │  │             │  │             │        │
+│  │  Rendering  │  │  Creation   │  │  Education  │  │  Showcase   │        │
+│  │  Framework  │  │  Wizards    │  │  Platform   │  │  Gallery    │        │
+│  └──────┬──────┘  └──────┬──────┘  └──────┬──────┘  └──────┬──────┘        │
+│         │                │                │                │               │
+│         └────────────────┴────────────────┴────────────────┘               │
+│                                    │                                        │
+│                          ┌─────────┴─────────┐                             │
+│                          │   STRATA AI       │                             │
+│                          │   (Orchestration) │                             │
+│                          └───────────────────┘                             │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## The Four Pillars (Unified)
+
+### 1. Strata Engine (`strata.game`)
+
+**The core rendering and game framework for React Three Fiber.**
+
+- Terrain, water, vegetation, sky, volumetrics
+- ECS, physics, AI, animation, pathfinding
+- Game orchestration (scenes, modes, triggers)
+- Compositional objects (materials, skeletons, creatures)
+- World topology (regions, connections)
+
+**Package:** `@jbcom/strata`
+**Domain:** `strata.game` (apex)
+
+---
+
+### 2. Strata Workshop (`workshop.strata.game`)
+
+**AI-powered game creation wizard with Professor Pixel as guide.**
+
+Consolidates:
+- Game wizard flows from typescript-tutor (platformer, racing, RPG, dungeon, space, puzzle)
+- AI generation capabilities from rust-agentic-game-generator
+- Orchestration via agentic-control
+
+**Key Features:**
+- Conversational game design with Professor Pixel
+- Template-based project scaffolding
+- Asset selection and customization
+- Code generation targeting Strata Engine
+- Export to standalone projects
+
+**Package:** `@strata/workshop`
+**Domain:** `workshop.strata.game`
+
+**Agentic Control Integration:**
+```yaml
+# .agentic-control/workshop.yaml
+flows:
+  game-wizard:
+    entry: platformer | racing | rpg | dungeon | space | puzzle | adventure
+    orchestration:
+      provider: agentic-control
+      primitives: agentic-triage
+    ai:
+      asset-generation: strata-ai
+      code-generation: strata-ai
+      dialogue: professor-pixel
+```
+
+---
+
+### 3. Strata Learn (`learn.strata.game`)
+
+**Interactive education platform for TypeScript game development.**
+
+Consolidates:
+- Curriculum from typescript-tutor
+- Teaching methodology from Professor Pixel's Arcade Academy
+- Integration with actual Strata APIs
+
+**Curriculum:**
+1. **TypeScript Foundations** - Variables, types, functions
+2. **React Basics** - Components, hooks, state
+3. **3D Concepts** - Three.js, R3F fundamentals
+4. **Strata Essentials** - Terrain, water, sky
+5. **Game Mechanics** - ECS, physics, AI
+6. **Building Games** - Full project walkthroughs
+
+**Package:** `@strata/learn`
+**Domain:** `learn.strata.game`
+
+---
+
+### 4. Strata Arcade (`arcade.strata.game`)
+
+**Showcase gallery of games built with Strata.**
+
+- Playable demos (Rivermarsh, Otter River Rush, Otterfall)
+- Community submissions
+- "Made with Strata" badge program
+- Performance benchmarks
+- Source code links
+
+**Domain:** `arcade.strata.game`
+
+---
+
+## Strata AI (Cross-Cutting)
+
+**The AI brain powering Workshop, Learn, and Arcade.**
+
+Consolidates:
+- `rust-agentic-game-development` - Core AI client (multi-provider LLM)
+- `rust-agentic-game-generator` - RPG generation algorithms
+- `python-agentic-game-development` - Python bindings + training data
+
+**Capabilities:**
+- **Asset Generation** - Sprites, 3D models, audio via external APIs
+- **Code Generation** - TypeScript/Strata code from natural language
+- **Game Blending** - Combine genres and mechanics
+- **Dialogue** - Professor Pixel personality and teaching
+
+**Architecture:**
+```
+┌──────────────────────────────────────────────────┐
+│                   Strata AI                      │
+├──────────────────────────────────────────────────┤
+│  ┌────────────┐  ┌────────────┐  ┌────────────┐ │
+│  │   Rust     │  │   Python   │  │   Node.js  │ │
+│  │   Core     │──│  Bindings  │──│   Client   │ │
+│  │            │  │  (PyO3)    │  │  (WASM)    │ │
+│  └────────────┘  └────────────┘  └────────────┘ │
+│                       │                          │
+│              ┌────────┴────────┐                │
+│              │ Multi-Provider  │                │
+│              │ LLM Abstraction │                │
+│              └─────────────────┘                │
+│                       │                          │
+│  ┌─────────┬─────────┬─────────┬─────────┐     │
+│  │ OpenAI  │ Anthropic│ Ollama  │ Gemini  │     │
+│  └─────────┴─────────┴─────────┴─────────┘     │
+└──────────────────────────────────────────────────┘
+```
+
+---
+
+## Professor Pixel: Brand Mascot
+
+Professor Pixel evolves from "tutor mascot" to **Strata's official mascot** across all properties:
+
+| Context | Personality |
+|---------|-------------|
+| **Learn** | Patient teacher, encouraging, celebrates small wins |
+| **Workshop** | Creative collaborator, enthusiastic about ideas |
+| **Arcade** | Excited host, showcases community achievements |
+| **Docs** | Helpful guide, provides tips and warnings |
+
+**Visual Identity:**
+- Pixel art character (retro gaming nostalgia)
+- Strata color palette (terrain browns, water blues, vegetation greens, sky purples, game golds)
+- Animated expressions for different contexts
+
+---
+
+## Domain Structure
+
+```
+strata.game/                  # Apex - Engine documentation
+├── docs/                     # TypeDoc API reference
+├── guides/                   # Getting started, tutorials
+└── api/                      # API playground
+
+workshop.strata.game/         # Game creation wizard
+├── create/                   # New project wizard
+├── templates/                # Genre templates
+└── assets/                   # Asset library browser
+
+learn.strata.game/            # Education platform
+├── lessons/                  # Interactive curriculum
+├── playground/               # Code sandbox
+└── progress/                 # User progress tracking
+
+arcade.strata.game/           # Game showcase
+├── featured/                 # Curated games
+├── community/                # User submissions
+└── jams/                     # Game jam events
+```
+
+---
+
+## Repository Consolidation
+
+### Phase 1: Immediate
+
+| Current | Action | Target |
+|---------|--------|--------|
+| `nodejs-strata` | Keep as core | `@jbcom/strata` |
+| `nodejs-strata-typescript-tutor` | Rename + extend | `@strata/studio` (monorepo root) |
+| `nodejs-strata-shaders` | Extract from main | `@strata/shaders` |
+| `nodejs-strata-presets` | Extract from main | `@strata/presets` |
+| `nodejs-strata-examples` | Keep | `@strata/examples` |
+
+### Phase 2: Consolidation
+
+| Current | Action | Target |
+|---------|--------|--------|
+| `python-agentic-game-development` | Merge AI logic | `@strata/ai` (via WASM) |
+| `rust-agentic-game-development` | Core library | `strata-ai-core` (Rust crate) |
+| `rust-agentic-game-generator` | Merge generation | `strata-ai-core` |
+
+### Phase 3: Studio Structure
+
+```
+nodejs-strata-studio/          # Monorepo
+├── packages/
+│   ├── workshop/              # Game wizard (from typescript-tutor flows)
+│   ├── learn/                 # Education (from typescript-tutor lessons)
+│   ├── arcade/                # Showcase gallery
+│   └── ai/                    # AI client (WASM from Rust)
+├── apps/
+│   ├── workshop.strata.game/  # Workshop frontend
+│   ├── learn.strata.game/     # Learn frontend  
+│   └── arcade.strata.game/    # Arcade frontend
+└── .agentic-control/
+    └── flows/                 # Workshop flow configs
+```
+
+---
+
+## Agentic Control Integration
+
+The Workshop flows become agentic-control configurations:
+
+```yaml
+# nodejs-strata-studio/.agentic-control/config.yaml
+name: strata-studio
+version: 1.0.0
+
+primitives:
+  source: "@jbcom/agentic-triage"
+  
+flows:
+  # Game creation wizards
+  - id: platformer-wizard
+    entry: flows/platformer.yaml
+    triggers:
+      - user-intent: "create platformer game"
+      - template: "platformer"
+    
+  - id: racing-wizard
+    entry: flows/racing.yaml
+    triggers:
+      - user-intent: "create racing game"
+      - template: "racing"
+      
+  - id: rpg-wizard
+    entry: flows/rpg.yaml
+    triggers:
+      - user-intent: "create RPG"
+      - template: "rpg"
+
+ai:
+  providers:
+    - anthropic
+    - openai
+    - ollama
+  default: anthropic
+  
+  personas:
+    professor-pixel:
+      system: |
+        You are Professor Pixel, Strata's friendly mascot.
+        You guide users through game creation with enthusiasm.
+        Use gaming metaphors and celebrate progress.
+```
+
+---
+
+## Success Metrics
+
+### Brand Unification
+- [ ] All game-related repos use "Strata" branding
+- [ ] Professor Pixel appears across all properties
+- [ ] Consistent visual design (colors, typography)
+- [ ] Cross-linking between all subdomains
+
+### Technical Integration
+- [ ] Workshop generates valid Strata Engine code
+- [ ] Learn curriculum teaches actual Strata APIs
+- [ ] Arcade showcases run on Strata Engine
+- [ ] AI capabilities accessible from all platforms
+
+### User Journey
+- [ ] New user: Learn → Workshop → Publish to Arcade
+- [ ] Experienced dev: Strata Engine docs → Examples
+- [ ] AI-assisted: Workshop wizard → Generated project
+
+---
+
+## Open Questions
+
+1. **Monorepo vs Multi-repo?**
+   - Studio as monorepo with packages?
+   - Or keep separate repos with shared dependencies?
+
+2. **Rust AI Core Distribution**
+   - WASM for browser?
+   - Native bindings for Node.js?
+   - Keep Python bindings for training/tooling?
+
+3. **Professor Pixel Assets**
+   - Commission professional pixel art?
+   - Animate for different expressions?
+   - Voice synthesis via ElevenLabs?
+
+4. **Community Features**
+   - User accounts across properties?
+   - Game jam infrastructure?
+   - Asset marketplace?
+
+---
+
+## Immediate Next Steps
+
+1. **Create Epic Issue** - "Strata Game Studio Unification" spanning all repos
+2. **Prototype Studio Monorepo** - Start with typescript-tutor as base
+3. **Update Branding** - Apply Strata brand to Professor Pixel properties
+4. **Document AI Architecture** - How Rust core serves TypeScript/Python
+5. **Workshop Flow Extraction** - Move flows to agentic-control configs
+
+---
+
+*Last Updated: 2025-12-23*
+*Status: Proposal*
+*Owner: TBD*

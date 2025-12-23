@@ -38,6 +38,7 @@
  */
 
 import * as THREE from 'three';
+import { easeInOutCubic, lerp, lerpAngle } from './math/utils';
 
 /**
  * Configuration for trauma-based camera shake.
@@ -98,19 +99,6 @@ export interface CameraPath {
 }
 
 /**
- * Linear interpolation between two numbers.
- *
- * @param a - Start value
- * @param b - End value
- * @param t - Interpolation factor (0-1), clamped automatically
- * @returns Interpolated value
- * @category Player Experience
- */
-function lerp(a: number, b: number, t: number): number {
-    return a + (b - a) * Math.max(0, Math.min(1, t));
-}
-
-/**
  * Linear interpolation between two Vector3 positions.
  *
  * @param a - Start position
@@ -158,7 +146,6 @@ export function slerp(
     return result.copy(qa).slerp(qb, Math.max(0, Math.min(1, t)));
 }
 
-<<<<<<< HEAD
 /**
  * Unity-style smooth damping for scalar values.
  *
@@ -177,13 +164,10 @@ export function slerp(
  * @example
  * ```typescript
  * const velocity = { value: 0 };
- * const smoothZoom = smoothDamp(currentZoom, targetZoom, velocity, 0.3, deltaTime);
+ * const smoothZoom = smoothDampScalar(currentZoom, targetZoom, velocity, 0.3, deltaTime);
  * ```
  */
-export function smoothDamp(
-=======
-function smoothDamp(
->>>>>>> a3472d2 (Resolve remaining duplicate exports (smoothDamp, WindConfig, lerp))
+export function smoothDampScalar(
     current: number,
     target: number,
     velocity: { value: number },
@@ -260,9 +244,9 @@ export function smoothDampVector3(
     const velY = { value: velocity.y };
     const velZ = { value: velocity.z };
 
-    result.x = smoothDamp(current.x, target.x, velX, smoothTime, deltaTime, maxSpeed);
-    result.y = smoothDamp(current.y, target.y, velY, smoothTime, deltaTime, maxSpeed);
-    result.z = smoothDamp(current.z, target.z, velZ, smoothTime, deltaTime, maxSpeed);
+    result.x = smoothDampScalar(current.x, target.x, velX, smoothTime, deltaTime, maxSpeed);
+    result.y = smoothDampScalar(current.y, target.y, velY, smoothTime, deltaTime, maxSpeed);
+    result.z = smoothDampScalar(current.z, target.z, velZ, smoothTime, deltaTime, maxSpeed);
 
     velocity.set(velX.value, velY.value, velZ.value);
 
@@ -432,59 +416,6 @@ export class FOVTransition {
 }
 
 /**
- * Cubic ease-in-out interpolation.
- *
- * Starts slow, accelerates, then decelerates. Standard easing for smooth animations.
- *
- * @param t - Progress (0-1)
- * @returns Eased value (0-1)
- * @category Player Experience
- */
-export function easeInOutCubic(t: number): number {
-    return t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2;
-}
-
-/**
- * Cubic ease-out interpolation.
- *
- * Starts fast, then decelerates. Good for camera arrivals.
- *
- * @param t - Progress (0-1)
- * @returns Eased value (0-1)
- * @category Player Experience
- */
-function easeOutCubic(t: number): number {
-    return 1 - (1 - t) ** 3;
-}
-
-/**
- * Cubic ease-in interpolation.
- *
- * Starts slow, then accelerates. Good for camera departures.
- *
- * @param t - Progress (0-1)
- * @returns Eased value (0-1)
- * @category Player Experience
- */
-export function easeInCubic(t: number): number {
-    return t * t * t;
-}
-
-/**
- * Elastic ease-out interpolation.
- *
- * Overshoots target with bounce-back. Dramatic but can be disorienting.
- *
- * @param t - Progress (0-1)
- * @returns Eased value (0-1)
- * @category Player Experience
- */
-function easeOutElastic(t: number): number {
-    const c4 = (2 * Math.PI) / 3;
-    return t === 0 ? 0 : t === 1 ? 1 : 2 ** (-10 * t) * Math.sin((t * 10 - 0.75) * c4) + 1;
-}
-
-/**
  * Evaluate a Catmull-Rom spline at a given position.
  *
  * Produces smooth curves through waypoints for cinematic camera paths.
@@ -603,11 +534,13 @@ export function calculateLookAhead(
 ): THREE.Vector3 {
     const speed = velocity.length();
     if (speed < 0.01) {
-        return lerpVector3(currentLookAhead, new THREE.Vector3(), deltaTime / lookAheadSmoothing);
+        const t = Math.min(1, deltaTime / lookAheadSmoothing);
+        return new THREE.Vector3().lerpVectors(currentLookAhead, new THREE.Vector3(), t);
     }
 
     const targetLookAhead = velocity.clone().normalize().multiplyScalar(lookAheadDistance);
-    return lerpVector3(currentLookAhead, targetLookAhead, deltaTime / lookAheadSmoothing);
+    const t = Math.min(1, deltaTime / lookAheadSmoothing);
+    return new THREE.Vector3().lerpVectors(currentLookAhead, targetLookAhead, t);
 }
 
 /**

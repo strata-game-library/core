@@ -363,3 +363,44 @@ export function radToDeg(radians: number): number {
 export function approximately(a: number, b: number, epsilon: number = 0.00001): boolean {
     return Math.abs(a - b) < epsilon;
 }
+
+/**
+ * Cubic ease-out interpolation.
+ *
+ * @param t - Progress (0-1)
+ * @returns Eased value (0-1)
+ */
+export function easeOutCubic(t: number): number {
+    return 1 - (1 - t) ** 3;
+}
+
+/**
+ * Cubic ease-in interpolation.
+ *
+ * @param t - Progress (0-1)
+ * @returns Eased value (0-1)
+ */
+export function easeInCubic(t: number): number {
+    return t * t * t;
+}
+
+/**
+ * Cubic ease-in-out interpolation.
+ *
+ * @param t - Progress (0-1)
+ * @returns Eased value (0-1)
+ */
+export function easeInOutCubic(t: number): number {
+    return t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2;
+}
+
+/**
+ * Elastic ease-out interpolation.
+ *
+ * @param t - Progress (0-1)
+ * @returns Eased value (0-1)
+ */
+export function easeOutElastic(t: number): number {
+    const c4 = (2 * Math.PI) / 3;
+    return t === 0 ? 0 : t === 1 ? 1 : 2 ** (-10 * t) * Math.sin((t * 10 - 0.75) * c4) + 1;
+}

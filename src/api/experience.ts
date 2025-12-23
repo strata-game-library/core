@@ -215,6 +215,7 @@ export {
     setupAutoUnlock,
     slerp,
     smoothDamp,
+    smoothDampScalar,
     smoothDampVector3,
     suspendAudioContext,
     unlockAudioContext,

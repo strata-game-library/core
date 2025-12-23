@@ -3,7 +3,7 @@
  */
 
 import * as THREE from 'three';
-import { easeInOutCubic, lerp, slerp } from './math/index';
+import { easeInOutCubic, lerp } from './math/index';
 
 export interface CameraShakeConfig {
     trauma: number;

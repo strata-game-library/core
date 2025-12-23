@@ -10,7 +10,6 @@
 
 // Import core types directly to avoid circular dependency or missing re-exports
 import * as Core from '../core';
-import * as Components from '../components';
 
 // Weather state from components
 export type {

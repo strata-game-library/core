@@ -3,7 +3,7 @@
  */
 
 import * as THREE from 'three';
-import { lerp, slerp } from './math/index';
+import { easeInOutCubic, lerp, slerp } from './math/index';
 
 export interface CameraShakeConfig {
     trauma: number;
@@ -175,7 +175,7 @@ export class FOVTransition {
         this.startFOV = config.startFOV;
         this.endFOV = config.endFOV;
         this.duration = config.duration;
-        this.easing = config.easing ?? ((t: number) => t);
+        this.easing = config.easing ?? easeInOutCubic;
     }
 
     update(deltaTime: number): number {

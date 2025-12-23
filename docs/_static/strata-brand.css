@@ -58,7 +58,7 @@
   /* Game Framework - Action gold */
   --strata-game: #eab308;
   --strata-game-light: #fde047;
-  --strata-game-dark: #a16207;
+  --strata-game-dark: #b45309;       /* Deep gold - distinct from terrain */
   
   /* Semantic Layer Mapping */
   --strata-layer-0: var(--color-primary);     /* Core */

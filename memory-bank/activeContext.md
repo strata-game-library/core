@@ -787,4 +787,34 @@ All workflows use consistent configuration:
 
 ---
 
-Last updated: 2025-12-24T07:50:00Z
+### Cursor Background Composer API - INTEGRATED ✅ (2025-12-24)
+
+Based on: https://github.com/mjdierkes/cursor-background-agent-api
+
+**BREAKING CHANGE**: Use `CURSOR_SESSION_TOKEN` instead of `CURSOR_API_KEY`
+
+**Authentication**: Session token via `WorkosCursorSessionToken` cookie (NOT API key)
+
+**API Endpoints**:
+| Endpoint | Purpose |
+|----------|---------|
+| `/api/auth/startBackgroundComposerFromSnapshot` | Create composer |
+| `/api/background-composer/list` | List composers |
+| `/api/background-composer/get-detailed-composer` | Get details |
+| `/api/background-composer/open-pr` | Create PR |
+
+**Getting the Token**:
+1. Log in to cursor.com
+2. DevTools → Application → Cookies
+3. Copy `WorkosCursorSessionToken` value
+4. Set as `CURSOR_SESSION_TOKEN` secret
+
+**Updated Files**:
+- `scripts/cursor-client.mjs` - Reusable client module
+- `scripts/ecosystem-curator.mjs` - Uses Background Composer
+- `scripts/ecosystem-harvester.mjs` - Uses Background Composer
+- `.github/workflows/ecosystem-delegator.yml` - Uses Background Composer
+
+---
+
+Last updated: 2025-12-24T08:00:00Z

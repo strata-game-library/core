@@ -247,24 +247,23 @@ From "tutor mascot" → Strata's official brand mascot across ALL properties
 
 ### AI Design Automation (2025-12-23)
 
-**Configured**:
-- 21st.dev Magic MCP ✅
+**21st.dev Setup** (for local Cursor agent):
 - GitHub App integration ✅
 - Sandboxes ✅
+- MCP config issues created for all repos
 
-**MCP Servers Available**:
-| Server | Purpose |
-|--------|---------|
-| 21st-magic | AI UI component generation |
-| github | GitHub API access |
-| context7 | Documentation context |
+**Issues Created for Local Agent**:
+| Repo | Issue |
+|------|-------|
+| nodejs-strata | #102 |
+| nodejs-strata-typescript-tutor | #28 |
+| nodejs-strata-examples | #5 |
+| nodejs-strata-shaders | #3 |
+| nodejs-strata-presets | #4 |
+| nodejs-agentic-control | #16 |
+| nodejs-agentic-triage | #33 |
 
-**Usage**: In Cursor, use `/ui` command to generate components
-
-**Files Updated**:
-- `.kiro/settings/mcp.json` - Added 21st-magic
-- `.cursor/mcp.json` - Created with standard MCP config
-- `docs/architecture/AI_DESIGN_AUTOMATION.md` - Research + implementation
+**Research Doc**: `docs/architecture/AI_DESIGN_AUTOMATION.md`
 
 ---
 

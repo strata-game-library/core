@@ -736,4 +736,34 @@ From this point, the nightly workflow takes over autonomous development operatio
 
 ---
 
-Last updated: 2025-12-24T05:09:00Z
+### Ecosystem Sage - OPERATIONAL ✅ (2025-12-24)
+
+**Status**: FULLY OPERATIONAL
+
+**Function**: On-call intelligent advisor, answering technical questions, decomposing tasks, unblocking agents.
+
+**Triggered by**: `@sage` or `/sage` comments, `workflow_call`, `workflow_dispatch`.
+
+**Ollama Configuration** (matches existing `ollama-cloud-pr-review.yml`):
+- `OLLAMA_HOST`: `${{ vars.OLLAMA_HOST || 'https://ollama.com' }}`
+- `OLLAMA_API_KEY`: `${{ secrets.OLLAMA_API_KEY }}` (Bearer auth)
+- `OLLAMA_MODEL`: `glm-4.6:cloud`
+- Endpoint: `${OLLAMA_HOST}/api/chat`
+
+**Test Run**: ✅ Run 20480534144 - Answered "What is the Ecosystem Curator?" correctly.
+
+---
+
+### Orchestration Triad - COMPLETE ✅
+
+| Workflow | Schedule | Purpose |
+|----------|----------|---------|
+| Ecosystem Curator | Nightly (2 AM UTC) | Scan, triage, spawn agents |
+| Ecosystem Harvester | Every 15 min | Monitor agents, merge PRs, request reviews |
+| Ecosystem Sage | On-call | Answer questions, decompose tasks, unblock |
+
+All three use the standard Ollama pattern from `ollama-cloud-pr-review.yml`.
+
+---
+
+Last updated: 2025-12-24T07:05:00Z

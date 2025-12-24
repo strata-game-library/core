@@ -13,9 +13,6 @@ import {
 } from '../../core/marching-cubes';
 import { getTerrainHeight, type BiomeData as SDFBiomeData, sdTerrain } from '../../core/sdf';
 
-export type { MarchingCubesOptions, TerrainChunk } from '../../core/marching-cubes';
-export type { BiomeData } from '../../core/sdf';
-
 export interface TerrainOptions {
     biomes: SDFBiomeData[];
     resolution?: number;

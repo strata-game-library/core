@@ -12,9 +12,6 @@ import {
 } from '../../core/instancing';
 import type { BiomeData } from '../../core/sdf';
 
-export type { InstanceData } from '../../core/instancing';
-export type { BiomeData } from '../../core/sdf';
-
 export interface VegetationOptions {
     count: number;
     areaSize: number;
@@ -80,6 +77,9 @@ export function createVegetationMesh(options: VegetationOptions): THREE.Instance
         material,
         count,
         instances,
+        enableWind,
+        windStrength,
+        lodDistance,
     });
 }
 

@@ -630,4 +630,73 @@ Cursor Cloud Agent (supervisor)
 
 ---
 
-Last updated: 2025-12-24T02:52:00Z
+### Ecosystem Curator Deployment (2025-12-24)
+
+**The Final Piece**: Autonomous nightly orchestration workflow that does what was done manually:
+
+1. **Discovers** all repos in jbcom organization
+2. **Triages** open issues:
+   - Complex → Jules session
+   - Quick fix → Cursor agent
+   - Agent questions → Ollama resolution
+3. **Processes** PRs:
+   - Failed CI → spawn fix agent
+   - Blocking reviews → spawn address agent
+   - Ready → auto-merge
+4. **Monitors** agent fleet status
+5. **Auto-approves** waiting Jules plans
+6. **Reports** stats to GitHub Actions summary
+
+**Agent Deployed**: `bc-d523f97b-576f-49a7-b81e-4d61fe86bd01`
+- Task: Create Ecosystem Curator workflow
+- Branch: `feat/ecosystem-curator`
+- Auto-create PR: Yes
+
+**Files to Create**:
+- `.github/workflows/ecosystem-curator.yml` - Nightly at 2 AM UTC
+- `scripts/ecosystem-curator.mjs` - Main orchestration script
+- Copies in `repository-files/always-sync/`
+
+**Missing Secret Issue**: [#432](https://github.com/jbcom/control-center/issues/432)
+- JULES_GITHUB_TOKEN needs to be added as org secret
+
+**Workflow Features**:
+- Schedule: `cron: '0 2 * * *'` (nightly)
+- Manual: `workflow_dispatch` with dry_run and target_repo inputs
+- Secrets: GITHUB_TOKEN, CURSOR_API_KEY, GOOGLE_JULES_API_KEY, JULES_GITHUB_TOKEN
+- AI: Uses Ollama GLM-4.6 Cloud for blocker resolution
+
+**Handoff Complete**:
+The Ecosystem Curator agent will:
+1. Create the PR with all files
+2. Get CI passing
+3. Merge to main
+4. Trigger workflow_dispatch to test
+5. Verify it properly orchestrates the entire ecosystem
+
+From this point, the nightly workflow takes over autonomous development operations.
+
+---
+
+### Final Fleet Status (2025-12-24T03:01:00Z)
+
+| Category | Count |
+|----------|-------|
+| Total Agents | 20 |
+| RUNNING | 11 |
+| FINISHED | 9 |
+| Repos Covered | 15+ |
+
+**Key Active Agents**:
+- `bc-d523f97b` - Ecosystem Curator (creating the final workflow)
+- `bc-ef3cbd3a` - Jules PR #421 review (control-center)
+- `bc-3e4296f1` - Jules PR #103 completion (strata)
+- `bc-359331ed` - Jules PR #21 review (python-vendor-connectors)
+- `bc-4482ee35` - Jules PR #18 completion (agentic-control)
+- `bc-a693b54c` - Jules PR #35 completion (agentic-triage)
+
+**Transition**: From manual orchestration → autonomous nightly Ecosystem Curator
+
+---
+
+Last updated: 2025-12-24T03:02:00Z

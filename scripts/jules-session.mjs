@@ -11,23 +11,29 @@ const BASE_URL = 'https://jules.googleapis.com/v1alpha';
 
 async function listSources() {
   const res = await fetch(`${BASE_URL}/sources`, {
-    headers: { 'x-goog-api-key': API_KEY }
+    headers: { 'X-Goog-Api-Key': API_KEY }
   });
   const data = await res.json();
   return data.sources || [];
 }
 
-async function createSession(sourceName, prompt, branch = 'main') {
+async function createSession(sourceName, prompt, branch = 'main', title = null) {
   const res = await fetch(`${BASE_URL}/sessions`, {
     method: 'POST',
     headers: {
-      'x-goog-api-key': API_KEY,
+      'X-Goog-Api-Key': API_KEY,
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
       prompt,
-      source: sourceName,
-      startingBranch: branch
+      sourceContext: {
+        source: sourceName,
+        githubRepoContext: {
+          startingBranch: branch
+        }
+      },
+      automationMode: 'AUTO_CREATE_PR',
+      title: title || prompt.slice(0, 50)
     })
   });
   return await res.json();
@@ -35,7 +41,7 @@ async function createSession(sourceName, prompt, branch = 'main') {
 
 async function listSessions() {
   const res = await fetch(`${BASE_URL}/sessions`, {
-    headers: { 'x-goog-api-key': API_KEY }
+    headers: { 'X-Goog-Api-Key': API_KEY }
   });
   const data = await res.json();
   return data.sessions || [];

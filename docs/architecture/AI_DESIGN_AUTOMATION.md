@@ -330,13 +330,19 @@ gh issue create --repo jbcom/control-center \
 
 ---
 
-## Recommended Immediate Actions
+## Implementation Status
 
-1. **Install 21st.dev Magic MCP** in Cursor for immediate UI generation
-2. **Set up screenshot-to-code** for design reference conversion
-3. **Create agentic-control flow** for design automation
-4. **Document design tokens** in CSS variables format
-5. **Integrate into CI** for design QA checks
+### ✅ Completed
+
+1. **21st.dev Magic MCP** - Configured with GitHub App integration + Sandboxes
+2. **MCP Configuration** - Added to `.kiro/settings/mcp.json`
+
+### 🔲 Remaining
+
+1. **Set up screenshot-to-code** for design reference conversion
+2. **Create agentic-control flow** for design automation
+3. **Document design tokens** in CSS variables format
+4. **Integrate into CI** for design QA checks
 
 ---
 

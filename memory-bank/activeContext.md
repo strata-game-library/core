@@ -245,6 +245,29 @@ From "tutor mascot" → Strata's official brand mascot across ALL properties
 
 ---
 
+### AI Design Automation (2025-12-23)
+
+**Configured**:
+- 21st.dev Magic MCP ✅
+- GitHub App integration ✅
+- Sandboxes ✅
+
+**MCP Servers Available**:
+| Server | Purpose |
+|--------|---------|
+| 21st-magic | AI UI component generation |
+| github | GitHub API access |
+| context7 | Documentation context |
+
+**Usage**: In Cursor, use `/ui` command to generate components
+
+**Files Updated**:
+- `.kiro/settings/mcp.json` - Added 21st-magic
+- `.cursor/mcp.json` - Created with standard MCP config
+- `docs/architecture/AI_DESIGN_AUTOMATION.md` - Research + implementation
+
+---
+
 ### Control Center Integration (2025-12-23)
 
 **Issues Created in jbcom/control-center**:

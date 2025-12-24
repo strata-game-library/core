@@ -287,7 +287,13 @@ From "tutor mascot" → Strata's official brand mascot across ALL properties
 
 **Monitor**: https://jules.google.com
 
+**CLI Options**:
+- Local/Interactive: `npx @google/jules` (requires OAuth login)
+- Cloud/Programmatic: `node scripts/jules-session.mjs` (uses API key)
+
 **API Key**: Set as JULES_API_KEY environment variable
+
+**Script Created**: `/workspace/scripts/jules-session.mjs` - Simple wrapper for Jules REST API
 
 ---
 

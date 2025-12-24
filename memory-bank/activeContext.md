@@ -538,10 +538,12 @@ Cursor Cloud Agent (supervisor)
     └── Spawns sub-agents for complex work
 ```
 
-**Assets Created**:
-- `/workspace/scripts/cursor-jules-orchestrator.mjs` - Monitoring script
-- `/workspace/.cursor/rules/04-cursor-agent-orchestration.mdc` - Agent instructions
+**Assets Created** (in control-center repo):
+- `scripts/cursor-jules-orchestrator.mjs` - Monitoring script
+- `repository-files/always-sync/scripts/cursor-jules-orchestrator.mjs` - Synced to all repos
+- `CLAUDE.md` - Agent instructions for Jules API
 - [control-center#429](https://github.com/jbcom/control-center/issues/429) - Pattern documentation
+- [control-center PR#426](https://github.com/jbcom/control-center/pull/426) - All infrastructure (+958 lines)
 
 ---
 

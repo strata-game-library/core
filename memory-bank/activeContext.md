@@ -527,6 +527,23 @@ GitHub Marketplace Actions
 **Environment Variables for Future Agents**:
 - `JULES_API_KEY` ✅ - Google Jules API
 - `CURSOR_GITHUB_TOKEN` ✅ - GitHub operations
+- `CURSOR_API_KEY` ✅ - Cursor Cloud Agent API
+
+**Cursor Cloud Agent API** (Verified Working):
+```bash
+# Spawn agent
+curl -X POST "https://api.cursor.com/v0/agents" \
+  -u "$CURSOR_API_KEY:" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "prompt": {"text": "Task description"},
+    "source": {"repository": "https://github.com/owner/repo", "ref": "main"},
+    "target": {"autoCreatePr": true, "branchName": "feat/name"}
+  }'
+
+# List agents
+curl -X GET "https://api.cursor.com/v0/agents" -u "$CURSOR_API_KEY:"
+```
 
 **Orchestration Pattern**:
 ```
@@ -547,4 +564,47 @@ Cursor Cloud Agent (supervisor)
 
 ---
 
-Last updated: 2025-12-24
+### Agent Fleet Deployment (2025-12-24)
+
+**Cursor Cloud Agents Spawned** (20 total):
+
+| Agent | Repository | Task | Status |
+|-------|------------|------|--------|
+| bc-034d8c0e | nodejs-strata | PR review & merge | RUNNING |
+| bc-7a3ccd88 | agentic-triage | @agentic/triage primitives | FINISHED |
+| bc-ed791e03 | agentic-control | @agentic/control orchestration | FINISHED |
+| bc-e8d688a8 | control-center | Merge PR #426 | RUNNING |
+| bc-fa43bbea | control-center | Fix PR #421 CI | RUNNING |
+| bc-f4fd7194 | rust-agentic-game-generator | CI fixes | RUNNING |
+| bc-00665721 | python-vendor-connectors | AI tools | RUNNING |
+| bc-955a1b60 | strata-typescript-tutor | Curriculum migration | RUNNING |
+| bc-93be8d2e | rivermarsh | Game systems | FINISHED |
+| bc-16a97569 | strata-shaders | Package setup | RUNNING |
+| bc-36fd22a3 | jbcom.github.io | PR cleanup | RUNNING |
+| bc-63236743 | control-center | Orchestrator script | RUNNING |
+| bc-dff99f76 | agentic-control | Merge PRs | RUNNING |
+| bc-6b3b80f0 | agentic-triage | Merge deps | RUNNING |
+| bc-f335c8e1 | strata-shaders | Merge PR #2 | RUNNING |
+| bc-7a29ea6f | typescript-tutor | Merge deps | RUNNING |
+| bc-b94e67da | rivermarsh | Merge PRs | RUNNING |
+
+**PRs Created by Agents**:
+
+| Repository | PRs Created |
+|------------|-------------|
+| nodejs-agentic-control | #15, #18, #19 |
+| nodejs-agentic-triage | #35, #36 + deps |
+| nodejs-strata-shaders | #2 |
+| nodejs-rivermarsh | #56, #57, #58 |
+| nodejs-strata-typescript-tutor | #24 + deps |
+
+**Fleet Summary**:
+- 12 agents FINISHED
+- 8 agents RUNNING
+- Creating PRs across 10+ repositories
+- Auto-merging dependency updates
+- Working on @agentic package restructure
+
+---
+
+Last updated: 2025-12-24T02:15:00Z

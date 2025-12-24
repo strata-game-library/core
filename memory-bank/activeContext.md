@@ -599,12 +599,35 @@ Cursor Cloud Agent (supervisor)
 | nodejs-strata-typescript-tutor | #24 + deps |
 
 **Fleet Summary**:
-- 12 agents FINISHED
-- 8 agents RUNNING
-- Creating PRs across 10+ repositories
-- Auto-merging dependency updates
-- Working on @agentic package restructure
+- 20 total agents deployed
+- 16 agents RUNNING
+- 2 agents FINISHED
+- 2 agents CREATING
+- Creating/merging PRs across 15+ repositories
+
+**Jules PR Follow-Up Agents** (with full ownership instructions):
+
+| Agent | Repository | PR | Instructions |
+|-------|------------|-----|--------------|
+| bc-359331ed | python-vendor-connectors | #21 | Full review/merge |
+| bc-f22cc13f | rust-cosmic-cults | #19 | Full review/merge |
+| bc-3e4296f1 | nodejs-strata | #103 | Full review/merge |
+| bc-4482ee35 | nodejs-agentic-control | #18 | Full review/merge |
+| bc-a693b54c | nodejs-agentic-triage | #35 | Full review/merge |
+| bc-ef3cbd3a | control-center | #421 | Full review/merge |
+| bc-2081cec2 | jbcom.github.io | #61 | Full review/merge |
+
+**Jules PR Handler Instructions Given**:
+1. Install gh and ddgr
+2. Move PR to ready for review
+3. Work through ALL CodeQL alerts
+4. Address Ollama orchestrator reviews
+5. Engage Gemini + Amazon Q for review
+6. REJECT hallucinations - verify with ddgr
+7. Pin ALL GitHub Actions to exact SHA
+8. Merge ONLY when all criteria met
+9. Ensure releases succeed or issue follow-up PR
 
 ---
 
-Last updated: 2025-12-24T02:15:00Z
+Last updated: 2025-12-24T02:52:00Z

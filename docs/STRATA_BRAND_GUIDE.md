@@ -93,7 +93,7 @@ These colors represent Strata's core capabilities and may be used for:
   /* Game Framework - Action gold */
   --strata-game: #eab308;            /* Gold */
   --strata-game-light: #fde047;      /* Highlight gold */
-  --strata-game-dark: #a16207;       /* Deep gold */
+  --strata-game-dark: #b45309;       /* Deep gold - distinct from terrain */
 }
 ```
 

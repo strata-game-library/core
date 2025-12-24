@@ -140,11 +140,11 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+      - uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # v6.1.0
       - run: pnpm install
       - run: pnpm run docs:build
-      - uses: peaceiris/actions-gh-pages@v4.0.0
+      - uses: peaceiris/actions-gh-pages@4f23e57388d74ba3d1420791a717b0244ca76483 # v4.0.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./docs

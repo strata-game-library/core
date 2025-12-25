@@ -71,11 +71,14 @@ export function createTransitionManager(): TransitionManager {
     }));
 
     let animationFrameId: number | null = null;
+    let pendingReject: ((reason?: any) => void) | null = null;
 
     const manager: TransitionManager = {
         start: (config: TransitionConfig) => {
-            return new Promise((resolve) => {
+            return new Promise((resolve, reject) => {
                 manager.cancel();
+
+                pendingReject = reject;
 
                 useStore.setState({
                     isTransitioning: true,
@@ -87,21 +90,38 @@ export function createTransitionManager(): TransitionManager {
                 const durationMs = config.duration * 1000;
 
                 const animate = (now: number) => {
-                    const elapsed = now - startTime;
-                    let progress = Math.min(elapsed / durationMs, 1);
+                    try {
+                        const elapsed = now - startTime;
+                        const linearProgress = Math.min(elapsed / durationMs, 1);
+                        let progress = linearProgress;
 
-                    if (config.easing) {
-                        progress = config.easing(progress);
-                    }
+                        if (config.easing) {
+                            progress = config.easing(linearProgress);
+                        }
 
-                    useStore.setState({ progress });
+                        useStore.setState({ progress });
 
-                    if (progress < 1) {
-                        animationFrameId = requestAnimationFrame(animate);
-                    } else {
-                        useStore.setState({ isTransitioning: false, progress: 1 });
-                        animationFrameId = null;
-                        resolve();
+                        if (linearProgress < 1) {
+                            animationFrameId = requestAnimationFrame(animate);
+                        } else {
+                            useStore.setState({ isTransitioning: false, progress: 1 });
+                            animationFrameId = null;
+                            pendingReject = null;
+                            resolve();
+                        }
+                    } catch (error) {
+                        // Cleanup on error without calling manager.cancel() which would override the error
+                        if (animationFrameId !== null) {
+                            cancelAnimationFrame(animationFrameId);
+                            animationFrameId = null;
+                        }
+                        pendingReject = null;
+                        useStore.setState({
+                            isTransitioning: false,
+                            progress: 0,
+                            config: null,
+                        });
+                        reject(error);
                     }
                 };
 
@@ -114,6 +134,12 @@ export function createTransitionManager(): TransitionManager {
                 cancelAnimationFrame(animationFrameId);
                 animationFrameId = null;
             }
+
+            if (pendingReject) {
+                pendingReject(new Error('Transition cancelled'));
+                pendingReject = null;
+            }
+
             useStore.setState({
                 isTransitioning: false,
                 progress: 0,

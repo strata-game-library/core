@@ -94,4 +94,40 @@ describe('SceneManager', () => {
     it('should throw error when loading unregistered scene', async () => {
         await expect(manager.load('unknown')).rejects.toThrow('Scene "unknown" not registered.');
     });
+
+    it('should reset isLoading even if setup fails', async () => {
+        const scene = {
+            id: 'fail',
+            setup: async () => {
+                throw new Error('Setup failed');
+            },
+            teardown: async () => {},
+            render: () => null,
+        };
+        manager.register(scene);
+        await expect(manager.load('fail')).rejects.toThrow('Setup failed');
+        expect(manager.isLoading).toBe(false);
+    });
+
+    it('should reset isLoading even if teardown fails', async () => {
+        const scene1 = {
+            id: 's1',
+            setup: async () => {},
+            teardown: async () => {
+                throw new Error('Teardown failed');
+            },
+            render: () => null,
+        };
+        const scene2 = {
+            id: 's2',
+            setup: async () => {},
+            teardown: async () => {},
+            render: () => null,
+        };
+        manager.register(scene1);
+        manager.register(scene2);
+        await manager.load('s1');
+        await expect(manager.load('s2')).rejects.toThrow('Teardown failed');
+        expect(manager.isLoading).toBe(false);
+    });
 });

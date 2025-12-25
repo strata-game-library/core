@@ -154,6 +154,13 @@ export function createTriggerSystem<T extends TriggerEntity & TriggerableEntity>
                     // Default to simple distance check if no shape provided
                     return pos1.distanceTo(pos2) <= (t.radius ?? 1);
             }
+        } else if (t.type === 'interaction') {
+            // For interaction triggers, use proximity check with smaller default radius
+            const radius = t.radius ?? 0.5;
+            return pos1.distanceTo(pos2) <= radius;
+        } else if (t.type === 'timed') {
+            // Timed triggers don't depend on spatial proximity
+            return true;
         }
 
         return false;

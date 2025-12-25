@@ -152,4 +152,71 @@ describe('TriggerSystem', () => {
 
         expect(action).toHaveBeenCalledTimes(1);
     });
+
+    it('should handle interaction triggers', () => {
+        const action = vi.fn();
+        const triggerEntity = {
+            id: 'trigger1',
+            transform: { position: new THREE.Vector3(0, 0, 0) },
+            trigger: {
+                id: 't1',
+                type: 'interaction' as const,
+                radius: 0.5,
+                enabled: true,
+                action,
+            },
+        };
+
+        const playerEntity = {
+            id: 'player',
+            transform: { position: new THREE.Vector3(0.3, 0, 0) },
+            triggerable: true,
+        };
+
+        const worldMock = {
+            query: vi.fn((...components: string[]) => {
+                if (components.includes('trigger')) return [triggerEntity];
+                if (components.includes('triggerable')) return [playerEntity];
+                return [];
+            }),
+        };
+
+        const system = createTriggerSystem();
+        system(worldMock as any, 0.1);
+
+        expect(action).toHaveBeenCalledWith(playerEntity, triggerEntity);
+    });
+
+    it('should handle timed triggers', () => {
+        const action = vi.fn();
+        const triggerEntity = {
+            id: 'trigger1',
+            transform: { position: new THREE.Vector3(0, 0, 0) },
+            trigger: {
+                id: 't1',
+                type: 'timed' as const,
+                enabled: true,
+                action,
+            },
+        };
+
+        const playerEntity = {
+            id: 'player',
+            transform: { position: new THREE.Vector3(100, 0, 0) }, // Far away
+            triggerable: true,
+        };
+
+        const worldMock = {
+            query: vi.fn((...components: string[]) => {
+                if (components.includes('trigger')) return [triggerEntity];
+                if (components.includes('triggerable')) return [playerEntity];
+                return [];
+            }),
+        };
+
+        const system = createTriggerSystem();
+        system(worldMock as any, 0.1);
+
+        expect(action).toHaveBeenCalledWith(playerEntity, triggerEntity);
+    });
 });

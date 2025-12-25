@@ -20,7 +20,7 @@ export const GameOrchestrationExamples = {
      * Shows how to setup and use a SceneManager.
      */
     sceneManagement: () => {
-        const scenes = createSceneManager({ initialScene: 'main' });
+        const scenes = createSceneManager();
 
         scenes.register({
             id: 'main',
@@ -33,8 +33,8 @@ export const GameOrchestrationExamples = {
         return (
             <div>
                 <h3>Scene Manager</h3>
-                <p>Current: {scenes.current?.id}</p>
-                <button onClick={() => scenes.load('main')}>Reload Main</button>
+                <p>Current: {scenes.current?.id || 'No Scene Loaded'}</p>
+                <button onClick={() => scenes.load('main')}>Load Main Scene</button>
             </div>
         );
     },
@@ -43,7 +43,7 @@ export const GameOrchestrationExamples = {
      * Shows how to setup and use a ModeManager.
      */
     modeManagement: () => {
-        const modes = createModeManager('exploration');
+        const modes = createModeManager();
 
         modes.register({
             id: 'exploration',
@@ -62,7 +62,8 @@ export const GameOrchestrationExamples = {
         return (
             <div>
                 <h3>Mode Manager</h3>
-                <p>Current: {modes.current?.config.id}</p>
+                <p>Current: {modes.current?.config.id || 'No Mode Active'}</p>
+                <button onClick={() => modes.push('exploration')}>Enter Exploration</button>
                 <button onClick={() => modes.push('combat')}>Enter Combat</button>
                 <button onClick={() => modes.pop()}>Exit Mode</button>
             </div>

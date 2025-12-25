@@ -8,9 +8,9 @@ export interface Scene {
     /** Unique identifier for the scene. */
     id: string;
     /** Called before the scene is loaded. Useful for asset preloading. */
-    setup: () => Promise<void>;
+    setup?: () => Promise<void>;
     /** Called after the scene is unloaded. Useful for cleanup. */
-    teardown: () => Promise<void>;
+    teardown?: () => Promise<void>;
     /** React Three Fiber content to render for this scene. */
     render: () => React.ReactNode;
     /** Optional 2D UI overlay for this scene. */
@@ -99,12 +99,11 @@ export function createSceneManager(config: SceneManagerConfig = {}): SceneManage
 
             useStore.setState({ isLoading: true, loadProgress: 0 });
 
-            if (state.current) {
-                await state.current.teardown();
-            }
-
             try {
-                await scene.setup();
+                if (state.current) {
+                    await state.current.teardown?.();
+                }
+                await scene.setup?.();
                 useStore.setState({
                     current: scene,
                     stack: [scene],
@@ -125,7 +124,7 @@ export function createSceneManager(config: SceneManagerConfig = {}): SceneManage
             useStore.setState({ isLoading: true, loadProgress: 0 });
 
             try {
-                await scene.setup();
+                await scene.setup?.();
                 useStore.setState((prev) => ({
                     stack: [...prev.stack, scene],
                     current: scene,
@@ -143,7 +142,7 @@ export function createSceneManager(config: SceneManagerConfig = {}): SceneManage
             if (state.stack.length <= 1) return;
 
             const topScene = state.stack[state.stack.length - 1];
-            await topScene.teardown();
+            await topScene.teardown?.();
 
             useStore.setState((prev) => {
                 const newStack = prev.stack.slice(0, -1);
@@ -169,10 +168,8 @@ export function createSceneManager(config: SceneManagerConfig = {}): SceneManage
     };
 
     if (config.initialScene) {
-        // We can't await here in a sync factory,
-        // but we can start the load.
-        // The user should probably handle the promise if they care.
-        setTimeout(() => manager.load(config.initialScene!), 0);
+        // Start initial scene load if it exists
+        manager.load(config.initialScene).catch(console.error);
     }
 
     return manager;

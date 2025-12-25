@@ -10,7 +10,12 @@ describe('TransitionManager', () => {
     });
 
     it('should start a transition and complete it', async () => {
-        const transitionPromise = manager.start({
+        // Mock requestAnimationFrame
+        vi.stubGlobal('requestAnimationFrame', (callback: FrameRequestCallback) => {
+            return setTimeout(() => callback(performance.now()), 16);
+        });
+
+        const promise = manager.start({
             type: 'fade',
             duration: 1,
             color: 'black',
@@ -19,22 +24,40 @@ describe('TransitionManager', () => {
         expect(manager.isTransitioning).toBe(true);
         expect(manager.config?.type).toBe('fade');
 
-        // Advance time
-        vi.advanceTimersByTime(500);
-        // Note: progress update depends on requestAnimationFrame which is tricky with fake timers
-        // but since we await the promise, we can just jump to end.
+        vi.advanceTimersByTime(1100);
+        await promise;
 
-        vi.advanceTimersByTime(500);
-        // Since we're using requestAnimationFrame, we need to mock it if we want to test intermediate progress.
-        // For simplicity, let's just test that it resolves.
+        expect(manager.isTransitioning).toBe(false);
+        expect(manager.progress).toBe(1);
     });
 
-    it('should cancel a transition', () => {
-        manager.start({ type: 'fade', duration: 1 });
+    it('should cancel a transition', async () => {
+        const promise = manager.start({ type: 'fade', duration: 1 });
         expect(manager.isTransitioning).toBe(true);
 
         manager.cancel();
         expect(manager.isTransitioning).toBe(false);
         expect(manager.config).toBeNull();
+
+        await expect(promise).rejects.toThrow('Transition cancelled');
+    });
+
+    it('should handle errors in animation loop', async () => {
+        const promise = manager.start({
+            type: 'fade',
+            duration: 1,
+            easing: () => {
+                throw new Error('Easing error');
+            },
+        });
+
+        // Mock requestAnimationFrame to trigger the error
+        vi.stubGlobal('requestAnimationFrame', (callback: FrameRequestCallback) => {
+            return setTimeout(() => callback(performance.now()), 16);
+        });
+
+        vi.advanceTimersByTime(100);
+        await expect(promise).rejects.toThrow('Easing error');
+        expect(manager.isTransitioning).toBe(false);
     });
 });

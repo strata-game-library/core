@@ -1,5 +1,3 @@
-import { StatePreset } from '../../game/types';
-
 export const rpgPreset = {
     initialState: {
         player: {

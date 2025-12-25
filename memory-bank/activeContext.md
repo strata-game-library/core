@@ -140,7 +140,7 @@ pnpm run format:check  # Biome format check
    - #85: Remove type re-exports from presets
    - #86: Rename conflicting core exports
    - #87: Create migration guide
-   - #88: Clean up internal/triage
+   - ✅ #88: Clean up internal/triage - moved to agentic-triage
    - #89: Extract presets/shaders to packages
 
 7. **Game Framework (Epic #50) Status**:

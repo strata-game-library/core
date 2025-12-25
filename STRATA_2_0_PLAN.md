@@ -594,7 +594,7 @@ Issues are tracked in jbcom organization projects:
 | `src/shaders/` | nodejs-strata-shaders | strata-shaders#1 | 🔲 Pending |
 | `src/presets/` | nodejs-strata-presets | strata-presets#1 | 🔲 Pending |
 | `examples/` | nodejs-strata-examples | strata-examples#4 | 🔲 Pending |
-| `internal/triage/` | (delete, use nodejs-agentic-triage) | strata#88 | ✅ Complete |
+| `internal/triage/` | (delete, use nodejs-agentic-triage) | strata#88 | ✅ Done |
 
 ### Issue Transfer Plan
 

@@ -31,7 +31,6 @@ export {
     type CreatureDefinition,
     createAvianSkeleton,
     createBipedSkeleton,
-    createCrystalMaterial,
     // Factories & Presets
     createFurMaterial,
     createMetalMaterial,
@@ -39,6 +38,7 @@ export {
     createQuadrupedSkeleton,
     createSerpentineSkeleton,
     createShellMaterial,
+    createVolumetricMaterial,
     createWoodMaterial,
     type DropItem,
     type DropTable,

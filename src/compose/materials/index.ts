@@ -1,9 +1,9 @@
 import {
-    createCrystalMaterial,
     createFurMaterial,
     createMetalMaterial,
     createOrganicMaterial,
     createShellMaterial,
+    createVolumetricMaterial,
     createWoodMaterial,
 } from './factory';
 import type { MaterialDefinition } from './types';
@@ -63,7 +63,7 @@ export const MATERIALS: Record<string, MaterialDefinition> = {
     }),
 
     // Crystals
-    crystal_quartz: createCrystalMaterial('crystal_quartz', {
+    crystal_quartz: createVolumetricMaterial('crystal_quartz', {
         baseColor: '#e8e8e8',
         volumetric: {
             refraction: 1.5,

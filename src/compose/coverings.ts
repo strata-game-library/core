@@ -24,7 +24,11 @@ export interface CoveringRegion {
 export interface CoveringDefinition {
     skeleton: string; // Reference to skeleton ID
 
-    // Region-based material application
+    /**
+     * Region-based material application.
+     * Keys are bone IDs or glob-style patterns (e.g., 'leg*', 'spine_*', '*').
+     * Patterns are resolved by the system in order of specificity (exact match first, then longest pattern).
+     */
     regions: {
         [bonePattern: string]: CoveringRegion;
     };
@@ -41,13 +45,11 @@ export const COVERINGS: Record<string, CoveringDefinition> = {
     otter: {
         skeleton: 'quadruped_medium',
         regions: {
-            'body*': { material: 'fur_otter', color: '#4a3520' },
             'spine*': { material: 'fur_otter', color: '#4a3520' },
-            belly: { material: 'fur_otter', color: '#8b7355', variation: 0.1 },
             head: { material: 'fur_otter', color: '#4a3520' },
             'tail*': { material: 'fur_otter', color: '#3d2817' },
             'leg*': { material: 'fur_otter', color: '#3d2817' },
-            nose: { material: 'flesh_mammal', color: '#2d2d2d' },
+            '*': { material: 'fur_otter', color: '#4a3520' },
         },
         markings: [{ type: 'mask', regions: ['head'], color: '#8b7355' }],
     },
@@ -55,7 +57,6 @@ export const COVERINGS: Record<string, CoveringDefinition> = {
         skeleton: 'quadruped_medium',
         regions: {
             '*': { material: 'fur_fox', color: '#c45a25' },
-            belly: { material: 'fur_fox', color: '#ffffff' },
             tail_tip: { material: 'fur_fox', color: '#ffffff' },
         },
         markings: [{ type: 'socks', regions: ['leg*'], color: '#2d2d2d' }],

@@ -29,10 +29,11 @@ function createBaseMaterial(
  */
 export function createFurMaterial(
     id: string,
-    options: Partial<MaterialDefinition> & { shell: Partial<ShellProperties> }
+    options: Partial<Omit<MaterialDefinition, 'shell'>> & { shell?: Partial<ShellProperties> }
 ): MaterialDefinition {
+    const { shell, ...rest } = options;
     return createBaseMaterial(id, 'shell', {
-        ...options,
+        ...rest,
         shell: {
             layers: 24,
             length: 0.05,
@@ -40,8 +41,8 @@ export function createFurMaterial(
             thickness: 0.01,
             curvature: 0.5,
             colorVariation: 0.1,
-            ...options.shell,
-        },
+            ...shell,
+        } as ShellProperties,
     });
 }
 
@@ -88,20 +89,23 @@ export function createShellMaterial(
 }
 
 /**
- * Creates a crystal material definition
+ * Creates a volumetric material definition
  */
-export function createCrystalMaterial(
+export function createVolumetricMaterial(
     id: string,
-    options: Partial<MaterialDefinition> & { volumetric: Partial<VolumetricProperties> }
+    options: Partial<Omit<MaterialDefinition, 'volumetric'>> & {
+        volumetric?: Partial<VolumetricProperties>;
+    }
 ): MaterialDefinition {
+    const { volumetric, ...rest } = options;
     return createBaseMaterial(id, 'volumetric', {
-        ...options,
+        ...rest,
         volumetric: {
             refraction: 1.5,
             absorption: '#ffffff',
             transparency: 0.8,
-            ...options.volumetric,
-        },
+            ...volumetric,
+        } as VolumetricProperties,
     });
 }
 
@@ -110,14 +114,17 @@ export function createCrystalMaterial(
  */
 export function createOrganicMaterial(
     id: string,
-    options: Partial<MaterialDefinition> & { organic: Partial<OrganicProperties> }
+    options: Partial<Omit<MaterialDefinition, 'organic'>> & {
+        organic?: Partial<OrganicProperties>;
+    }
 ): MaterialDefinition {
+    const { organic, ...rest } = options;
     return createBaseMaterial(id, 'organic', {
-        ...options,
+        ...rest,
         organic: {
             scatterColor: '#ff0000',
             scatterDistance: 0.1,
-            ...options.organic,
-        },
+            ...organic,
+        } as OrganicProperties,
     });
 }

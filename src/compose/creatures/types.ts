@@ -39,7 +39,7 @@ export interface CreatureDefinition {
     };
 
     // Behavior
-    ai: AIPresetName | any; // AIPresetName or custom AIDefinition
+    ai: AIPresetName | Record<string, unknown>; // AIPresetName or custom AIDefinition
 
     // Animations
     animations: {

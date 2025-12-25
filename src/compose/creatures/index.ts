@@ -33,7 +33,7 @@ export const CREATURES: Record<string, CreatureDefinition> = {
             play: 'otter_play',
         },
 
-        biomes: ['marsh', 'river', 'lake'] as any,
+        biomes: ['marsh'],
         spawnWeight: 0.4,
         packSize: [2, 6],
         timeOfDay: ['day', 'dawn', 'dusk'],

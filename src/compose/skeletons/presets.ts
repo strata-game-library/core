@@ -35,7 +35,16 @@ export function createQuadrupedSkeleton(
         neckLength?: number;
     }
 ): SkeletonDefinition {
-    const { bodyLength, legRatio, tailLength, headSize, neckLength = 0.1 } = options;
+    const {
+        bodyLength,
+        bodyWidth = 0.1,
+        legRatio,
+        tailLength,
+        headSize,
+        neckLength = 0.1,
+    } = options;
+
+    const tailRotation = eulerToQuat(0, 0, -30);
 
     const bones: BoneDefinition[] = [
         { id: 'root', shape: 'sphere', size: [0.01, 0.01, 0.01], position: [0, 0, 0] },
@@ -43,21 +52,21 @@ export function createQuadrupedSkeleton(
             id: 'spine_base',
             parent: 'root',
             shape: 'capsule',
-            size: [bodyLength * 0.3, 0.1, 0.1],
+            size: [bodyLength * 0.3, bodyWidth, bodyWidth],
             position: [0, 0, 0],
         },
         {
             id: 'spine_mid',
             parent: 'spine_base',
             shape: 'capsule',
-            size: [bodyLength * 0.4, 0.12, 0.12],
+            size: [bodyLength * 0.4, bodyWidth * 1.2, bodyWidth * 1.2],
             position: [bodyLength * 0.3, 0, 0],
         },
         {
             id: 'spine_upper',
             parent: 'spine_mid',
             shape: 'capsule',
-            size: [bodyLength * 0.3, 0.1, 0.1],
+            size: [bodyLength * 0.3, bodyWidth, bodyWidth],
             position: [bodyLength * 0.4, 0, 0],
         },
         // Neck and head
@@ -111,12 +120,7 @@ export function createQuadrupedSkeleton(
             shape: 'capsule',
             size: [tailLength * 0.3, 0.03, 0.03],
             position: [-0.05, 0, 0],
-            rotation: [
-                eulerToQuat(0, 0, -30).x,
-                eulerToQuat(0, 0, -30).y,
-                eulerToQuat(0, 0, -30).z,
-                eulerToQuat(0, 0, -30).w,
-            ],
+            rotation: [tailRotation.x, tailRotation.y, tailRotation.z, tailRotation.w],
         },
         {
             id: 'tail_mid',
@@ -139,15 +143,15 @@ export function createQuadrupedSkeleton(
         type: 'quadruped',
         bones,
         ikChains: [
-            { id: 'leg_front_l_ik', bones: ['leg_front_l'], target: 'front_left_foot' },
-            { id: 'leg_front_r_ik', bones: ['leg_front_r'], target: 'front_right_foot' },
-            { id: 'leg_back_l_ik', bones: ['leg_back_l'], target: 'back_left_foot' },
-            { id: 'leg_back_r_ik', bones: ['leg_back_r'], target: 'back_right_foot' },
+            { id: 'leg_front_l_ik', bones: ['leg_front_l'], target: 'leg_front_l' },
+            { id: 'leg_front_r_ik', bones: ['leg_front_r'], target: 'leg_front_r' },
+            { id: 'leg_back_l_ik', bones: ['leg_back_l'], target: 'leg_back_l' },
+            { id: 'leg_back_r_ik', bones: ['leg_back_r'], target: 'leg_back_r' },
         ],
     };
 }
 
-export function createBipedSkeleton(id: string, options: { height: number }): SkeletonDefinition {
+export function createBipedSkeleton(id: string, _options: { height: number }): SkeletonDefinition {
     // Stub implementation
     return {
         id,
@@ -158,8 +162,8 @@ export function createBipedSkeleton(id: string, options: { height: number }): Sk
                 id: 'spine',
                 parent: 'root',
                 shape: 'capsule',
-                size: [options.height * 0.4, 0.2, 0.1],
-                position: [0, options.height * 0.5, 0],
+                size: [_options.height * 0.4, 0.2, 0.1],
+                position: [0, _options.height * 0.5, 0],
             },
         ],
     };
@@ -167,7 +171,7 @@ export function createBipedSkeleton(id: string, options: { height: number }): Sk
 
 export function createAvianSkeleton(
     id: string,
-    options: { wingspan: number; bodyLength: number }
+    _options: { wingspan: number; bodyLength: number }
 ): SkeletonDefinition {
     // Stub implementation
     return {
@@ -179,7 +183,7 @@ export function createAvianSkeleton(
 
 export function createSerpentineSkeleton(
     id: string,
-    options: { length: number; segments: number }
+    _options: { length: number; segments: number }
 ): SkeletonDefinition {
     // Stub implementation
     return {

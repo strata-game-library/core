@@ -137,6 +137,8 @@ export function VirtualJoystick({
                 onTouchEnd={handleEnd}
                 onMouseDown={handleStart}
                 onMouseMove={handleMove}
+                role="application"
+                aria-label="Virtual joystick control"
                 onMouseUp={handleEnd}
                 onMouseLeave={handleEnd}
             />

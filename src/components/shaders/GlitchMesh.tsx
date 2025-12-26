@@ -37,6 +37,7 @@ export const GlitchMesh = forwardRef<GlitchMeshRef, GlitchMeshProps>(
     ) => {
         const meshRef = useRef<THREE.Mesh>(null);
 
+        // biome-ignore lint/correctness/useExhaustiveDependencies: materialOptions is spread from props
         const material = useMemo(
             () => createGlitchMaterial(materialOptions),
             [
@@ -44,7 +45,6 @@ export const GlitchMesh = forwardRef<GlitchMeshRef, GlitchMeshProps>(
                 materialOptions.glitchIntensity,
                 materialOptions.scanlineIntensity,
                 materialOptions.rgbShiftAmount,
-                materialOptions,
             ]
         );
 

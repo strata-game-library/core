@@ -35,8 +35,8 @@ export const HealthBar = forwardRef<HealthBarRef, HealthBarProps>(
             borderColor = 'rgba(255, 255, 255, 0.3)',
             borderWidth = 1,
             borderRadius = 2,
-            showText = false,
-            textFormat = 'percentage',
+            showText: _showText = false,
+            textFormat: _textFormat = 'percentage',
             animationDuration = 300,
             segments,
             glowColor,
@@ -144,7 +144,7 @@ export const HealthBar = forwardRef<HealthBarRef, HealthBarProps>(
                                     const isFilled = percentage >= segmentPercentage;
                                     return (
                                         <div
-                                            key={i}
+                                            key={`segment-${i}-${segments}`}
                                             style={{
                                                 flex: 1,
                                                 backgroundColor: isFilled

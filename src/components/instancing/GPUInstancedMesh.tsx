@@ -91,9 +91,9 @@ export function GPUInstancedMesh({
             {/* drei's Instances expects geometry and material as primitive children */}
             <primitive object={geometry} attach="geometry" />
             <primitive object={material} attach="material" />
-            {instances.slice(0, instanceCount).map((instance, i) => (
+            {instances.slice(0, instanceCount).map((instance) => (
                 <Instance
-                    key={i}
+                    key={`inst-${instance.position.x.toFixed(2)}-${instance.position.y.toFixed(2)}-${instance.position.z.toFixed(2)}`}
                     position={instance.position as unknown as [number, number, number]}
                     rotation={[instance.rotation.x, instance.rotation.y, instance.rotation.z]}
                     scale={instance.scale as unknown as [number, number, number]}

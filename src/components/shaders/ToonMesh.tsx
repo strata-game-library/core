@@ -39,6 +39,7 @@ export const ToonMesh = forwardRef<ToonMeshRef, ToonMeshProps>(
         const meshRef = useRef<THREE.Mesh>(null);
         const outlineRef = useRef<THREE.Mesh>(null);
 
+        // biome-ignore lint/correctness/useExhaustiveDependencies: materialOptions is spread from props
         const material = useMemo(
             () => createToonMaterial(materialOptions),
             [
@@ -46,7 +47,6 @@ export const ToonMesh = forwardRef<ToonMeshRef, ToonMeshProps>(
                 materialOptions.levels,
                 materialOptions.rimColor,
                 materialOptions.rimPower,
-                materialOptions,
             ]
         );
 

@@ -37,6 +37,7 @@ export const HologramMesh = forwardRef<HologramMeshRef, HologramMeshProps>(
     ) => {
         const meshRef = useRef<THREE.Mesh>(null);
 
+        // biome-ignore lint/correctness/useExhaustiveDependencies: materialOptions is spread from props
         const material = useMemo(
             () => createHologramMaterial(materialOptions),
             [
@@ -46,7 +47,6 @@ export const HologramMesh = forwardRef<HologramMeshRef, HologramMeshProps>(
                 materialOptions.flickerSpeed,
                 materialOptions.fresnelPower,
                 materialOptions.alpha,
-                materialOptions,
             ]
         );
 

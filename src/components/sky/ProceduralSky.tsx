@@ -116,8 +116,20 @@ export function ProceduralSky({
     distance = 50,
 }: ProceduralSkyProps) {
     const meshRef = useRef<THREE.Mesh>(null);
-    const timeOfDay = { ...defaultTimeOfDay, ...timeOfDayProp };
-    const weather = { ...defaultWeather, ...weatherProp };
+    // biome-ignore lint/correctness/useExhaustiveDependencies: specific properties listed for stable dependency
+    const timeOfDay = useMemo(
+        () => ({ ...defaultTimeOfDay, ...timeOfDayProp }),
+        [
+            timeOfDayProp.sunIntensity,
+            timeOfDayProp.sunAngle,
+            timeOfDayProp.sunElevation,
+            timeOfDayProp.ambientLight,
+            timeOfDayProp.starVisibility,
+            timeOfDayProp.fogDensity,
+        ]
+    );
+    // biome-ignore lint/correctness/useExhaustiveDependencies: specific properties listed for stable dependency
+    const weather = useMemo(() => ({ ...defaultWeather, ...weatherProp }), [weatherProp.intensity]);
 
     const material = useMemo(() => {
         return createSkyMaterial({

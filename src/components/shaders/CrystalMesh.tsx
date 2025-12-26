@@ -37,14 +37,10 @@ export const CrystalMesh = forwardRef<CrystalMeshRef, CrystalMeshProps>(
     ) => {
         const meshRef = useRef<THREE.Mesh>(null);
 
+        // biome-ignore lint/correctness/useExhaustiveDependencies: materialOptions is spread from props, individual values listed
         const material = useMemo(
             () => createCrystalMaterial(materialOptions),
-            [
-                materialOptions.color,
-                materialOptions.fresnelPower,
-                materialOptions.rainbowIntensity,
-                materialOptions,
-            ]
+            [materialOptions.color, materialOptions.fresnelPower, materialOptions.rainbowIntensity]
         );
 
         useFrame((state) => {

@@ -35,6 +35,7 @@ export const GradientMesh = forwardRef<GradientMeshRef, GradientMeshProps>(
     ) => {
         const meshRef = useRef<THREE.Mesh>(null);
 
+        // biome-ignore lint/correctness/useExhaustiveDependencies: materialOptions is spread from props
         const material = useMemo(
             () => createGradientMaterial(materialOptions),
             [
@@ -43,7 +44,6 @@ export const GradientMesh = forwardRef<GradientMeshRef, GradientMeshProps>(
                 materialOptions.colorMiddle,
                 materialOptions.direction,
                 materialOptions.useThreeColors,
-                materialOptions,
             ]
         );
 

@@ -31,6 +31,7 @@ export const Forcefield = forwardRef<ForcefieldRef, ForcefieldProps>(
         const meshRef = useRef<THREE.Mesh>(null);
         const hitDecay = useRef(0);
 
+        // biome-ignore lint/correctness/useExhaustiveDependencies: materialOptions is spread from props
         const material = useMemo(
             () => createForcefieldMaterial(materialOptions),
             [
@@ -40,7 +41,6 @@ export const Forcefield = forwardRef<ForcefieldRef, ForcefieldProps>(
                 materialOptions.pulseSpeed,
                 materialOptions.hexagonScale,
                 materialOptions.alpha,
-                materialOptions,
             ]
         );
 

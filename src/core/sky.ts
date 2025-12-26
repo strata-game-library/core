@@ -196,7 +196,7 @@ export function createSkyMaterial(options: SkyMaterialOptions): THREE.ShaderMate
     const mergedTimeOfDay = { ...defaultTimeOfDay, ...timeOfDay };
     
     // Handle sunElevation alias
-    if (timeOfDay.sunElevation !== undefined) {
+    if (timeOfDay?.sunElevation !== undefined) {
         mergedTimeOfDay.sunAngle = timeOfDay.sunElevation;
     }
 

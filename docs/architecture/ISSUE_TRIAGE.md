@@ -77,8 +77,8 @@ The type re-exports have been addressed:
 **Blocks:** Nothing
 
 **Action Plan:**
-1. Create `nodejs-strata-shaders` repository
-2. Create `nodejs-strata-presets` repository
+1. Create `strata/shaders` repository
+2. Create `strata/presets` repository
 3. Implement transparent folding mechanism
 4. Update documentation
 
@@ -140,14 +140,18 @@ The type re-exports have been addressed:
 
 **Status:** ❌ Not using Strata
 
-## Strata Org Analysis
+## Strata Organization Structure
 
-The `strata` GitHub organization contains unrelated PHP projects:
-- strata/frontend - PHP headless CMS
-- strata/symfony-frontend - Symfony integration
-- strata/data - PHP data providers
+The `strata` GitHub organization will host all Strata packages:
 
-**Conclusion:** No action needed - these are different projects sharing the "Strata" name.
+| Repository | Purpose | npm Package |
+|------------|---------|-------------|
+| `strata/core` | Main library | `@strata/core` |
+| `strata/shaders` | GLSL shaders | `@strata/shaders` |
+| `strata/presets` | Pre-configured presets | `@strata/presets` |
+| `strata/examples` | Example projects | (not published) |
+
+**Migration:** `@jbcom/strata` → `@strata/core` (v2.0)
 
 ## Summary
 

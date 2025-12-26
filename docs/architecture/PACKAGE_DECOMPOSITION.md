@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document outlines the strategy for decomposing `@jbcom/strata` into modular, optional companion packages while maintaining a seamless developer experience.
+This document outlines the strategy for decomposing the Strata library into modular, optional companion packages within the `strata` GitHub organization while maintaining a seamless developer experience.
 
 ## Goals
 
@@ -12,14 +12,25 @@ This document outlines the strategy for decomposing `@jbcom/strata` into modular
 4. **Zero-Config for Beginners** - Main package works out of the box
 5. **Transparent Folding** - Optional packages integrate seamlessly when installed
 
+## Organization Structure
+
+All packages live under the `strata` GitHub organization:
+
+| Package | Repository | npm Package |
+|---------|------------|-------------|
+| Core | `strata/core` | `@strata/core` |
+| Shaders | `strata/shaders` | `@strata/shaders` |
+| Presets | `strata/presets` | `@strata/presets` |
+| Examples | `strata/examples` | (not published) |
+
 ## Package Architecture
 
-### Core Package: `@jbcom/strata`
+### Core Package: `@strata/core`
 
 The main package remains the primary entry point, containing:
 
 ```
-@jbcom/strata
+@strata/core
 ├── src/core/           # Pure TypeScript utilities (math, SDF, ECS, etc.)
 ├── src/components/     # React Three Fiber components
 ├── src/compose/        # Compositional object system
@@ -31,19 +42,19 @@ The main package remains the primary entry point, containing:
 ```
 
 **Exports:**
-- `@jbcom/strata` - Main entry (core + game + world + compose)
-- `@jbcom/strata/components` - React components
-- `@jbcom/strata/api` - High-level API
-- `@jbcom/strata/game` - Game orchestration
+- `@strata/core` - Main entry (core + game + world + compose)
+- `@strata/core/components` - React components
+- `@strata/core/api` - High-level API
+- `@strata/core/game` - Game orchestration
 
-### Optional Package: `@jbcom/strata-shaders`
+### Optional Package: `@strata/shaders`
 
-**Repository:** `jbcom/strata-shaders`
+**Repository:** `strata/shaders`
 
 Pure GLSL shader strings with zero dependencies on strata core.
 
 ```
-@jbcom/strata-shaders
+@strata/shaders
 ├── src/
 │   ├── clouds.ts       # Cloud shaders
 │   ├── fur.ts          # Fur/shell shaders
@@ -60,20 +71,20 @@ Pure GLSL shader strings with zero dependencies on strata core.
 
 ```typescript
 // Standalone (without strata)
-import { waterFragmentShader, waterVertexShader } from '@jbcom/strata-shaders';
+import { waterFragmentShader, waterVertexShader } from '@strata/shaders';
 
 // With strata (auto-detected)
-import { waterFragmentShader } from '@jbcom/strata/shaders';
+import { waterFragmentShader } from '@strata/core/shaders';
 ```
 
-### Optional Package: `@jbcom/strata-presets`
+### Optional Package: `@strata/presets`
 
-**Repository:** `jbcom/strata-presets`
+**Repository:** `strata/presets`
 
-Pre-configured settings that depend on `@jbcom/strata` from npm.
+Pre-configured settings that depend on `@strata/core` from npm.
 
 ```
-@jbcom/strata-presets
+@strata/presets
 ├── src/
 │   ├── ai/             # AI behavior presets (guard, flock, predator, prey)
 │   ├── animation/      # Animation presets
@@ -98,7 +109,7 @@ Pre-configured settings that depend on `@jbcom/strata` from npm.
 ```json
 {
   "peerDependencies": {
-    "@jbcom/strata": "^2.0.0"
+    "@strata/core": "^2.0.0"
   }
 }
 ```
@@ -129,7 +140,7 @@ export * from './water';
 // ... local shaders
 
 // Also re-export from optional package if installed
-const optionalShaders = loadOptionalPackage('@jbcom/strata-shaders');
+const optionalShaders = loadOptionalPackage('@strata/shaders');
 if (optionalShaders) {
   Object.assign(module.exports, optionalShaders);
 }
@@ -144,7 +155,7 @@ export * from './animation';
 // ... local presets
 
 // Also re-export from optional package if installed
-const optionalPresets = loadOptionalPackage('@jbcom/strata-presets');
+const optionalPresets = loadOptionalPackage('@strata/presets');
 if (optionalPresets) {
   Object.assign(module.exports, optionalPresets);
 }
@@ -161,14 +172,14 @@ if (optionalPresets) {
 
 ### Phase 2: Create Companion Repositories
 
-1. [ ] Create `strata-shaders` repository
+1. [ ] Create `strata/shaders` repository
    - Copy `src/shaders/` contents
    - Create independent package.json with zero dependencies
    - Set up CI/CD for independent releases
 
-2. [ ] Create `strata-presets` repository
+2. [ ] Create `strata/presets` repository
    - Copy `src/presets/` contents
-   - Create package.json with `@jbcom/strata` peer dependency
+   - Create package.json with `@strata/core` peer dependency
    - Set up CI/CD for independent releases
 
 ### Phase 3: Implement Transparent Folding
@@ -187,14 +198,14 @@ if (optionalPresets) {
 
 | Configuration | Estimated Size |
 |--------------|----------------|
-| `@jbcom/strata` (current) | ~350KB |
-| `@jbcom/strata` (core only) | ~200KB |
-| `@jbcom/strata-shaders` | ~80KB |
-| `@jbcom/strata-presets` | ~100KB |
+| `@strata/core` (current) | ~350KB |
+| `@strata/core` (minimal) | ~200KB |
+| `@strata/shaders` | ~80KB |
+| `@strata/presets` | ~100KB |
 
 ## Import Patterns
 
-### Before (v1.x)
+### Before (v1.x - @jbcom/strata)
 
 ```typescript
 // Everything from main package
@@ -204,20 +215,20 @@ import {
 } from '@jbcom/strata';
 ```
 
-### After (v2.0)
+### After (v2.0 - @strata/*)
 
 ```typescript
 // Core functionality
-import { Terrain, Water } from '@jbcom/strata';
+import { Terrain, Water } from '@strata/core';
 
 // Shaders (optional package)
-import { waterFragmentShader } from '@jbcom/strata-shaders';
+import { waterFragmentShader } from '@strata/shaders';
 
 // Presets (optional package)
-import { createFireEffect, vegetationPresets } from '@jbcom/strata-presets';
+import { createFireEffect, vegetationPresets } from '@strata/presets';
 
-// OR if optional packages are installed, still works from main:
-import { waterFragmentShader, createFireEffect } from '@jbcom/strata';
+// OR if optional packages are installed, still works from core:
+import { waterFragmentShader, createFireEffect } from '@strata/core';
 ```
 
 ## TypeScript Configuration
@@ -246,6 +257,16 @@ Each package needs proper TypeScript configuration for source maps and declarati
 - [#86](https://github.com/jbcom/nodejs-strata/issues/86) - Rename conflicting core exports
 - [#87](https://github.com/jbcom/nodejs-strata/issues/87) - Create Strata 2.0 Migration Guide
 - [#89](https://github.com/jbcom/nodejs-strata/issues/89) - Extract presets and shaders to standalone packages
+
+## Migration from @jbcom/strata to @strata/*
+
+When v2.0 releases, the package will migrate from `@jbcom/strata` to the `@strata` organization:
+
+| v1.x (current) | v2.0 (future) |
+|----------------|---------------|
+| `@jbcom/strata` | `@strata/core` |
+| `@jbcom/strata/shaders` | `@strata/shaders` |
+| `@jbcom/strata/presets` | `@strata/presets` |
 
 ## Success Criteria
 

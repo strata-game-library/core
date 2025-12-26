@@ -9,6 +9,7 @@ This library provides **three distinct entry points** with clear separation:
 **Pure TypeScript, zero dependencies on React or R3F**
 
 #### SDF Primitives
+
 ```typescript
 sdSphere(p: Vector3, center: Vector3, radius: number): number
 sdBox(p: Vector3, center: Vector3, halfExtents: Vector3): number
@@ -19,6 +20,7 @@ sdCone(p: Vector3, center: Vector3, angle: number, height: number): number
 ```
 
 #### SDF Operations
+
 ```typescript
 opUnion(d1: number, d2: number): number
 opSubtraction(d1: number, d2: number): number
@@ -29,6 +31,7 @@ opSmoothIntersection(d1: number, d2: number, k: number): number
 ```
 
 #### Noise Functions
+
 ```typescript
 noise3D(x: number, y: number, z: number): number
 fbm(x: number, y: number, z: number, octaves?: number): number
@@ -36,6 +39,7 @@ warpedFbm(x: number, y: number, z: number, octaves?: number): number
 ```
 
 #### Marching Cubes
+
 ```typescript
 marchingCubes(
   sdf: (p: Vector3) => number,
@@ -53,6 +57,7 @@ generateTerrainChunk(
 ```
 
 #### Instancing (Pure TS)
+
 ```typescript
 generateInstanceData(
   count: number,
@@ -64,6 +69,7 @@ generateInstanceData(
 ```
 
 #### Water Materials (Pure TS)
+
 ```typescript
 createWaterMaterial(options?: WaterMaterialOptions): ShaderMaterial
 createAdvancedWaterMaterial(options?: AdvancedWaterMaterialOptions): ShaderMaterial
@@ -71,24 +77,37 @@ createWaterGeometry(size: number, segments?: number): PlaneGeometry
 ```
 
 #### Ray Marching (Pure TS)
+
 ```typescript
 createRaymarchingMaterial(options: RaymarchingMaterialOptions): ShaderMaterial
 createRaymarchingGeometry(): PlaneGeometry
 ```
 
+#### Characters & Animation (Pure TS)
+
+```typescript
+createCharacter(options?: CharacterOptions): { root: Group, joints: CharacterJoints, state: CharacterState }
+animateCharacter(character: any, time: number, options?: number | AnimateCharacterOptions): void
+updateFurUniforms(furSystem: THREE.Object3D, time: number): void
+invalidateFurCache(furSystem: THREE.Object3D): void
+```
+
 ### Sky (Pure TS)
+
 ```typescript
 createSkyMaterial(options: SkyMaterialOptions): ShaderMaterial
 createSkyGeometry(size?: [number, number]): PlaneGeometry
 ```
 
 ### Volumetrics (Pure TS)
+
 ```typescript
 createVolumetricFogMeshMaterial(options: VolumetricFogMeshMaterialOptions): ShaderMaterial
 createUnderwaterOverlayMaterial(options: UnderwaterOverlayMaterialOptions): ShaderMaterial
 ```
 
 #### Utilities
+
 ```typescript
 calcNormal(
   p: Vector3,
@@ -170,6 +189,7 @@ createFurUniforms(config): Uniforms
 ## Type Contracts
 
 ### InstanceData
+
 ```typescript
 interface InstanceData {
   position: Vector3;
@@ -179,6 +199,7 @@ interface InstanceData {
 ```
 
 ### BiomeData
+
 ```typescript
 interface BiomeData {
   type: string;
@@ -188,6 +209,7 @@ interface BiomeData {
 ```
 
 ### MarchingCubesOptions
+
 ```typescript
 interface MarchingCubesOptions {
   resolution: number;

@@ -1,4 +1,4 @@
-import { Html } from '@react-three/drei';
+
 import { Canvas } from '@react-three/fiber';
 import type React from 'react';
 import { createContext, useContext, useEffect, useState } from 'react';

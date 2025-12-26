@@ -79,7 +79,7 @@ export function YukaEntityManager({ children }: YukaEntityManagerProps): React.J
             register,
             unregister,
         }),
-        []
+        [register, unregister]
     );
 
     return <YukaContext.Provider value={contextValue}>{children}</YukaContext.Provider>;

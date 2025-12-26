@@ -1,5 +1,4 @@
 import React, { useMemo } from 'react';
-import * as THREE from 'three';
 import { createOutlineMaterial } from '../../shaders/materials';
 import type { OutlineProps } from './types';
 

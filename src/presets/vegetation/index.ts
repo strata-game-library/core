@@ -8,7 +8,6 @@ import * as THREE from 'three';
 import {
     createInstancedMesh,
     generateInstanceData,
-    type InstanceData,
 } from '../../core/instancing';
 import type { BiomeData } from '../../core/sdf';
 

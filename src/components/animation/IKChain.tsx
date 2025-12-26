@@ -18,7 +18,7 @@
  */
 
 import { useFrame } from '@react-three/fiber';
-import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useRef } from 'react';
+import { forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useRef } from 'react';
 import * as THREE from 'three';
 import {
     type BoneChain,

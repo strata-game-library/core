@@ -82,7 +82,7 @@ export const HealthBar = forwardRef<HealthBarRef, HealthBarProps>(
                     cancelAnimationFrame(animationRef.current);
                 }
             };
-        }, [value, animationDuration]);
+        }, [value, animationDuration, displayValue]);
 
         useFrame(() => {
             if (distanceFade && groupRef.current) {

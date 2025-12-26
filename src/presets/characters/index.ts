@@ -222,13 +222,13 @@ export function animateCharacter(
 ): void {
     const { joints, state } = character;
 
-    let deltaTime = 0.016;
+    let _deltaTime = 0.016;
     let isAttacking = false;
 
     if (typeof options === 'number') {
-        deltaTime = options;
+        _deltaTime = options;
     } else {
-        deltaTime = options.deltaTime ?? 0.016;
+        _deltaTime = options.deltaTime ?? 0.016;
         isAttacking = options.isAttacking ?? false;
     }
 

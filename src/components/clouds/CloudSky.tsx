@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { createDefaultCloudSkyConfig } from '../../core/clouds';
 import { CloudLayer } from './CloudLayer';
 import type { CloudSkyProps } from './types';

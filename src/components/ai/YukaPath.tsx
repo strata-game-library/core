@@ -1,6 +1,5 @@
 import { Line } from '@react-three/drei';
 import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef } from 'react';
-import type * as THREE from 'three';
 import * as YUKA from 'yuka';
 import type { YukaPathProps, YukaPathRef } from './types';
 

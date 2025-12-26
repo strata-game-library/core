@@ -1,4 +1,4 @@
-import React, { forwardRef, useImperativeHandle, useMemo, useRef } from 'react';
+import { forwardRef, useImperativeHandle, useMemo, useRef } from 'react';
 import type * as THREE from 'three';
 import { createGradientMaterial } from '../../shaders/materials';
 import type { GradientMeshProps, GradientMeshRef } from './types';
